@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 IM - APK 下載器 (UAT)</title>
+  
+  <!-- 使用 SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M30 25 L70 25 Q75 25 75 30 L75 35 Q75 40 70 40 L30 40 Q25 40 25 35 L25 30 Q25 25 30 25 Z' fill='white'/%3E%3Cpath d='M30 45 L60 45 Q65 45 65 50 L65 55 Q65 60 60 60 L30 60 Q25 60 25 55 L25 50 Q25 45 30 45 Z' fill='white'/%3E%3Cpath d='M30 65 L65 65 Q70 65 70 70 L70 75 Q70 80 65 80 L30 80 Q25 80 25 75 L25 70 Q25 65 30 65 Z' fill='white'/%3E%3Ccircle cx='75' cy='75' r='12' fill='%2328a745'/%3E%3Cpath d='M70 75 L73 78 L80 68' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='36' fill='url(%23grad1)'/%3E%3Cpath d='M54 45 L126 45 Q135 45 135 54 L135 63 Q135 72 126 72 L54 72 Q45 72 45 63 L45 54 Q45 45 54 45 Z' fill='white'/%3E%3Cpath d='M54 81 L108 81 Q117 81 117 90 L117 99 Q117 108 108 108 L54 108 Q45 108 45 99 L45 90 Q45 81 54 81 Z' fill='white'/%3E%3Cpath d='M54 117 L117 117 Q126 117 126 126 L126 135 Q126 144 117 144 L54 144 Q45 144 45 135 L45 126 Q45 117 54 117 Z' fill='white'/%3E%3Ccircle cx='135' cy='135' r='22' fill='%2328a745'/%3E%3Cpath d='M126 135 L131 140 L144 122' stroke='white' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  
+  <!-- Meta tags for better SEO and appearance -->
+  <meta name="description" content="APK 版本下載器 - 快速產生並下載不同版本的 APK 檔案">
+  <meta name="theme-color" content="#667eea">
+  
+  <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+      }
+      
+      .container {
+          background: white;
+          border-radius: 20px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+          padding: 40px;
+          max-width: 600px;
+          width: 100%;
+      }
+      
+      h1 {
+          text-align: center;
+          color: #333;
+          margin-bottom: 30px;
+          font-size: 2.2em;
+          font-weight: 300;
+      }
+      
+      .input-group {
+          margin-bottom: 20px;
+          position: relative;
+      }
+      
+      .input-group:last-of-type {
+          margin-bottom: 30px;
+      }
+      
+      label {
+          display: block;
+          margin-bottom: 10px;
+          color: #555;
+          font-weight: 500;
+          font-size: 1.1em;
+      }
+      
+      .optional {
+          color: #888;
+          font-weight: 400;
+          font-size: 0.9em;
+      }
+      
+      .memory-indicator {
+          color: #28a745;
+          font-size: 0.8em;
+          font-weight: 400;
+          margin-left: 5px;
+      }
+      
+      .input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+      }
+      
+      input[type="text"] {
+          width: 100%;
+          padding: 15px;
+          padding-right: 45px; /* 為清除按鈕留出空間 */
+          border: 2px solid #e1e5e9;
+          border-radius: 10px;
+          font-size: 1.1em;
+          transition: all 0.3s ease;
+          background: #f8f9fa;
+      }
+      
+      input[type="text"]:focus {
+          outline: none;
+          border-color: #667eea;
+          background: white;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+      
+      .clear-btn {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: #dc3545;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 22px;
+          height: 22px;
+          font-size: 14px;
+          line-height: 1;
+          cursor: pointer;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          z-index: 10;
+      }
+      
+      .clear-btn:hover {
+          background: #c82333;
+          transform: translateY(-50%) scale(1.1);
+      }
+      
+      .clear-btn:active {
+          transform: translateY(-50%) scale(0.95);
+      }
+      
+      .clear-btn.show {
+          display: flex;
+      }
+      
+      .generate-btn {
+          width: 100%;
+          padding: 15px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          border-radius: 10px;
+          font-size: 1.2em;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-bottom: 30px;
+      }
+      
+      .generate-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      }
+      
+      .generate-btn:active {
+          transform: translateY(0);
+      }
+      
+      .download-links {
+          display: none;
+      }
+      
+      .download-links.show {
+          display: block;
+          animation: fadeIn 0.5s ease;
+      }
+      
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .download-item {
+          background: #f8f9fa;
+          border: 2px solid #e9ecef;
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 15px;
+          transition: all 0.3s ease;
+      }
+      
+      .download-item:hover {
+          border-color: #667eea;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      }
+      
+      .app-name {
+          font-size: 1.3em;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+      }
+      
+      .app-icon {
+          width: 24px;
+          height: 24px;
+          margin-right: 10px;
+          background: #667eea;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: bold;
+      }
+      
+      .download-link {
+          display: inline-block;
+          background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+          color: white;
+          text-decoration: none;
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          font-size: 1em;
+          cursor: pointer;
+          border: none;
+      }
+      
+      .download-link:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+          text-decoration: none;
+          color: white;
+      }
+      
+      .version-display {
+          background: #e3f2fd;
+          color: #1976d2;
+          padding: 10px 15px;
+          border-radius: 20px;
+          font-size: 0.9em;
+          font-weight: 500;
+          display: inline-block;
+          margin-bottom: 15px;
+          margin-right: 10px;
+      }
+      
+      .product-version-display {
+          background: #f3e5f5;
+          color: #7b1fa2;
+          padding: 10px 15px;
+          border-radius: 20px;
+          font-size: 0.9em;
+          font-weight: 500;
+          display: inline-block;
+          margin-bottom: 15px;
+      }
+      
+      .url-display {
+          background: #f1f3f4;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-family: 'Courier New', monospace;
+          font-size: 0.85em;
+          color: #666;
+          word-break: break-all;
+          margin-top: 8px;
+      }
+      
+      .filename-display {
+          background: #fff3cd;
+          color: #856404;
+          padding: 6px 10px;
+          border-radius: 4px;
+          font-size: 0.8em;
+          margin-top: 5px;
+          font-weight: 500;
+      }
+      
+      .input-hint {
+          font-size: 0.85em;
+          color: #666;
+          margin-top: 5px;
+          font-style: italic;
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+      <h1>🚀 APK 版本下載器</h1>
+      
+      <div class="input-group">
+          <label for="productVersion">
+              產品版號 <span class="optional">(選填)</span>
+              <span class="memory-indicator" id="memoryIndicator" style="display: none;">💾 已記憶上次輸入</span>
+          </label>
+          <div class="input-wrapper">
+              <input type="text" id="productVersion" placeholder="例如：PRD001 或 BETA" />
+              <button class="clear-btn" id="clearProductVersion" onclick="clearProductVersion()" title="清除產品版號">×</button>
+          </div>
+          <div class="input-hint">此版號僅影響下載檔案的名稱，不會改變下載連結</div>
+      </div>
+      
+      <div class="input-group">
+          <label for="version">版本號 <span style="color: #dc3545;">*</span>：</label>
+          <input type="text" id="version" placeholder="例如：1.0.0" />
+          <div class="input-hint">此版本號會用於產生下載連結路徑</div>
+      </div>
+      
+      <button class="generate-btn" onclick="generateLinks()">
+          產生下載連結
+      </button>
+      
+      <div class="download-links" id="downloadLinks">
+          <div id="versionInfo">
+              <div class="version-display" id="versionDisplay"></div>
+              <div class="product-version-display" id="productVersionDisplay" style="display: none;"></div>
+          </div>
+          
+          <div class="download-item">
+              <div class="app-name">
+                  <div class="app-icon">G</div>
+                  GUCHAT
+              </div>
+              <button class="download-link" onclick="downloadFile('guchat')">
+                  📱 下載 GUCHAT APK
+              </button>
+              <div class="filename-display" id="guchatFilename"></div>
+              <div class="url-display" id="guchatUrl"></div>
+          </div>
+          
+          <div class="download-item">
+              <div class="app-name">
+                  <div class="app-icon">M</div>
+                  MEECHAT
+              </div>
+              <button class="download-link" onclick="downloadFile('meechat')">
+                  📱 下載 MEECHAT APK
+              </button>
+              <div class="filename-display" id="meechatFilename"></div>
+              <div class="url-display" id="meechatUrl"></div>
+          </div>
+          
+          <div class="download-item">
+              <div class="app-name">
+                  <div class="app-icon">V</div>
+                  VARTACHAT
+              </div>
+              <button class="download-link" onclick="downloadFile('vartachat')">
+                  📱 下載 VARTACHAT APK
+              </button>
+              <div class="filename-display" id="vartachatFilename"></div>
+              <div class="url-display" id="vartachatUrl"></div>
+          </div>
+      </div>
+  </div>
+
+  <script>
+      let downloadData = {};
+      const STORAGE_KEY = 'apk-downloader-product-version';
+      
+      // 載入儲存的產品版號
+      function loadSavedProductVersion() {
+          try {
+              const savedVersion = localStorage.getItem(STORAGE_KEY);
+              if (savedVersion) {
+                  document.getElementById('productVersion').value = savedVersion;
+                  document.getElementById('memoryIndicator').style.display = 'inline';
+                  document.getElementById('clearProductVersion').classList.add('show');
+              }
+          } catch (error) {
+              console.log('無法載入儲存的產品版號:', error);
+          }
+      }
+      
+      // 儲存產品版號
+      function saveProductVersion(version) {
+          try {
+              if (version.trim()) {
+                  localStorage.setItem(STORAGE_KEY, version.trim());
+              } else {
+                  localStorage.removeItem(STORAGE_KEY);
+              }
+          } catch (error) {
+              console.log('無法儲存產品版號:', error);
+          }
+      }
+      
+      // 清除產品版號
+      function clearProductVersion() {
+          document.getElementById('productVersion').value = '';
+          document.getElementById('memoryIndicator').style.display = 'none';
+          document.getElementById('clearProductVersion').classList.remove('show');
+          localStorage.removeItem(STORAGE_KEY);
+          document.getElementById('productVersion').focus();
+      }
+      
+      // 監聽產品版號輸入變化
+      document.getElementById('productVersion').addEventListener('input', function(e) {
+          const value = e.target.value;
+          const clearBtn = document.getElementById('clearProductVersion');
+          
+          if (value.trim()) {
+              clearBtn.classList.add('show');
+          } else {
+              clearBtn.classList.remove('show');
+          }
+      });
+      
+      // 監聽產品版號失去焦點時儲存
+      document.getElementById('productVersion').addEventListener('blur', function(e) {
+          const value = e.target.value.trim();
+          saveProductVersion(value);
+          
+          if (value) {
+              document.getElementById('memoryIndicator').style.display = 'inline';
+          } else {
+              document.getElementById('memoryIndicator').style.display = 'none';
+          }
+      });
+      
+      function generateLinks() {
+          const version = document.getElementById('version').value.trim();
+          const productVersion = document.getElementById('productVersion').value.trim();
+          
+          if (!version) {
+              alert('請輸入版本號！');
+              return;
+          }
+          
+          // 儲存產品版號（如果有輸入的話）
+          saveProductVersion(productVersion);
+          
+          const baseUrl = 'https://squirrel-uat.paradise-soft.com.tw';
+          const apps = [
+              { name: 'guchat', displayName: 'GUCHAT' },
+              { name: 'meechat', displayName: 'MEECHAT' },
+              { name: 'vartachat', displayName: 'VARTACHAT' }
+          ];
+          
+          // 顯示版本資訊
+          document.getElementById('versionDisplay').textContent = `版本：${version}`;
+          
+          const productVersionElement = document.getElementById('productVersionDisplay');
+          if (productVersion) {
+              productVersionElement.textContent = `產品版號：${productVersion}`;
+              productVersionElement.style.display = 'inline-block';
+              document.getElementById('memoryIndicator').style.display = 'inline';
+          } else {
+              productVersionElement.style.display = 'none';
+          }
+          
+          // 清空之前的下載資料
+          downloadData = {};
+          
+          // 為每個應用程式產生下載連結
+          apps.forEach(app => {
+              const url = `${baseUrl}/${app.name}/app/master/${version}/${app.displayName}.apk`;
+              
+              // 根據是否有產品版號決定檔名格式
+              let fileName;
+              if (productVersion) {
+                  fileName = `${app.displayName}_${productVersion}_${version}.apk`;
+              } else {
+                  fileName = `${app.displayName}_${version}.apk`;
+              }
+              
+              // 儲存下載資料
+              downloadData[app.name] = {
+                  url: url,
+                  filename: fileName
+              };
+              
+              // 顯示檔名和 URL
+              document.getElementById(`${app.name}Filename`).textContent = `檔名：${fileName}`;
+              document.getElementById(`${app.name}Url`).textContent = url;
+          });
+          
+          // 顯示下載連結區域
+          document.getElementById('downloadLinks').classList.add('show');
+      }
+      
+      async function downloadFile(appName) {
+          if (!downloadData[appName]) {
+              alert('請先產生下載連結！');
+              return;
+          }
+          
+          const { url, filename } = downloadData[appName];
+          
+          try {
+              // 方法1：使用 fetch 下載並創建 blob
+              const response = await fetch(url);
+              
+              if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              
+              const blob = await response.blob();
+              
+              // 創建下載連結
+              const downloadUrl = window.URL.createObjectURL(blob);
+              const tempLink = document.createElement('a');
+              tempLink.href = downloadUrl;
+              tempLink.download = filename;
+              tempLink.style.display = 'none';
+              
+              document.body.appendChild(tempLink);
+              tempLink.click();
+              document.body.removeChild(tempLink);
+              
+              // 清理 blob URL
+              window.URL.revokeObjectURL(downloadUrl);
+              
+          } catch (error) {
+              console.error('下載失敗，嘗試直接連結方式:', error);
+              
+              // 方法2：如果 fetch 失敗，使用直接連結方式
+              const tempLink = document.createElement('a');
+              tempLink.href = url;
+              tempLink.download = filename;
+              tempLink.target = '_blank';
+              tempLink.style.display = 'none';
+              
+              document.body.appendChild(tempLink);
+              tempLink.click();
+              document.body.removeChild(tempLink);
+          }
+      }
+      
+      // 按 Enter 鍵也可以產生連結
+      document.getElementById('version').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+              generateLinks();
+          }
+      });
+      
+      document.getElementById('productVersion').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+              generateLinks();
+          }
+      });
+      
+      // 頁面載入時的初始化
+      window.onload = function() {
+          // 載入儲存的產品版號
+          loadSavedProductVersion();
+          
+          // 聚焦到版本號輸入框（因為產品版號可能已經有值了）
+          const productVersionInput = document.getElementById('productVersion');
+          if (productVersionInput.value.trim()) {
+              document.getElementById('version').focus();
+          } else {
+              productVersionInput.focus();
+          }
+      };
+  </script>
+</body>
+</html>
