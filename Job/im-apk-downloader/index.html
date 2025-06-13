@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IM - APK 下載器 (UAT)</title>
+  <title>IM - APK 下載連結產生器 (UAT)</title>
   
   <!-- 使用 Emoji 作為 Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
   
   <!-- Meta tags for better SEO and appearance -->
-  <meta name="description" content="IM - APK 下載器 (UAT) - 快速產生並下載不同版本的 APK 檔案">
+  <meta name="description" content="IM - APK 下載連結產生器 (UAT) - 快速產生並下載不同版本的 APK 檔案">
   <meta name="theme-color" content="#667eea">
   
   <style>
@@ -229,6 +229,13 @@
           color: white;
       }
       
+      .download-link:disabled {
+          background: #6c757d;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+      }
+      
       .version-display {
           background: #e3f2fd;
           color: #1976d2;
@@ -279,11 +286,42 @@
           margin-top: 5px;
           font-style: italic;
       }
+      
+      /* 錯誤提示樣式 */
+      .error-message {
+          background: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+          border-radius: 6px;
+          padding: 10px 12px;
+          margin-top: 10px;
+          font-size: 0.9em;
+          display: none;
+      }
+      
+      .error-message.show {
+          display: block;
+          animation: slideDown 0.3s ease;
+      }
+      
+      @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .loading {
+          opacity: 0.7;
+          pointer-events: none;
+      }
+      
+      .loading::after {
+          content: " ⏳";
+      }
   </style>
 </head>
 <body>
   <div class="container">
-      <h1>🚀 IM - APK 下載器 (UAT)</h1>
+      <h1>📱 IM - APK 下載連結產生器 (UAT)</h1>
       
       <div class="input-group">
           <label for="productVersion">
@@ -324,9 +362,10 @@
                   <div class="app-icon">G</div>
                   GUCHAT
               </div>
-              <button class="download-link" onclick="downloadFile('guchat')">
+              <button class="download-link" id="guchatBtn" onclick="downloadFile('guchat')">
                   📱 下載 GUCHAT APK
               </button>
+              <div class="error-message" id="guchatError"></div>
               <div class="filename-display" id="guchatFilename"></div>
               <div class="url-display" id="guchatUrl"></div>
           </div>
@@ -336,9 +375,10 @@
                   <div class="app-icon">M</div>
                   MEECHAT
               </div>
-              <button class="download-link" onclick="downloadFile('meechat')">
+              <button class="download-link" id="meechatBtn" onclick="downloadFile('meechat')">
                   📱 下載 MEECHAT APK
               </button>
+              <div class="error-message" id="meechatError"></div>
               <div class="filename-display" id="meechatFilename"></div>
               <div class="url-display" id="meechatUrl"></div>
           </div>
@@ -348,9 +388,10 @@
                   <div class="app-icon">V</div>
                   VARTACHAT
               </div>
-              <button class="download-link" onclick="downloadFile('vartachat')">
+              <button class="download-link" id="vartachatBtn" onclick="downloadFile('vartachat')">
                   📱 下載 VARTACHAT APK
               </button>
+              <div class="error-message" id="vartachatError"></div>
               <div class="filename-display" id="vartachatFilename"></div>
               <div class="url-display" id="vartachatUrl"></div>
           </div>
@@ -429,6 +470,23 @@
           document.getElementById('clearVersion').classList.remove('show');
           localStorage.removeItem(STORAGE_KEYS.version);
           document.getElementById('version').focus();
+      }
+      
+      // 隱藏錯誤訊息
+      function hideErrorMessage(appName) {
+          const errorElement = document.getElementById(`${appName}Error`);
+          if (errorElement) {
+              errorElement.classList.remove('show');
+          }
+      }
+      
+      // 顯示錯誤訊息
+      function showErrorMessage(appName, message) {
+          const errorElement = document.getElementById(`${appName}Error`);
+          if (errorElement) {
+              errorElement.textContent = message;
+              errorElement.classList.add('show');
+          }
       }
       
       // 監聽產品版號輸入變化
@@ -514,8 +572,11 @@
           // 顯示版本號記憶指示器
           document.getElementById('versionMemoryIndicator').style.display = 'inline';
           
-          // 清空之前的下載資料
+          // 清空之前的下載資料和錯誤訊息
           downloadData = {};
+          apps.forEach(app => {
+              hideErrorMessage(app.name);
+          });
           
           // 為每個應用程式產生下載連結
           apps.forEach(app => {
@@ -551,13 +612,25 @@
           }
           
           const { url, filename } = downloadData[appName];
+          const btnElement = document.getElementById(`${appName}Btn`);
+          
+          // 隱藏之前的錯誤訊息
+          hideErrorMessage(appName);
+          
+          // 顯示載入狀態
+          btnElement.classList.add('loading');
+          btnElement.disabled = true;
           
           try {
               // 方法1：使用 fetch 下載並創建 blob
               const response = await fetch(url);
               
+              if (response.status === 404) {
+                  throw new Error('FILE_NOT_FOUND');
+              }
+              
               if (!response.ok) {
-                  throw new Error(`HTTP error! status: ${response.status}`);
+                  throw new Error(`HTTP_ERROR_${response.status}`);
               }
               
               const blob = await response.blob();
@@ -577,18 +650,50 @@
               window.URL.revokeObjectURL(downloadUrl);
               
           } catch (error) {
-              console.error('下載失敗，嘗試直接連結方式:', error);
+              console.error('下載失敗:', error);
               
-              // 方法2：如果 fetch 失敗，使用直接連結方式
-              const tempLink = document.createElement('a');
-              tempLink.href = url;
-              tempLink.download = filename;
-              tempLink.target = '_blank';
-              tempLink.style.display = 'none';
+              let errorMessage = '';
               
-              document.body.appendChild(tempLink);
-              tempLink.click();
-              document.body.removeChild(tempLink);
+              if (error.message === 'FILE_NOT_FOUND') {
+                  errorMessage = `❌ 檔案不存在 (HTTP 404)：請確認版本號是否正確，或該版本的 APK 檔案尚未發布。`;
+              } else if (error.message.startsWith('HTTP_ERROR_')) {
+                  const statusCode = error.message.replace('HTTP_ERROR_', '');
+                  errorMessage = `❌ 伺服器錯誤 (HTTP ${statusCode})：無法存取下載連結，請稍後再試。`;
+              } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                  errorMessage = `❌ 網路錯誤：無法連接到伺服器，請檢查網路連線或稍後再試。`;
+              } else {
+                  errorMessage = `❌ 下載失敗：${error.message}`;
+              }
+              
+              showErrorMessage(appName, errorMessage);
+              
+              // 如果是網路錯誤，嘗試直接連結方式
+              if (error.name === 'TypeError') {
+                  try {
+                      const tempLink = document.createElement('a');
+                      tempLink.href = url;
+                      tempLink.download = filename;
+                      tempLink.target = '_blank';
+                      tempLink.style.display = 'none';
+                      
+                      document.body.appendChild(tempLink);
+                      tempLink.click();
+                      document.body.removeChild(tempLink);
+                      
+                      // 如果成功開啟連結，隱藏錯誤訊息並顯示提示
+                      setTimeout(() => {
+                          hideErrorMessage(appName);
+                          showErrorMessage(appName, '🔗 已嘗試在新視窗開啟下載連結，如無法下載請檢查彈出視窗封鎖設定。');
+                      }, 1000);
+                      
+                  } catch (linkError) {
+                      console.error('直接連結也失敗:', linkError);
+                  }
+              }
+          } finally {
+              // 恢復按鈕狀態
+              btnElement.classList.remove('loading');
+              btnElement.disabled = false;
           }
       }
       
