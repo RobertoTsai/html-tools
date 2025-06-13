@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='36' fill='url(%23grad1)'/%3E%3Cpath d='M54 45 L126 45 Q135 45 135 54 L135 63 Q135 72 126 72 L54 72 Q45 72 45 63 L45 54 Q45 45 54 45 Z' fill='white'/%3E%3Cpath d='M54 81 L108 81 Q117 81 117 90 L117 99 Q117 108 108 108 L54 108 Q45 108 45 99 L45 90 Q45 81 54 81 Z' fill='white'/%3E%3Cpath d='M54 117 L117 117 Q126 117 126 126 L126 135 Q126 144 117 144 L54 144 Q45 144 45 135 L45 126 Q45 117 54 117 Z' fill='white'/%3E%3Ccircle cx='135' cy='135' r='22' fill='%2328a745'/%3E%3Cpath d='M126 135 L131 140 L144 122' stroke='white' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   
   <!-- Meta tags for better SEO and appearance -->
-  <meta name="description" content="APK 版本下載器 - 快速產生並下載不同版本的 APK 檔案">
+  <meta name="description" content="IM - APK 下載器 (UAT) - 快速產生並下載不同版本的 APK 檔案">
   <meta name="theme-color" content="#667eea">
   
   <style>
@@ -108,7 +108,7 @@
           right: 12px;
           top: 50%;
           transform: translateY(-50%);
-          background: #dc3545;
+          background: #6c757d;
           color: white;
           border: none;
           border-radius: 50%;
@@ -125,7 +125,7 @@
       }
       
       .clear-btn:hover {
-          background: #c82333;
+          background: #5a6268;
           transform: translateY(-50%) scale(1.1);
       }
       
@@ -286,12 +286,12 @@
 </head>
 <body>
   <div class="container">
-      <h1>🚀 APK 版本下載器</h1>
+      <h1>🚀 IM - APK 下載器 (UAT)</h1>
       
       <div class="input-group">
           <label for="productVersion">
               產品版號 <span class="optional">(選填)</span>
-              <span class="memory-indicator" id="memoryIndicator" style="display: none;">💾 已記憶上次輸入</span>
+              <span class="memory-indicator" id="productMemoryIndicator" style="display: none;">💾 已記憶上次輸入</span>
           </label>
           <div class="input-wrapper">
               <input type="text" id="productVersion" placeholder="例如：PRD001 或 BETA" />
@@ -301,8 +301,14 @@
       </div>
       
       <div class="input-group">
-          <label for="version">版本號 <span style="color: #dc3545;">*</span>：</label>
-          <input type="text" id="version" placeholder="例如：1.0.0" />
+          <label for="version">
+              版本號 <span style="color: #dc3545;">*</span>
+              <span class="memory-indicator" id="versionMemoryIndicator" style="display: none;">💾 已記憶上次輸入</span>
+          </label>
+          <div class="input-wrapper">
+              <input type="text" id="version" placeholder="例如：1.0.0" />
+              <button class="clear-btn" id="clearVersion" onclick="clearVersion()" title="清除版本號">×</button>
+          </div>
           <div class="input-hint">此版本號會用於產生下載連結路徑</div>
       </div>
       
@@ -356,19 +362,31 @@
 
   <script>
       let downloadData = {};
-      const STORAGE_KEY = 'apk-downloader-product-version';
+      const STORAGE_KEYS = {
+          productVersion: 'apk-downloader-product-version',
+          version: 'apk-downloader-version'
+      };
       
-      // 載入儲存的產品版號
-      function loadSavedProductVersion() {
+      // 載入儲存的輸入值
+      function loadSavedValues() {
           try {
-              const savedVersion = localStorage.getItem(STORAGE_KEY);
-              if (savedVersion) {
-                  document.getElementById('productVersion').value = savedVersion;
-                  document.getElementById('memoryIndicator').style.display = 'inline';
+              // 載入產品版號
+              const savedProductVersion = localStorage.getItem(STORAGE_KEYS.productVersion);
+              if (savedProductVersion) {
+                  document.getElementById('productVersion').value = savedProductVersion;
+                  document.getElementById('productMemoryIndicator').style.display = 'inline';
                   document.getElementById('clearProductVersion').classList.add('show');
               }
+              
+              // 載入版本號
+              const savedVersion = localStorage.getItem(STORAGE_KEYS.version);
+              if (savedVersion) {
+                  document.getElementById('version').value = savedVersion;
+                  document.getElementById('versionMemoryIndicator').style.display = 'inline';
+                  document.getElementById('clearVersion').classList.add('show');
+              }
           } catch (error) {
-              console.log('無法載入儲存的產品版號:', error);
+              console.log('無法載入儲存的輸入值:', error);
           }
       }
       
@@ -376,22 +394,44 @@
       function saveProductVersion(version) {
           try {
               if (version.trim()) {
-                  localStorage.setItem(STORAGE_KEY, version.trim());
+                  localStorage.setItem(STORAGE_KEYS.productVersion, version.trim());
               } else {
-                  localStorage.removeItem(STORAGE_KEY);
+                  localStorage.removeItem(STORAGE_KEYS.productVersion);
               }
           } catch (error) {
               console.log('無法儲存產品版號:', error);
           }
       }
       
+      // 儲存版本號
+      function saveVersion(version) {
+          try {
+              if (version.trim()) {
+                  localStorage.setItem(STORAGE_KEYS.version, version.trim());
+              } else {
+                  localStorage.removeItem(STORAGE_KEYS.version);
+              }
+          } catch (error) {
+              console.log('無法儲存版本號:', error);
+          }
+      }
+      
       // 清除產品版號
       function clearProductVersion() {
           document.getElementById('productVersion').value = '';
-          document.getElementById('memoryIndicator').style.display = 'none';
+          document.getElementById('productMemoryIndicator').style.display = 'none';
           document.getElementById('clearProductVersion').classList.remove('show');
-          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(STORAGE_KEYS.productVersion);
           document.getElementById('productVersion').focus();
+      }
+      
+      // 清除版本號
+      function clearVersion() {
+          document.getElementById('version').value = '';
+          document.getElementById('versionMemoryIndicator').style.display = 'none';
+          document.getElementById('clearVersion').classList.remove('show');
+          localStorage.removeItem(STORAGE_KEYS.version);
+          document.getElementById('version').focus();
       }
       
       // 監聽產品版號輸入變化
@@ -406,15 +446,39 @@
           }
       });
       
+      // 監聽版本號輸入變化
+      document.getElementById('version').addEventListener('input', function(e) {
+          const value = e.target.value;
+          const clearBtn = document.getElementById('clearVersion');
+          
+          if (value.trim()) {
+              clearBtn.classList.add('show');
+          } else {
+              clearBtn.classList.remove('show');
+          }
+      });
+      
       // 監聽產品版號失去焦點時儲存
       document.getElementById('productVersion').addEventListener('blur', function(e) {
           const value = e.target.value.trim();
           saveProductVersion(value);
           
           if (value) {
-              document.getElementById('memoryIndicator').style.display = 'inline';
+              document.getElementById('productMemoryIndicator').style.display = 'inline';
           } else {
-              document.getElementById('memoryIndicator').style.display = 'none';
+              document.getElementById('productMemoryIndicator').style.display = 'none';
+          }
+      });
+      
+      // 監聽版本號失去焦點時儲存
+      document.getElementById('version').addEventListener('blur', function(e) {
+          const value = e.target.value.trim();
+          saveVersion(value);
+          
+          if (value) {
+              document.getElementById('versionMemoryIndicator').style.display = 'inline';
+          } else {
+              document.getElementById('versionMemoryIndicator').style.display = 'none';
           }
       });
       
@@ -427,8 +491,9 @@
               return;
           }
           
-          // 儲存產品版號（如果有輸入的話）
+          // 儲存兩個輸入值
           saveProductVersion(productVersion);
+          saveVersion(version);
           
           const baseUrl = 'https://squirrel-uat.paradise-soft.com.tw';
           const apps = [
@@ -444,10 +509,13 @@
           if (productVersion) {
               productVersionElement.textContent = `產品版號：${productVersion}`;
               productVersionElement.style.display = 'inline-block';
-              document.getElementById('memoryIndicator').style.display = 'inline';
+              document.getElementById('productMemoryIndicator').style.display = 'inline';
           } else {
               productVersionElement.style.display = 'none';
           }
+          
+          // 顯示版本號記憶指示器
+          document.getElementById('versionMemoryIndicator').style.display = 'inline';
           
           // 清空之前的下載資料
           downloadData = {};
@@ -542,14 +610,24 @@
       
       // 頁面載入時的初始化
       window.onload = function() {
-          // 載入儲存的產品版號
-          loadSavedProductVersion();
+          // 載入儲存的輸入值
+          loadSavedValues();
           
-          // 聚焦到版本號輸入框（因為產品版號可能已經有值了）
+          // 智慧聚焦邏輯
           const productVersionInput = document.getElementById('productVersion');
-          if (productVersionInput.value.trim()) {
-              document.getElementById('version').focus();
+          const versionInput = document.getElementById('version');
+          
+          if (productVersionInput.value.trim() && versionInput.value.trim()) {
+              // 兩個都有值，聚焦到產生按鈕（或第一個輸入框）
+              productVersionInput.focus();
+          } else if (productVersionInput.value.trim()) {
+              // 只有產品版號有值，聚焦到版本號
+              versionInput.focus();
+          } else if (versionInput.value.trim()) {
+              // 只有版本號有值，聚焦到產品版號
+              productVersionInput.focus();
           } else {
+              // 都沒有值，聚焦到第一個輸入框
               productVersionInput.focus();
           }
       };
