@@ -2,7 +2,10 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
+<<<<<<< HEAD
   <!-- ✅ 關鍵修正：加入 viewport-fit=cover -->
+=======
+>>>>>>> 2965f19286c7294f2f0a2d9fe295156036b29320
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
   <meta name="googlebot" content="noindex, nofollow" />
@@ -43,11 +46,13 @@
       padding-top: env(safe-area-inset-top);
     }
 
-    /* ── Header ── */
     header {
       background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
       color: #fff;
+<<<<<<< HEAD
       /* ✅ header 本身也要補上頂部安全區域 */
+=======
+>>>>>>> 2965f19286c7294f2f0a2d9fe295156036b29320
       padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
       text-align: center;
       position: sticky;
@@ -61,7 +66,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* ── Form Card ── */
     .form-wrap {
       max-width: 520px;
       margin: 16px auto;
@@ -76,7 +80,6 @@
       margin-bottom: 12px;
     }
 
-    /* ── Field ── */
     .field { margin-bottom: 14px; }
     .field:last-child { margin-bottom: 0; }
 
@@ -125,7 +128,6 @@
     }
     .err-msg.show { display: block; }
 
-    /* ── Amount Row ── */
     .amount-input-row {
       display: flex;
       gap: 0;
@@ -162,7 +164,6 @@
       background-color: #fff5f5;
     }
 
-    /* ── Toggle Button Group ── */
     .btn-group {
       display: grid;
       gap: 8px;
@@ -196,7 +197,6 @@
       background: #fff5f5;
     }
 
-    /* ── Bottom Bar ── */
     .bottom-bar-outer {
       position: fixed;
       bottom: 0;
@@ -206,7 +206,10 @@
       background: var(--card);
       border-top: 1px solid var(--border);
       box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+<<<<<<< HEAD
       /* ✅ viewport-fit=cover 生效後，這裡才能正確取得非零值 */
+=======
+>>>>>>> 2965f19286c7294f2f0a2d9fe295156036b29320
       padding-bottom: env(safe-area-inset-bottom);
     }
     .bottom-bar-inner {
@@ -242,7 +245,6 @@
       border: 1.5px solid var(--border);
     }
 
-    /* ── Toast ── */
     #toast {
       position: fixed;
       top: calc(60px + env(safe-area-inset-top));
@@ -266,7 +268,6 @@
     #toast.success { background: #15803d; }
     #toast.fail    { background: #b91c1c; }
 
-    /* ── Confirm Modal ── */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -296,7 +297,6 @@
     .btn-confirm { background: var(--danger); color: #fff; }
     .btn-cancel  { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
 
-    /* ── Spinner ── */
     .spinner {
       display: inline-block;
       width: 16px; height: 16px;
@@ -401,7 +401,9 @@
   <script>
     const NOTION_API_KEY = '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';
     const DATABASE_ID    = '2ca500d3d98781cfa35ec8c4ec141550';
-    const PROXY          = 'https://corsproxy.io/?';
+    // ✅ 修正：使用新格式 ?url= 而非舊的 ?
+    const NOTION_URL     = 'https://api.notion.com/v1/pages';
+    const PROXY          = 'https://corsproxy.io/?url=';
 
     const DEFAULTS = { payer: 'Roberto', method: '支付寶', amountType: 'CNY' };
 
@@ -559,7 +561,8 @@
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span>送出中…';
 
-      const url = PROXY + encodeURIComponent('https://api.notion.com/v1/pages');
+      // ✅ 修正：PROXY + encodeURIComponent(目標URL)
+      const url = PROXY + encodeURIComponent(NOTION_URL);
       try {
         const res = await fetch(url, {
           method: 'POST',
