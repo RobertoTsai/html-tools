@@ -2,7 +2,6 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <!-- ✅ 關鍵修正：加入 viewport-fit=cover -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
   <meta name="googlebot" content="noindex, nofollow" />
@@ -11,7 +10,6 @@
   <link rel="icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/24/e1/6d/24e16dee-4b28-568e-a70a-32f4c4f3d276/AppIcon-0-0-1x_U007ephone-0-1-0-85-220.png/400x400ia-75.webp" type="image/webp" />
   <link rel="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/24/e1/6d/24e16dee-4b28-568e-a70a-32f4c4f3d276/AppIcon-0-0-1x_U007ephone-0-1-0-85-220.png/400x400ia-75.webp" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <!-- ✅ black-translucent 才能讓安全區域正確暴露給 CSS -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="上海消費記錄" />
 
@@ -38,16 +36,15 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      /* ✅ 只處理底部，頂部交給 header 處理 */
       padding-bottom: calc(80px + env(safe-area-inset-bottom));
-      /* ✅ PWA 模式下頂部也需要安全區域（status-bar-style=black-translucent 會覆蓋頂部） */
-      padding-top: env(safe-area-inset-top);
     }
 
     /* ── Header ── */
     header {
       background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
       color: #fff;
-      /* ✅ header 本身也要補上頂部安全區域 */
+      /* ✅ 只在 header 補一次頂部安全區域，body 不重複加 */
       padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
       text-align: center;
       position: sticky;
@@ -206,7 +203,6 @@
       background: var(--card);
       border-top: 1px solid var(--border);
       box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
-      /* ✅ viewport-fit=cover 生效後，這裡才能正確取得非零值 */
       padding-bottom: env(safe-area-inset-bottom);
     }
     .bottom-bar-inner {
