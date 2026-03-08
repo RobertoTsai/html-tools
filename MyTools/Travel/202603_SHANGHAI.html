@@ -6,7 +6,15 @@
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
   <meta name="googlebot" content="noindex, nofollow" />
   <title>上海消費記錄</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>$</text></svg>" />
+
+  <!-- 一般瀏覽器 favicon -->
+  <link rel="icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/24/e1/6d/24e16dee-4b28-568e-a70a-32f4c4f3d276/AppIcon-0-0-1x_U007ephone-0-1-0-85-220.png/400x400ia-75.webp" type="image/webp" />
+  <!-- iPhone 釘選主畫面圖示 -->
+  <link rel="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/24/e1/6d/24e16dee-4b28-568e-a70a-32f4c4f3d276/AppIcon-0-0-1x_U007ephone-0-1-0-85-220.png/400x400ia-75.webp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="上海消費記錄" />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -30,7 +38,8 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding-bottom: 100px;
+      /* 底部留白：固定按鈕高度 + iOS 安全區域 */
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
     }
 
     /* ── Header ── */
@@ -66,9 +75,7 @@
     }
 
     /* ── Field ── */
-    .field {
-      margin-bottom: 14px;
-    }
+    .field { margin-bottom: 14px; }
     .field:last-child { margin-bottom: 0; }
 
     label {
@@ -136,21 +143,16 @@
       font-weight: 600;
       color: var(--primary);
       cursor: pointer;
-      z-index: 1;
     }
     .amount-type-select:focus {
       border-color: var(--primary);
       border-right: none !important;
       box-shadow: none;
-      z-index: 2;
     }
     .amount-number-input {
       flex: 1;
       border-radius: 0 8px 8px 0 !important;
       border-left: 1.5px solid var(--border) !important;
-    }
-    .amount-number-input:focus {
-      z-index: 2;
     }
     .amount-input-row.error-group .amount-type-select,
     .amount-input-row.error-group .amount-number-input {
@@ -163,7 +165,7 @@
       display: grid;
       gap: 8px;
     }
-    .btn-group.col-2 { grid-template-columns: 1fr 1fr; }
+    .btn-group.col-2   { grid-template-columns: 1fr 1fr; }
     .btn-group.col-2x2 { grid-template-columns: 1fr 1fr; }
 
     .opt-btn {
@@ -202,6 +204,8 @@
       background: var(--card);
       border-top: 1px solid var(--border);
       box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+      /* 底部安全區域內距 */
+      padding-bottom: env(safe-area-inset-bottom);
     }
     .bottom-bar-inner {
       max-width: 520px;
@@ -274,7 +278,8 @@
     .modal-box {
       background: #fff;
       border-radius: 16px 16px 0 0;
-      padding: 24px 20px 32px;
+      /* Modal 底部也需要安全區域 */
+      padding: 24px 20px calc(28px + env(safe-area-inset-bottom));
       width: 100%;
       max-width: 520px;
       animation: slideUp 0.25s ease;
@@ -405,29 +410,19 @@
     const DATABASE_ID    = '2ca500d3d98781cfa35ec8c4ec141550';
     const PROXY          = 'https://corsproxy.io/?';
 
-    // ── 預設值 ──
-    const DEFAULTS = {
-      payer:  'Roberto',
-      method: '支付寶',
-      amountType: 'CNY'
-    };
+    const DEFAULTS = { payer: 'Roberto', method: '支付寶', amountType: 'CNY' };
 
-    // ── 日期 ──
     function getTodayStr() {
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
-    // ── 按鈕群組邏輯 ──
     function initBtnGroup(groupId) {
       const group = document.getElementById(groupId);
       group.querySelectorAll('.opt-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          group.querySelectorAll('.opt-btn').forEach(b => {
-            b.classList.remove('selected', 'error-btn');
-          });
+          group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected', 'error-btn'));
           btn.classList.add('selected');
-          // 清除該群組錯誤
           const errEl = document.getElementById(groupId.replace('-group', '-err'));
           if (errEl) errEl.classList.remove('show');
         });
@@ -440,14 +435,12 @@
     }
 
     function setBtnGroupValue(groupId, value) {
-      const group = document.getElementById(groupId);
-      group.querySelectorAll('.opt-btn').forEach(btn => {
+      document.getElementById(groupId).querySelectorAll('.opt-btn').forEach(btn => {
         btn.classList.toggle('selected', btn.dataset.value === value);
         btn.classList.remove('error-btn');
       });
     }
 
-    // ── 金額類型切換 ──
     document.getElementById('amountType').addEventListener('change', function() {
       const input = document.getElementById('amount');
       if (this.value === 'TWD') {
@@ -467,7 +460,6 @@
       document.getElementById('amount-err').classList.remove('show');
     }
 
-    // ── 清除所有錯誤 ──
     function clearErrors() {
       document.querySelectorAll('.err-msg').forEach(el => el.classList.remove('show'));
       document.querySelectorAll('input, select, textarea').forEach(el => el.classList.remove('error'));
@@ -496,7 +488,6 @@
       document.getElementById(errId).classList.add('show');
     }
 
-    // ── 驗證 ──
     function validate() {
       clearErrors();
       let valid = true;
@@ -508,7 +499,6 @@
         setFieldError('date', 'date-err', '請選擇消費日期'); valid = false;
       }
 
-      // 金額
       const amtType = document.getElementById('amountType').value;
       const amtRaw  = document.getElementById('amount').value;
       if (amtRaw === '' || amtRaw === null) {
@@ -527,17 +517,12 @@
         }
       }
 
-      if (!getBtnGroupValue('payer-group')) {
-        setBtnGroupError('payer-group', 'payer-err'); valid = false;
-      }
-      if (!getBtnGroupValue('method-group')) {
-        setBtnGroupError('method-group', 'method-err'); valid = false;
-      }
+      if (!getBtnGroupValue('payer-group'))  { setBtnGroupError('payer-group',  'payer-err');  valid = false; }
+      if (!getBtnGroupValue('method-group')) { setBtnGroupError('method-group', 'method-err'); valid = false; }
 
       return valid;
     }
 
-    // ── Toast ──
     let toastTimer = null;
     function showToast(msg, type = '') {
       const t = document.getElementById('toast');
@@ -547,7 +532,6 @@
       toastTimer = setTimeout(() => { t.className = ''; }, 2000);
     }
 
-    // ── Build Payload ──
     function buildPayload() {
       const item    = document.getElementById('item').value.trim();
       const date    = document.getElementById('date').value;
@@ -569,7 +553,6 @@
       } else {
         props["金額 (TWD)"] = { "number": parseInt(amtRaw, 10) };
       }
-
       if (note) {
         props["備註"] = { "rich_text": [{ "text": { "content": note } }] };
       }
@@ -577,7 +560,6 @@
       return { "parent": { "database_id": DATABASE_ID }, "properties": props };
     }
 
-    // ── Submit ──
     async function submitForm() {
       if (!validate()) return;
       const btn = document.getElementById('btnSubmit');
@@ -610,12 +592,11 @@
       }
     }
 
-    // ── Reset ──
     function resetForm() {
-      document.getElementById('item').value  = '';
+      document.getElementById('item').value   = '';
       document.getElementById('amount').value = '';
-      document.getElementById('note').value  = '';
-      document.getElementById('date').value  = getTodayStr();
+      document.getElementById('note').value   = '';
+      document.getElementById('date').value   = getTodayStr();
       document.getElementById('amountType').value = DEFAULTS.amountType;
       document.getElementById('amount').placeholder = '0.00';
       document.getElementById('amount').step = '0.01';
@@ -624,7 +605,6 @@
       clearErrors();
     }
 
-    // ── Events ──
     document.getElementById('btnSubmit').addEventListener('click', submitForm);
     document.getElementById('btnReset').addEventListener('click', () => {
       document.getElementById('resetModal').classList.add('show');
@@ -641,7 +621,6 @@
       if (e.target === this) this.classList.remove('show');
     });
 
-    // ── Init ──
     initBtnGroup('payer-group');
     initBtnGroup('method-group');
     document.getElementById('date').value = getTodayStr();
