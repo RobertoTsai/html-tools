@@ -173,6 +173,15 @@
       transition: all 0.15s;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .opt-btn .btn-icon {
+      font-size: 1.05rem;
+      line-height: 1;
+      flex-shrink: 0;
     }
     .opt-btn:active { transform: scale(0.97); }
     .opt-btn.selected {
@@ -345,10 +354,18 @@
       <div class="field">
         <label>付款方式 <span class="req">*</span></label>
         <div class="btn-group col-2x2" id="method-group">
-          <button type="button" class="opt-btn selected" data-value="支付寶">支付寶</button>
-          <button type="button" class="opt-btn" data-value="微信">微信</button>
-          <button type="button" class="opt-btn" data-value="信用卡">信用卡</button>
-          <button type="button" class="opt-btn" data-value="現金 (人民幣)">現金 (人民幣)</button>
+          <button type="button" class="opt-btn selected" data-value="支付寶">
+            <span class="btn-icon">🔵</span>支付寶
+          </button>
+          <button type="button" class="opt-btn" data-value="微信">
+            <span class="btn-icon">💬</span>微信
+          </button>
+          <button type="button" class="opt-btn" data-value="信用卡">
+            <span class="btn-icon">💳</span>信用卡
+          </button>
+          <button type="button" class="opt-btn" data-value="現金">
+            <span class="btn-icon">💵</span>現金
+          </button>
         </div>
         <div class="err-msg" id="method-err">請選擇付款方式</div>
       </div>
@@ -384,7 +401,6 @@
   </div>
 
   <script>
-    // ✅ 透過 Cloudflare Worker 呼叫，不含任何 Notion Token
     const WORKER_URL  = 'https://notion-proxy-202603.roberto-954.workers.dev';
     const DATABASE_ID = '2ca500d3d98781cfa35ec8c4ec141550';
 
