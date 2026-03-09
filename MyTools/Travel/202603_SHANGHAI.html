@@ -333,7 +333,23 @@
             <option value="CNY">金額 (CNY)</option>
             <option value="TWD">金額 (TWD)</option>
           </select>
-          <input class="amount-number-input" type="number" id="amount" placeholder="0.00" step="0.01" min="0" autocomplete="off" />
+          <!--
+            inputmode="decimal" → iOS/Android 優先呼叫帶小數點的數字鍵盤
+            pattern="[0-9]*"    → iOS Safari 的額外提示，確保數字鍵盤觸發
+            type="text"         → 避免 type="number" 在部分 iOS 版本出現上下箭頭或格式問題
+          -->
+          <input
+            class="amount-number-input"
+            type="text"
+            id="amount"
+            placeholder="0.00"
+            inputmode="decimal"
+            pattern="[0-9]*"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          />
         </div>
         <div class="err-msg" id="amount-err">請輸入有效金額</div>
       </div>
@@ -411,6 +427,35 @@
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
+    // 當幣別切換時，同步更新 inputmode 與 placeholder
+    document.getElementById('amountType').addEventListener('change', function() {
+      const input = document.getElementById('amount');
+      if (this.value === 'TWD') {
+        input.placeholder  = '0';
+        input.inputMode    = 'numeric';   // TWD 整數 → 純數字鍵盤（無小數點）
+        input.pattern      = '[0-9]*';
+      } else {
+        input.placeholder  = '0.00';
+        input.inputMode    = 'decimal';   // CNY 小數 → 帶小數點的數字鍵盤
+        input.pattern      = '[0-9]*';
+      }
+      input.value = '';
+      clearAmountError();
+    });
+
+    // 只允許輸入數字與小數點，防止使用者貼上非法字元
+    document.getElementById('amount').addEventListener('input', function() {
+      const amtType = document.getElementById('amountType').value;
+      if (amtType === 'TWD') {
+        // 整數：只保留數字
+        this.value = this.value.replace(/[^0-9]/g, '');
+      } else {
+        // 小數：只保留數字與第一個小數點
+        this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+      }
+      clearAmountError();
+    });
+
     function initBtnGroup(groupId) {
       const group = document.getElementById(groupId);
       group.querySelectorAll('.opt-btn').forEach(btn => {
@@ -434,19 +479,6 @@
         btn.classList.remove('error-btn');
       });
     }
-
-    document.getElementById('amountType').addEventListener('change', function() {
-      const input = document.getElementById('amount');
-      if (this.value === 'TWD') {
-        input.placeholder = '0';
-        input.step = '1';
-      } else {
-        input.placeholder = '0.00';
-        input.step = '0.01';
-      }
-      input.value = '';
-      clearAmountError();
-    });
 
     function clearAmountError() {
       document.getElementById('amount-group').classList.remove('error-group');
@@ -494,8 +526,9 @@
       }
 
       const amtType = document.getElementById('amountType').value;
-      const amtRaw  = document.getElementById('amount').value;
-      if (amtRaw === '' || amtRaw === null) {
+      const amtRaw  = document.getElementById('amount').value.trim();
+
+      if (amtRaw === '') {
         setAmountError('請輸入金額'); valid = false;
       } else {
         const v = parseFloat(amtRaw);
@@ -530,7 +563,7 @@
       const item    = document.getElementById('item').value.trim();
       const date    = document.getElementById('date').value;
       const amtType = document.getElementById('amountType').value;
-      const amtRaw  = document.getElementById('amount').value;
+      const amtRaw  = document.getElementById('amount').value.trim();
       const payer   = getBtnGroupValue('payer-group');
       const method  = getBtnGroupValue('method-group');
       const note    = document.getElementById('note').value.trim();
@@ -582,13 +615,15 @@
     }
 
     function resetForm() {
-      document.getElementById('item').value   = '';
-      document.getElementById('amount').value = '';
-      document.getElementById('note').value   = '';
-      document.getElementById('date').value   = getTodayStr();
+      document.getElementById('item').value      = '';
+      document.getElementById('amount').value    = '';
+      document.getElementById('note').value      = '';
+      document.getElementById('date').value      = getTodayStr();
       document.getElementById('amountType').value = DEFAULTS.amountType;
-      document.getElementById('amount').placeholder = '0.00';
-      document.getElementById('amount').step = '0.01';
+      const amtInput = document.getElementById('amount');
+      amtInput.placeholder = '0.00';
+      amtInput.inputMode   = 'decimal';
+      amtInput.pattern     = '[0-9]*';
       setBtnGroupValue('payer-group',  DEFAULTS.payer);
       setBtnGroupValue('method-group', DEFAULTS.method);
       clearErrors();
