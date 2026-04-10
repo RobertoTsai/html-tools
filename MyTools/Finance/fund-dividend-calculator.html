@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>基金配息計算工具</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💰</text></svg>">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: "Microsoft JhengHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .content {
+      padding: 30px;
+    }
+    
+    .upload-section {
+      border: 2px dashed #667eea;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+      background: #f8f9ff;
+      transition: all 0.3s;
+    }
+    
+    .upload-section:hover {
+      border-color: #764ba2;
+      background: #f0f2ff;
+    }
+    
+    .upload-section input[type="file"] {
+      display: none;
+    }
+    
+    .upload-label {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+    
+    .upload-label:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .file-info {
+      margin-top: 15px;
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .file-name {
+      color: #667eea;
+      font-weight: bold;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+    
+    .btn {
+      padding: 12px 40px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+    
+    .btn-calculate {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .btn-calculate:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-calculate:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-clear {
+      background: #e0e0e0;
+      color: #666;
+    }
+    
+    .btn-clear:hover {
+      background: #d0d0d0;
+      transform: translateY(-2px);
+    }
+    
+    .result-section {
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .result-title {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+    
+    .result-title .date-range {
+      font-size: 16px;
+      color: #667eea;
+      font-weight: normal;
+    }
+    
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .result-table thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .result-table th,
+    .result-table td {
+      padding: 15px;
+      text-align: left;
+    }
+    
+    .result-table th {
+      font-weight: bold;
+      font-size: 16px;
+      color: white !important;
+    }
+    
+    .result-table tbody tr {
+      border-bottom: 1px solid #e0e0e0;
+      transition: background 0.2s;
+    }
+    
+    .result-table tbody tr:hover {
+      background: #f8f9ff;
+    }
+    
+    .result-table tbody tr:last-child {
+      border-bottom: none;
+    }
+    
+    .result-table .amount {
+      text-align: right;
+      font-weight: bold;
+      color: #667eea;
+    }
+    
+    .result-table tfoot {
+      background: #f8f9ff;
+      font-weight: bold;
+    }
+    
+    .result-table tfoot td {
+      border-top: 2px solid #667eea;
+      font-size: 16px;
+    }
+    
+    .cell-with-copy {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .cell-with-copy.right {
+      justify-content: flex-end;
+    }
+    
+    .copy-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 5px;
+      border-radius: 5px;
+      transition: all 0.2s;
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+    
+    .copy-btn:hover {
+      opacity: 1;
+      background: rgba(102, 126, 234, 0.1);
+      transform: scale(1.1);
+    }
+    
+    .copy-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .copy-feedback {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+      animation: fadeInOut 1.5s;
+      pointer-events: none;
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    }
+    
+    .error-message {
+      background: #ffebee;
+      color: #c62828;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+    
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💰 基金配息計算工具</h1>
+      <p>上傳 HTML 檔案，自動統計各產品入帳金額總和</p>
+    </div>
+    
+    <div class="content">
+      <div class="upload-section">
+        <input type="file" id="fileInput" accept=".html,.htm">
+        <label for="fileInput" class="upload-label">📁 選擇 HTML 檔案</label>
+        <div class="file-info" id="fileInfo">尚未選擇檔案</div>
+      </div>
+      
+      <div class="button-group">
+        <button class="btn btn-calculate" id="calculateBtn" disabled>🔢 計算</button>
+        <button class="btn btn-clear" id="clearBtn">🗑️ 清除</button>
+      </div>
+      
+      <div class="error-message" id="errorMessage"></div>
+      
+      <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p style="margin-top: 10px; color: #666;">處理中...</p>
+      </div>
+      
+      <div class="result-section" id="resultSection">
+        <h2 class="result-title" id="resultTitle">📈 統計結果</h2>
+        <table class="result-table" id="resultTable">
+          <thead>
+            <tr>
+              <th>產品名稱</th>
+              <th class="amount">入帳金額總和 (USD)</th>
+            </tr>
+          </thead>
+          <tbody id="resultBody">
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>總計</td>
+              <td class="amount" id="totalAmount">0.00</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    let uploadedFile = null;
+    
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const loading = document.getElementById('loading');
+    const resultSection = document.getElementById('resultSection');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultBody = document.getElementById('resultBody');
+    const totalAmount = document.getElementById('totalAmount');
+    
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        uploadedFile = file;
+        fileInfo.innerHTML = `已選擇: <span class="file-name">${file.name}</span> (${(file.size / 1024).toFixed(2)} KB)`;
+        calculateBtn.disabled = false;
+        hideError();
+        hideResult();
+      }
+    });
+    
+    calculateBtn.addEventListener('click', function() {
+      if (!uploadedFile) return;
+      
+      hideError();
+      hideResult();
+      showLoading();
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const htmlContent = e.target.result;
+          const { productData, dateRange } = parseHTMLAndCalculate(htmlContent);
+          displayResults(productData, dateRange);
+          hideLoading();
+        } catch (error) {
+          hideLoading();
+          showError('解析檔案時發生錯誤: ' + error.message);
+        }
+      };
+      reader.readAsText(uploadedFile, 'UTF-8');
+    });
+    
+    clearBtn.addEventListener('click', function() {
+      uploadedFile = null;
+      fileInput.value = '';
+      fileInfo.textContent = '尚未選擇檔案';
+      calculateBtn.disabled = true;
+      hideError();
+      hideResult();
+    });
+    
+    function parseHTMLAndCalculate(htmlContent) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      
+      const table = doc.querySelector('table.table_ver_f');
+      if (!table) {
+        throw new Error('找不到表格資料');
+      }
+      
+      const rows = table.querySelectorAll('tbody tr');
+      const productData = {};
+      const dates = [];
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 10) return;
+        
+        // 交易日期在第一個 td 中的第一行
+        const dateCell = cells[0];
+        const dateText = dateCell.textContent.trim().split(/\s+/)[0];
+        if (dateText && dateText.match(/\d{4}\/\d{2}\/\d{2}/)) {
+          dates.push(dateText);
+        }
+        
+        // 產品名稱在第二個 td 中
+        const productCell = cells[1];
+        const productSpan = productCell.querySelector('span[name="fundCodeLink"]');
+        if (!productSpan) return;
+        
+        const productName = productSpan.textContent.trim();
+        
+        // 入帳金額在最後一個 td 中的第一行
+        const amountCell = cells[9];
+        const amountText = amountCell.textContent.trim().split(/\s+/)[0];
+        const amount = parseFloat(amountText) || 0;
+        
+        if (productName) {
+          if (!productData[productName]) {
+            productData[productName] = 0;
+          }
+          productData[productName] += amount;
+        }
+      });
+      
+      // 計算日期範圍
+      let dateRange = '';
+      if (dates.length > 0) {
+        dates.sort();
+        const minDate = dates[0];
+        const maxDate = dates[dates.length - 1];
+        if (minDate === maxDate) {
+          dateRange = minDate;
+        } else {
+          dateRange = `${minDate}~${maxDate}`;
+        }
+      }
+      
+      return { productData, dateRange };
+    }
+    
+    function displayResults(results, dateRange) {
+      resultBody.innerHTML = '';
+      let total = 0;
+      
+      // 更新標題，加入日期範圍
+      if (dateRange) {
+        resultTitle.innerHTML = `📈 統計結果 <span class="date-range">(${dateRange})</span>`;
+      } else {
+        resultTitle.innerHTML = `📈 統計結果`;
+      }
+      
+      // 按金額由大到小排序
+      const sortedProducts = Object.keys(results).sort((a, b) => results[b] - results[a]);
+      
+      sortedProducts.forEach(product => {
+        const amount = results[product];
+        total += amount;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            <div class="cell-with-copy">
+              <span>${product}</span>
+              <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(product)}')" title="複製產品名稱">📋</button>
+            </div>
+          </td>
+          <td class="amount">
+            <div class="cell-with-copy right">
+              <span>${amount.toFixed(2)}</span>
+              <button class="copy-btn" onclick="copyToClipboard('${amount.toFixed(2)}')" title="複製金額">📋</button>
+            </div>
+          </td>
+        `;
+        resultBody.appendChild(row);
+      });
+      
+      totalAmount.innerHTML = `
+        <div class="cell-with-copy right">
+          <span>${total.toFixed(2)}</span>
+          <button class="copy-btn" onclick="copyToClipboard('${total.toFixed(2)}')" title="複製總金額">📋</button>
+        </div>
+      `;
+      
+      resultSection.style.display = 'block';
+    }
+    
+    function escapeHtml(text) {
+      return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+    
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showCopyFeedback('✓ 已複製');
+      }).catch(err => {
+        // 備用方案：使用舊方法
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showCopyFeedback('✓ 已複製');
+        } catch (err) {
+          showCopyFeedback('✗ 複製失敗');
+        }
+        document.body.removeChild(textarea);
+      });
+    }
+    
+    function showCopyFeedback(message) {
+      const feedback = document.createElement('div');
+      feedback.className = 'copy-feedback';
+      feedback.textContent = message;
+      document.body.appendChild(feedback);
+      
+      setTimeout(() => {
+        document.body.removeChild(feedback);
+      }, 1500);
+    }
+    
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+    }
+    
+    function hideError() {
+      errorMessage.style.display = 'none';
+    }
+    
+    function showLoading() {
+      loading.style.display = 'block';
+    }
+    
+    function hideLoading() {
+      loading.style.display = 'none';
+    }
+    
+    function hideResult() {
+      resultSection.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
