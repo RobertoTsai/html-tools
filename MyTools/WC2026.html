@@ -2200,6 +2200,22 @@
     }
 
     /**
+     * 捲動 Date Bar 使選中 Tab 置中可見（手動計算以避免垂直滾動衝突）
+     */
+    function scrollTabIntoView(dateStr) {
+      if (dateStr === 'ALL') return;
+      const selectedTab = document.getElementById(`tab-${dateStr}`);
+      if (selectedTab) {
+        const container = document.getElementById('datebar-inner');
+        const containerRect = container.getBoundingClientRect();
+        const tabRect = selectedTab.getBoundingClientRect();
+        const tabOffsetLeft = tabRect.left - containerRect.left + container.scrollLeft;
+        const targetScrollLeft = tabOffsetLeft - (containerRect.width / 2) + (tabRect.width / 2);
+        container.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+      }
+    }
+
+    /**
      * 切換選中日期 Tab
      */
     function selectDate(dateStr) {
@@ -2213,23 +2229,15 @@
         tab.setAttribute('tabindex', isSelected ? '0' : '-1');
       });
 
-      // 捲動 Date Bar 使選中 Tab 置中可見（手動計算以避免垂直滾動衝突）
-      const selectedTab = document.getElementById(`tab-${dateStr}`);
-      if (selectedTab) {
-        const container = document.getElementById('datebar-inner');
-        const containerRect = container.getBoundingClientRect();
-        const tabRect = selectedTab.getBoundingClientRect();
-        const tabOffsetLeft = tabRect.left - containerRect.left + container.scrollLeft;
-        const targetScrollLeft = tabOffsetLeft - (containerRect.width / 2) + (tabRect.width / 2);
-        container.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
-      }
+      // 捲動 Date Bar 使選中 Tab 置中可見
+      scrollTabIntoView(dateStr);
 
       // 重新渲染賽事列表
       renderMatches();
 
       // 除「全部」選項外，切換日期時，賽事列表應捲動到最上面
       if (dateStr !== 'ALL') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0);
       }
     }
 
@@ -2899,10 +2907,7 @@
 
         // 捲動 Date Bar 使選中 Tab 置中
         requestAnimationFrame(() => {
-          const activeTab = document.getElementById(`tab-${state.selectedDate}`);
-          if (activeTab) {
-            activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-          }
+          scrollTabIntoView(state.selectedDate);
         });
 
       } catch (err) {
