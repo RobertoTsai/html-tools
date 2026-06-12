@@ -9,9 +9,9 @@
   <!-- ═══════════════════════════════════════════════════════════
        SEO: Title & Description（JS 會依語言動態更新）
   ═══════════════════════════════════════════════════════════ -->
-  <title>FIFA World Cup 2026™ Match Schedule | New York New Jersey</title>
+  <title>FIFA World Cup 2026™ Match Schedule</title>
   <meta name="description" id="meta-description"
-    content="View the complete FIFA World Cup 2026™ match schedule for New York &amp; New Jersey. Find match times, venues, and results for all 48 teams." />
+    content="View the complete FIFA World Cup 2026™ match schedule. Find match times, venues, and results for all 48 teams." />
 
   <!-- ═══════════════════════════════════════════════════════════
        SEO: hreflang（完整 10 條雙向宣告，靜態固定）
@@ -32,10 +32,10 @@
        SEO: Open Graph / Twitter Card（JS 動態更新）
   ═══════════════════════════════════════════════════════════ -->
   <meta property="og:type"        content="website" />
-  <meta property="og:site_name"   content="FIFA World Cup 2026™ NYNJ" />
+  <meta property="og:site_name"   content="FIFA World Cup 2026™" />
   <meta property="og:url"         id="og-url" content="https://nynjfwc26.com/en/schedule" />
-  <meta property="og:title"       id="og-title" content="FIFA World Cup 2026™ Match Schedule | New York New Jersey" />
-  <meta property="og:description" id="og-description" content="View the complete FIFA World Cup 2026™ match schedule for New York &amp; New Jersey." />
+  <meta property="og:title"       id="og-title" content="FIFA World Cup 2026™ Match Schedule" />
+  <meta property="og:description" id="og-description" content="View the complete FIFA World Cup 2026™ match schedule." />
   <meta property="og:image"       content="https://nynjfwc26.com/og-image-en.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -60,7 +60,7 @@
   {
     "@context": "https://schema.org",
     "@type": "SportsOrganization",
-    "name": "FIFA World Cup 2026™ NYNJ",
+    "name": "FIFA World Cup 2026™",
     "url": "https://nynjfwc26.com"
   }
   </script>
@@ -452,8 +452,8 @@
 
     .datebar-inner {
       height: 100%;
-      display: flex;
-      align-items: stretch;
+      display: block;
+      white-space: nowrap;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scrollbar-width: none; /* Firefox */
@@ -466,15 +466,49 @@
       display: none; /* Chrome / Safari */
     }
 
+    /* ── Date Bar 箭頭按鈕 ── */
+    .date-arrow-btn {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      background: rgba(28, 28, 28, 0.95);
+      border: none;
+      color: var(--text-primary);
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: none; /* 手機端預設隱藏 */
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: background var(--transition-fast), color var(--transition-fast), opacity 0.2s ease;
+      outline: none;
+    }
+
+    .date-arrow-btn:hover {
+      background: var(--color-red);
+      color: var(--color-white);
+    }
+
+    .date-arrow-btn.prev {
+      left: 60px; /* 避開固定在最左側的全部選項 (60px) */
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .date-arrow-btn.next {
+      right: 0;
+      border-left: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
     /* Date Tab 按鈕 */
     .date-tab {
-      flex-shrink: 0;
       display: inline-flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 0 14px;
       min-width: 64px;
+      height: 100%;
       border: none;
       background: transparent;
       color: var(--text-secondary);
@@ -486,6 +520,7 @@
       white-space: nowrap;
       font-family: 'Inter', sans-serif;
       outline: none;
+      vertical-align: top;
     }
 
     .date-tab:hover {
@@ -528,12 +563,25 @@
       color: rgba(255,255,255,0.8);
     }
 
-    /* ALL tab 特殊樣式 */
+    /* ALL tab 特殊樣式 - 固定在左側 */
     .date-tab.tab-all {
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      display: inline-flex;
+      width: 60px;
+      min-width: 60px !important;
+      padding: 0;
+      justify-content: center;
+      background: var(--color-charcoal);
+      box-shadow: 4px 0 8px rgba(0, 0, 0, 0.4);
       font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.08em;
-      min-width: 52px;
+      vertical-align: top;
+    }
+    .date-tab.tab-all[aria-selected="true"] {
+      background: var(--color-red);
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -595,6 +643,7 @@
     /* 日期分組容器 */
     .date-group {
       margin-bottom: 24px;
+      scroll-margin-top: calc(var(--header-height-mobile) + var(--datebar-height));
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -888,6 +937,10 @@
       text-align: center;
     }
 
+    .score-num.is-dimmed {
+      opacity: 0.4;
+    }
+
     .score-sep {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1.4rem;
@@ -971,6 +1024,10 @@
       .match-card {
         padding: 16px 20px;
       }
+
+      .date-group {
+        scroll-margin-top: calc(var(--header-height-tablet) + var(--datebar-height));
+      }
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -1026,6 +1083,18 @@
 
       .team-name {
         font-size: 1rem;
+      }
+
+      /* 電腦版日期列箭頭與排版覆蓋 */
+      .date-arrow-btn {
+        display: inline-flex;
+      }
+      .datebar-inner {
+        scroll-snap-type: none;
+      }
+
+      .date-group {
+        scroll-margin-top: calc(var(--header-height-desktop) + var(--datebar-height));
       }
     }
 
@@ -1350,9 +1419,11 @@
     role="tablist"
     aria-label="Match dates"
   >
+    <button id="date-prev-btn" class="date-arrow-btn prev" type="button" aria-label="Previous dates">◀</button>
     <div class="datebar-inner" id="datebar-inner">
       <!-- JS 動態填充 Date Tabs -->
     </div>
+    <button id="date-next-btn" class="date-arrow-btn next" type="button" aria-label="Next dates">▶</button>
   </nav>
 
   <!-- ══════════════════════════════════════════════════════════
@@ -1384,7 +1455,7 @@
   ══════════════════════════════════════════════════════════ -->
   <footer id="site-footer" role="contentinfo">
     <div class="footer-inner">
-      <p class="footer-brand">FIFA WORLD CUP 2026™ NYNJ</p>
+      <p class="footer-brand">FIFA WORLD CUP 2026™</p>
     </div>
   </footer>
 
@@ -1551,15 +1622,15 @@
 
     /* SEO Meta 資料（依語言）*/
     const SEO_META = {
-      'en':    { title: 'FIFA World Cup 2026™ Match Schedule | New York New Jersey', description: 'View the complete FIFA World Cup 2026™ match schedule for New York & New Jersey. Find match times, venues, and results for all 48 teams.', ogLocale: 'en_US' },
-      'zh-TW': { title: 'FIFA 世界盃 2026™ 賽程表 | 紐約紐澤西', description: '查看 FIFA 世界盃 2026™ 紐約紐澤西完整賽程，包含所有 48 支球隊的比賽時間、場館與賽果。', ogLocale: 'zh_TW' },
-      'zh-CN': { title: 'FIFA 世界杯 2026™ 赛程表 | 纽约新泽西', description: '查看 FIFA 世界杯 2026™ 纽约新泽西完整赛程，包含所有 48 支球队的比赛时间、场馆与赛果。', ogLocale: 'zh_CN' },
-      'es':    { title: 'Calendario FIFA Copa Mundial 2026™ | Nueva York Nueva Jersey', description: 'Consulta el calendario completo de la FIFA Copa Mundial 2026™ en Nueva York y Nueva Jersey.', ogLocale: 'es_ES' },
-      'pt':    { title: 'Calendário FIFA Copa do Mundo 2026™ | Nova York Nova Jersey', description: 'Veja o calendário completo da FIFA Copa do Mundo 2026™ em Nova York e Nova Jersey.', ogLocale: 'pt_BR' },
-      'fr':    { title: 'Calendrier FIFA Coupe du Monde 2026™ | New York New Jersey', description: 'Consultez le calendrier complet de la FIFA Coupe du Monde 2026™ à New York et New Jersey.', ogLocale: 'fr_FR' },
-      'de':    { title: 'FIFA Weltmeisterschaft 2026™ Spielplan | New York New Jersey', description: 'Den vollständigen Spielplan der FIFA Weltmeisterschaft 2026™ in New York und New Jersey ansehen.', ogLocale: 'de_DE' },
-      'ja':    { title: 'FIFAワールドカップ 2026™ 試合スケジュール | ニューヨーク・ニュージャージー', description: 'FIFAワールドカップ 2026™ ニューヨーク・ニュージャージーの全試合スケジュールを確認。', ogLocale: 'ja_JP' },
-      'ko':    { title: 'FIFA 월드컵 2026™ 경기 일정 | 뉴욕 뉴저지', description: 'FIFA 월드컵 2026™ 뉴욕·뉴저지 전체 경기 일정을 확인하세요.', ogLocale: 'ko_KR' },
+      'en':    { title: 'FIFA World Cup 2026™ Match Schedule', description: 'View the complete FIFA World Cup 2026™ match schedule. Find match times, venues, and results for all 48 teams.', ogLocale: 'en_US' },
+      'zh-TW': { title: 'FIFA 世界盃 2026™ 賽程表', description: '查看 FIFA 世界盃 2026™ 完整賽程，包含所有 48 支球隊的比賽時間、場館與賽果。', ogLocale: 'zh_TW' },
+      'zh-CN': { title: 'FIFA 世界杯 2026™ 赛程表', description: '查看 FIFA 世界杯 2026™ 完整赛程，包含所有 48 支球队的比赛时间、场馆与赛果。', ogLocale: 'zh_CN' },
+      'es':    { title: 'Calendario FIFA Copa Mundial 2026™', description: 'Consulta el calendario completo de la FIFA Copa Mundial 2026™.', ogLocale: 'es_ES' },
+      'pt':    { title: 'Calendário FIFA Copa do Mundo 2026™', description: 'Veja o calendário completo da FIFA Copa do Mundo 2026™.', ogLocale: 'pt_BR' },
+      'fr':    { title: 'Calendrier FIFA Coupe du Monde 2026™', description: 'Consultez le calendrier complet de la FIFA Coupe du Monde 2026™.', ogLocale: 'fr_FR' },
+      'de':    { title: 'FIFA Weltmeisterschaft 2026™ Spielplan', description: 'Den vollständigen Spielplan der FIFA Weltmeisterschaft 2026™ ansehen.', ogLocale: 'de_DE' },
+      'ja':    { title: 'FIFAワールドカップ 2026™ 試合スケジュール', description: 'FIFAワールドカップ 2026™ の全試合スケジュールを確認。', ogLocale: 'ja_JP' },
+      'ko':    { title: 'FIFA 월드컵 2026™ 경기 일정', description: 'FIFA 월드컵 2026™ 전체 경기 일정을 확인하세요.', ogLocale: 'ko_KR' },
     };
 
     /* 語言偵測 Mapping */
@@ -2062,6 +2133,7 @@
       allTab.textContent = t('date.all');
       frag.appendChild(allTab);
 
+
       // 各日期 Tab
       for (const dateStr of state.dates) {
         const tab = document.createElement('button');
@@ -2089,6 +2161,7 @@
         tab.appendChild(daySpan);
         frag.appendChild(tab);
       }
+
 
       container.innerHTML = '';
       container.appendChild(frag);
@@ -2140,14 +2213,24 @@
         tab.setAttribute('tabindex', isSelected ? '0' : '-1');
       });
 
-      // 捲動 Date Bar 使選中 Tab 置中可見
+      // 捲動 Date Bar 使選中 Tab 置中可見（手動計算以避免垂直滾動衝突）
       const selectedTab = document.getElementById(`tab-${dateStr}`);
       if (selectedTab) {
-        selectedTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        const container = document.getElementById('datebar-inner');
+        const containerRect = container.getBoundingClientRect();
+        const tabRect = selectedTab.getBoundingClientRect();
+        const tabOffsetLeft = tabRect.left - containerRect.left + container.scrollLeft;
+        const targetScrollLeft = tabOffsetLeft - (containerRect.width / 2) + (tabRect.width / 2);
+        container.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
       }
 
       // 重新渲染賽事列表
       renderMatches();
+
+      // 除「全部」選項外，切換日期時，賽事列表應捲動到最上面
+      if (dateStr !== 'ALL') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
     /* ╔══════════════════════════════════════════════════════════╗
@@ -2173,7 +2256,8 @@
         // 圖片載入失敗時降級為 emoji
         img.onerror = () => {
           img.remove();
-          wrapper.textContent = fallbackEmoji || '🏴';
+          const finalEmoji = (fallbackEmoji === '🏴' || !fallbackEmoji) ? '⚽' : fallbackEmoji;
+          wrapper.textContent = finalEmoji;
           wrapper.setAttribute('aria-label', enName + ' flag');
         };
         wrapper.appendChild(img);
@@ -2181,7 +2265,8 @@
         // 使用 emoji fallback
         wrapper.setAttribute('aria-label', enName + ' flag');
         wrapper.setAttribute('role', 'img');
-        wrapper.textContent = fallbackEmoji || '🏴';
+        const finalEmoji = (fallbackEmoji === '🏴' || !fallbackEmoji) ? '⚽' : fallbackEmoji;
+        wrapper.textContent = finalEmoji;
       }
 
       return wrapper;
@@ -2305,6 +2390,15 @@
         const awayScoreEl = document.createElement('span');
         awayScoreEl.className = 'score-num';
         awayScoreEl.textContent = event.awayScore ?? '?';
+
+        // 完場已有比分的賽事，數字較小的比分請用較暗淡的顏色；若為平手則不做處理
+        if (status === 'finished' && event.homeScore !== null && event.awayScore !== null) {
+          if (event.homeScore < event.awayScore) {
+            homeScoreEl.classList.add('is-dimmed');
+          } else if (event.awayScore < event.homeScore) {
+            awayScoreEl.classList.add('is-dimmed');
+          }
+        }
 
         scoreEl.appendChild(homeScoreEl);
         scoreEl.appendChild(sepEl);
@@ -2455,8 +2549,6 @@
 
         container.innerHTML = '';
         container.appendChild(frag);
-        // 特定日期模式：捲回頂部
-        window.scrollTo({ top: 0, behavior: 'instant' });
       }
     }
 
@@ -2703,7 +2795,7 @@
       const ld = {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        name: 'FIFA World Cup 2026™ Match Schedule — New York New Jersey',
+        name: 'FIFA World Cup 2026™ Match Schedule',
         url: 'https://nynjfwc26.com/en/schedule',
         numberOfItems: events.length,
         itemListElement: items,
@@ -2711,6 +2803,51 @@
 
       const el = document.getElementById('jsonld-matches');
       if (el) el.textContent = JSON.stringify(ld);
+    }
+
+    /**
+     * 設定電腦版日期列左右按鈕的點擊與滾動事件
+     */
+    function setupDateBarArrows() {
+      const prevBtn = document.getElementById('date-prev-btn');
+      const nextBtn = document.getElementById('date-next-btn');
+      const container = document.getElementById('datebar-inner');
+
+      if (prevBtn && nextBtn && container) {
+        prevBtn.addEventListener('click', () => {
+          container.scrollBy({ left: -240, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', () => {
+          container.scrollBy({ left: 240, behavior: 'smooth' });
+        });
+
+        // 監聽滾動以動態隱藏/顯示箭頭
+        const updateArrowVisibility = () => {
+          const scrollLeft = container.scrollLeft;
+          const maxScroll = container.scrollWidth - container.clientWidth;
+          
+          if (scrollLeft <= 5) {
+            prevBtn.style.opacity = '0';
+            prevBtn.style.pointerEvents = 'none';
+          } else {
+            prevBtn.style.opacity = '1';
+            prevBtn.style.pointerEvents = 'auto';
+          }
+
+          if (scrollLeft >= maxScroll - 5) {
+            nextBtn.style.opacity = '0';
+            nextBtn.style.pointerEvents = 'none';
+          } else {
+            nextBtn.style.opacity = '1';
+            nextBtn.style.pointerEvents = 'auto';
+          }
+        };
+
+        container.addEventListener('scroll', updateArrowVisibility);
+        // 初始化一次可見性
+        setTimeout(updateArrowVisibility, 100);
+        window.addEventListener('resize', updateArrowVisibility);
+      }
     }
 
     /* ╔══════════════════════════════════════════════════════════╗
@@ -2784,7 +2921,11 @@
     });
 
     // 頁面載入
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+      init().then(() => {
+        setupDateBarArrows();
+      });
+    });
 
     // 定期更新 LIVE 狀態（每 30 秒）
     setInterval(() => {
