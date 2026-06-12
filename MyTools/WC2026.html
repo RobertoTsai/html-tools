@@ -2247,8 +2247,9 @@
 
       if (dateStr !== 'ALL') {
         // 步驟 1：掛上 is-switching，將頁面最小高度鎖定在 200dvh
-        // 這樣即使渲染後內容較少，頁面仍有足夠高度，
-        // Safari 不會因頁面縮短而自動調整捲動位置
+        // iOS Safari 在 scrollTo(0,0) 後會非同步展開網址列，期間會將 scrollY
+        // 加上網址列高度（約 50-60px），導致內容被遮擋。
+        // 鎖定大高度可防止 Safari 因頁面縮短而自動調整捲動位置。
         if (matchList) matchList.classList.add('is-switching');
 
         // 步驟 2：停用平滑滾動 + 立即置頂
@@ -2260,15 +2261,51 @@
 
         // 步驟 4：滾動 Date Bar 使選中 Tab 置中可見
         scrollTabIntoView(dateStr);
-
-        // 步驟 5：再次確保置頂，然後在下一幀移除鎖定
-        // requestAnimationFrame 確保瀏覽器已完成本輪佈局計算後才釋放高度
         window.scrollTo(0, 0);
-        requestAnimationFrame(() => {
+
+        // 步驟 5：等待 Safari 網址列展開動畫完全結束後再釋放高度鎖定
+        // 原理：使用 visualViewport 'resize' 事件追蹤動畫。
+        //   - 每次觸發（網址列正在動畫中）就重新呼叫 scrollTo(0,0)
+        //   - 動畫結束後（80ms 內無 resize 事件）才移除 is-switching
+        //   - 若 viewport 本就穩定（150ms 內無事件），立即清理
+        //   - 安全兜底：最多等待 600ms 強制清理
+        const finalize = () => {
           window.scrollTo(0, 0);
           if (matchList) matchList.classList.remove('is-switching');
           htmlEl.style.scrollBehavior = '';
-        });
+        };
+
+        if (window.visualViewport) {
+          let debounceTimer = null;
+          let done = false;
+
+          const stopAndFinalize = () => {
+            if (done) return;
+            done = true;
+            window.visualViewport.removeEventListener('resize', onVpResize);
+            clearTimeout(debounceTimer);
+            clearTimeout(maxTimer);
+            finalize();
+          };
+
+          const onVpResize = () => {
+            // 網址列動畫中：持續置頂並重設防抖計時器
+            window.scrollTo(0, 0);
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(stopAndFinalize, 80);
+          };
+
+          window.visualViewport.addEventListener('resize', onVpResize);
+
+          // 若 150ms 內無 resize 事件，表示 viewport 已穩定，直接清理
+          debounceTimer = setTimeout(stopAndFinalize, 150);
+
+          // 安全兜底：最多等待 600ms
+          const maxTimer = setTimeout(stopAndFinalize, 600);
+        } else {
+          // 非 iOS Safari（桌面瀏覽器）：無網址列問題，直接在下一幀清理
+          requestAnimationFrame(finalize);
+        }
       } else {
         // 點擊「全部」時，將滾動軸回復至點擊前的記錄值，避免拉回 0
         renderMatches();
