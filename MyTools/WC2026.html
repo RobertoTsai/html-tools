@@ -2259,10 +2259,15 @@
         // 再次確保置頂
         window.scrollTo(0, 0);
         
-        // 在下一個 Frame 恢復原本的 scroll-behavior
-        requestAnimationFrame(() => {
+        // 解決 iOS Safari 網址列（工作列）在捲動後點擊切換日期時，網址列展開動畫期間（約 300ms）導致頁面位移被遮擋的問題
+        // 在 50ms, 150ms, 300ms 延遲重複 scrollTo(0,0)，並在 350ms 穩定後恢復原本的 scroll-behavior
+        setTimeout(() => window.scrollTo(0, 0), 50);
+        setTimeout(() => window.scrollTo(0, 0), 150);
+        setTimeout(() => window.scrollTo(0, 0), 300);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
           htmlEl.style.scrollBehavior = originalScrollBehavior;
-        });
+        }, 350);
       } else {
         // 點擊「全部」時，將滾動軸回復至點擊前的記錄值，避免拉回 0
         const container = document.getElementById('datebar-inner');
