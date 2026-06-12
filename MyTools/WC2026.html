@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#002868" />
   <meta name="robots" content="index, follow" />
+
+  <!-- ═══════════════════════════════════════════════════════════
+       Favicon & App Icons
+  ═══════════════════════════════════════════════════════════ -->
+  <!-- SVG favicon（現代瀏覽器，無需外部檔案）-->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%23002868'/%3E%3Ctext y='82' x='50' text-anchor='middle' font-size='76'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E" />
+  <!-- PNG fallback for older browsers -->
+  <link rel="alternate icon" type="image/png" href="apple-touch-icon.png" />
+  <!-- iOS 釘選主畫面圖示 -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <!-- Android / PWA -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="WC 2026" />
 
   <!-- ═══════════════════════════════════════════════════════════
        SEO: Title & Description（JS 會依語言動態更新）
@@ -16,42 +32,45 @@
   <!-- ═══════════════════════════════════════════════════════════
        SEO: hreflang（完整 10 條雙向宣告，靜態固定）
   ═══════════════════════════════════════════════════════════ -->
-  <link rel="alternate" hreflang="en"       href="https://nynjfwc26.com/en/schedule" />
-  <link rel="alternate" hreflang="zh-TW"    href="https://nynjfwc26.com/zh-tw/schedule" />
-  <link rel="alternate" hreflang="zh-CN"    href="https://nynjfwc26.com/zh-cn/schedule" />
-  <link rel="alternate" hreflang="es"       href="https://nynjfwc26.com/es/schedule" />
-  <link rel="alternate" hreflang="pt"       href="https://nynjfwc26.com/pt/schedule" />
-  <link rel="alternate" hreflang="fr"       href="https://nynjfwc26.com/fr/schedule" />
-  <link rel="alternate" hreflang="de"       href="https://nynjfwc26.com/de/schedule" />
-  <link rel="alternate" hreflang="ja"       href="https://nynjfwc26.com/ja/schedule" />
-  <link rel="alternate" hreflang="ko"       href="https://nynjfwc26.com/ko/schedule" />
-  <link rel="alternate" hreflang="x-default" href="https://nynjfwc26.com/en/schedule" />
-  <link rel="canonical" id="canonical-url" href="https://nynjfwc26.com/en/schedule" />
+  <link rel="alternate" hreflang="en" href="https://undiff.net/tools/WC2026.html" />
+  <link rel="alternate" hreflang="zh-TW" href="https://undiff.net/tools/WC2026.html?lang=zh-TW" />
+  <link rel="alternate" hreflang="zh-CN" href="https://undiff.net/tools/WC2026.html?lang=zh-CN" />
+  <link rel="alternate" hreflang="es" href="https://undiff.net/tools/WC2026.html?lang=es" />
+  <link rel="alternate" hreflang="pt" href="https://undiff.net/tools/WC2026.html?lang=pt" />
+  <link rel="alternate" hreflang="fr" href="https://undiff.net/tools/WC2026.html?lang=fr" />
+  <link rel="alternate" hreflang="de" href="https://undiff.net/tools/WC2026.html?lang=de" />
+  <link rel="alternate" hreflang="ja" href="https://undiff.net/tools/WC2026.html?lang=ja" />
+  <link rel="alternate" hreflang="ko" href="https://undiff.net/tools/WC2026.html?lang=ko" />
+  <link rel="alternate" hreflang="x-default" href="https://undiff.net/tools/WC2026.html" />
+  <link rel="canonical" id="canonical-url" href="https://undiff.net/tools/WC2026.html" />
 
   <!-- ═══════════════════════════════════════════════════════════
        SEO: Open Graph / Twitter Card（JS 動態更新）
   ═══════════════════════════════════════════════════════════ -->
-  <meta property="og:type"        content="website" />
-  <meta property="og:site_name"   content="FIFA World Cup 2026™" />
-  <meta property="og:url"         id="og-url" content="https://nynjfwc26.com/en/schedule" />
-  <meta property="og:title"       id="og-title" content="FIFA World Cup 2026™ Match Schedule" />
-  <meta property="og:description" id="og-description" content="View the complete FIFA World Cup 2026™ match schedule." />
-  <meta property="og:image"       content="https://nynjfwc26.com/og-image-en.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="FIFA World Cup 2026™" />
+  <meta property="og:url" id="og-url" content="https://undiff.net/tools/WC2026.html" />
+  <meta property="og:title" id="og-title" content="FIFA World Cup 2026™ Match Schedule" />
+  <meta property="og:description" id="og-description"
+    content="View the complete FIFA World Cup 2026™ match schedule." />
+  <meta property="og:image"       content="https://undiff.net/tools/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:locale"      id="og-locale" content="en_US" />
-  <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:site"        content="@FIFAWorldCup" />
-  <meta name="twitter:title"       id="tw-title" content="FIFA World Cup 2026™ Match Schedule" />
-  <meta name="twitter:description" id="tw-description" content="View the complete FIFA World Cup 2026™ match schedule." />
-  <meta name="twitter:image"       content="https://nynjfwc26.com/og-image-en.jpg" />
+  <meta property="og:locale" id="og-locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@FIFAWorldCup" />
+  <meta name="twitter:title" id="tw-title" content="FIFA World Cup 2026™ Match Schedule" />
+  <meta name="twitter:description" id="tw-description"
+    content="View the complete FIFA World Cup 2026™ match schedule." />
+  <meta name="twitter:image" content="https://undiff.net/tools/og-image.png" />
 
   <!-- ═══════════════════════════════════════════════════════════
        字型：Bebas Neue（標題/比分） + Inter（正文）
   ═══════════════════════════════════════════════════════════ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
 
   <!-- ═══════════════════════════════════════════════════════════
        JSON-LD 結構化資料（JS 動態注入到 #jsonld-container）
@@ -61,78 +80,96 @@
     "@context": "https://schema.org",
     "@type": "SportsOrganization",
     "name": "FIFA World Cup 2026™",
-    "url": "https://nynjfwc26.com"
+    "url": "https://undiff.net/tools/WC2026.html"
   }
   </script>
-
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "x5zknq2a0w");
+  </script>
   <style>
     /* ══════════════════════════════════════════════════════════
        CSS CUSTOM PROPERTIES — 依規格 Section 4 + Color Spec
     ══════════════════════════════════════════════════════════ */
     :root {
       /* ── Primary Colors（規格 Section 4.1）── */
-      --color-navy:        #002868;   /* NYNJ Navy Blue */
-      --color-red:         #C8102E;   /* NYNJ Scarlet Red */
-      --color-white:       #FFFFFF;   /* Pure White */
-      --color-black:       #0A0A0A;   /* Stadium Black */
+      --color-navy: #002868;
+      /* NYNJ Navy Blue */
+      --color-red: #C8102E;
+      /* NYNJ Scarlet Red */
+      --color-white: #FFFFFF;
+      /* Pure White */
+      --color-black: #0A0A0A;
+      /* Stadium Black */
 
       /* ── Secondary Colors ── */
-      --color-navy-deep:   #1A3A6B;   /* Deep Hudson Blue */
-      --color-red-bright:  #E8192C;   /* Bright Soccer Red */
-      --color-off-white:   #F5F5F5;
-      --color-gold:        #D4AF37;   /* Trophy Gold */
-      --color-charcoal:    #1C1C1C;   /* Dark Charcoal */
-      --color-sky:         #4A90D9;   /* Sky Blue Accent */
-      --color-dark-red:    #8B0000;
-      --color-gold-light:  #F5D67A;
-      --color-gold-dark:   #B8860B;
+      --color-navy-deep: #1A3A6B;
+      /* Deep Hudson Blue */
+      --color-red-bright: #E8192C;
+      /* Bright Soccer Red */
+      --color-off-white: #F5F5F5;
+      --color-gold: #D4AF37;
+      /* Trophy Gold */
+      --color-charcoal: #1C1C1C;
+      /* Dark Charcoal */
+      --color-sky: #4A90D9;
+      /* Sky Blue Accent */
+      --color-dark-red: #8B0000;
+      --color-gold-light: #F5D67A;
+      --color-gold-dark: #B8860B;
 
       /* ── Color Spec 命名（兼容）── */
-      --color-navy-blue:      #002868;
-      --color-scarlet-red:    #C8102E;
-      --color-hudson-blue:    #1A3A6B;
-      --color-bright-red:     #E8192C;
-      --color-trophy-gold:    #D4AF37;
-      --color-sky-blue:       #4A90D9;
+      --color-navy-blue: #002868;
+      --color-scarlet-red: #C8102E;
+      --color-hudson-blue: #1A3A6B;
+      --color-bright-red: #E8192C;
+      --color-trophy-gold: #D4AF37;
+      --color-sky-blue: #4A90D9;
 
       /* ── Typography Colors ── */
-      --text-primary:      #FFFFFF;
-      --text-body:         #F0F0F0;
-      --text-secondary:    #AAAAAA;
-      --text-muted:        #888888;   /* 提升至 888 以符合 WCAG AA（14px 以上） */
-      --text-accent:       #C8102E;
-      --text-gold:         #D4AF37;
+      --text-primary: #FFFFFF;
+      --text-body: #F0F0F0;
+      --text-secondary: #AAAAAA;
+      --text-muted: #888888;
+      /* 提升至 888 以符合 WCAG AA（14px 以上） */
+      --text-accent: #C8102E;
+      --text-gold: #D4AF37;
 
       /* ── Gradients ── */
-      --gradient-pride:    linear-gradient(135deg, #002868 0%, #C8102E 100%);
-      --gradient-night:    linear-gradient(135deg, #0A0A0A 0%, #002868 50%, #1A3A6B 100%);
-      --gradient-stadium:  linear-gradient(180deg, #002868 0%, #0A0A0A 100%);
-      --gradient-gold:     linear-gradient(135deg, #D4AF37 0%, #F5D67A 50%, #B8860B 100%);
-      --gradient-flame:    linear-gradient(135deg, #C8102E 0%, #8B0000 100%);
+      --gradient-pride: linear-gradient(135deg, #002868 0%, #C8102E 100%);
+      --gradient-night: linear-gradient(135deg, #0A0A0A 0%, #002868 50%, #1A3A6B 100%);
+      --gradient-stadium: linear-gradient(180deg, #002868 0%, #0A0A0A 100%);
+      --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F5D67A 50%, #B8860B 100%);
+      --gradient-flame: linear-gradient(135deg, #C8102E 0%, #8B0000 100%);
       --gradient-spotlight: radial-gradient(ellipse at center, #1A3A6B 0%, #0A0A0A 70%);
 
       /* ── Color Spec 命名（兼容）── */
-      --gradient-nyc-night:      linear-gradient(135deg, #0a0a0a 0%, #002868 50%, #1A3A6B 100%);
+      --gradient-nyc-night: linear-gradient(135deg, #0a0a0a 0%, #002868 50%, #1A3A6B 100%);
       --gradient-american-pride: linear-gradient(135deg, #002868 0%, #C8102E 100%);
-      --gradient-stadium-depth:  linear-gradient(180deg, #002868 0%, #0a0a0a 100%);
+      --gradient-stadium-depth: linear-gradient(180deg, #002868 0%, #0a0a0a 100%);
       --gradient-world-cup-gold: linear-gradient(135deg, #D4AF37 0%, #F5D67A 50%, #B8860B 100%);
 
       /* ── Layout ── */
-      --header-height-mobile:  100px;
-      --header-height-tablet:  120px;
+      --header-height-mobile: 100px;
+      --header-height-tablet: 120px;
       --header-height-desktop: 160px;
-      --datebar-height:        56px;
-      --max-content-width:     900px;
+      --datebar-height: 56px;
+      --max-content-width: 900px;
 
       /* ── Animation ── */
-      --transition-fast:   150ms ease;
-      --transition-base:   250ms ease;
+      --transition-fast: 150ms ease;
+      --transition-base: 250ms ease;
     }
 
     /* ══════════════════════════════════════════════════════════
        CSS RESET & BASE
     ══════════════════════════════════════════════════════════ */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -190,13 +227,11 @@
       position: absolute;
       inset: 0;
       background:
-        repeating-linear-gradient(
-          90deg,
+        repeating-linear-gradient(90deg,
           transparent,
           transparent 40px,
-          rgba(255,255,255,0.015) 40px,
-          rgba(255,255,255,0.015) 41px
-        );
+          rgba(255, 255, 255, 0.015) 40px,
+          rgba(255, 255, 255, 0.015) 41px);
       pointer-events: none;
     }
 
@@ -249,7 +284,7 @@
       font-size: 1.4rem;
       line-height: 1;
       color: var(--text-primary);
-      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -360,9 +395,9 @@
       right: 12px;
       width: 220px;
       background: #1a1a2e;
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,16,46,0.15);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(200, 16, 46, 0.15);
       overflow: hidden;
       animation: slideDown 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       z-index: 201;
@@ -370,7 +405,7 @@
 
     .lang-panel-header {
       padding: 12px 16px 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 0.65rem;
       font-weight: 600;
       letter-spacing: 0.15em;
@@ -396,7 +431,7 @@
 
     .lang-item:hover,
     .lang-item:focus-visible {
-      background: rgba(255,255,255,0.07);
+      background: rgba(255, 255, 255, 0.07);
     }
 
     .lang-item:focus-visible {
@@ -446,8 +481,8 @@
       z-index: 99;
       height: var(--datebar-height);
       background: var(--color-charcoal);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
     }
 
     .datebar-inner {
@@ -456,14 +491,17 @@
       white-space: nowrap;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE 11 */
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE 11 */
       /* scroll-padding 讓選中 tab 置中 */
       scroll-padding-inline: 20px;
     }
 
     .datebar-inner::-webkit-scrollbar {
-      display: none; /* Chrome / Safari */
+      display: none;
+      /* Chrome / Safari */
     }
 
     /* ── Date Bar 箭頭按鈕 ── */
@@ -477,7 +515,8 @@
       color: var(--text-primary);
       font-size: 0.8rem;
       cursor: pointer;
-      display: none; /* 手機端預設隱藏 */
+      display: none;
+      /* 手機端預設隱藏 */
       align-items: center;
       justify-content: center;
       z-index: 20;
@@ -491,7 +530,8 @@
     }
 
     .date-arrow-btn.prev {
-      left: 60px; /* 避開固定在最左側的全部選項 (60px) */
+      left: 60px;
+      /* 避開固定在最左側的全部選項 (60px) */
       border-right: 1px solid rgba(255, 255, 255, 0.06);
     }
 
@@ -541,7 +581,7 @@
     }
 
     .date-tab[aria-selected="true"] .tab-day {
-      color: rgba(255,255,255,0.9);
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .tab-date {
@@ -560,7 +600,7 @@
     }
 
     .date-tab[aria-selected="true"] .tab-day {
-      color: rgba(255,255,255,0.8);
+      color: rgba(255, 255, 255, 0.8);
     }
 
     /* ALL tab 特殊樣式 - 固定在左側 */
@@ -580,6 +620,7 @@
       letter-spacing: 0.08em;
       vertical-align: top;
     }
+
     .date-tab.tab-all[aria-selected="true"] {
       background: var(--color-red);
     }
@@ -617,7 +658,7 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
     }
 
     .date-group-label {
@@ -658,7 +699,7 @@
     ══════════════════════════════════════════════════════════ */
     .match-card {
       background: var(--color-charcoal);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 12px;
       padding: 14px 16px;
       margin-bottom: 8px;
@@ -683,7 +724,7 @@
     .match-card.is-live::before {
       background: var(--color-red);
       opacity: 1;
-      box-shadow: 0 0 12px rgba(200,16,46,0.6);
+      box-shadow: 0 0 12px rgba(200, 16, 46, 0.6);
     }
 
     /* FT 卡片裝飾 */
@@ -712,8 +753,8 @@
       font-size: 0.65rem;
       font-weight: 600;
       color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 2px 8px;
       border-radius: 4px;
       letter-spacing: 0.06em;
@@ -727,56 +768,67 @@
       border-color: rgba(232, 25, 44, 0.3);
       color: var(--color-bright-red);
     }
+
     .card-stage.stage-group-b {
       background: rgba(74, 144, 217, 0.08);
       border-color: rgba(74, 144, 217, 0.3);
       color: var(--color-sky-blue);
     }
+
     .card-stage.stage-group-c {
       background: rgba(212, 175, 55, 0.08);
       border-color: rgba(212, 175, 55, 0.3);
       color: var(--color-trophy-gold);
     }
+
     .card-stage.stage-group-d {
       background: rgba(255, 255, 255, 0.04);
       border-color: rgba(255, 255, 255, 0.15);
       color: var(--color-white);
     }
+
     .card-stage.stage-group-e {
       background: rgba(139, 0, 0, 0.1);
       border-color: rgba(139, 0, 0, 0.35);
       color: #FFA3A3;
     }
+
     .card-stage.stage-group-f {
       background: rgba(26, 58, 107, 0.12);
       border-color: rgba(26, 58, 107, 0.35);
       color: #8CC0FF;
     }
+
     .card-stage.stage-group-g {
       background: rgba(245, 214, 122, 0.08);
       border-color: rgba(245, 214, 122, 0.25);
       color: var(--color-gold-light);
     }
+
     .card-stage.stage-group-h {
       background: rgba(200, 16, 46, 0.08);
       border-color: rgba(200, 16, 46, 0.3);
       color: #FF8080;
     }
+
     .card-stage.stage-group-i {
       background: rgba(74, 144, 217, 0.12);
       border-color: rgba(74, 144, 217, 0.35);
       color: #A0C4FF;
     }
+
     .card-stage.stage-group-j {
       background: rgba(26, 58, 107, 0.15);
       border-color: rgba(74, 144, 217, 0.3);
       color: var(--color-sky-blue);
     }
+
     .card-stage.stage-group-k {
       background: rgba(184, 134, 11, 0.1);
       border-color: rgba(184, 134, 11, 0.3);
       color: var(--color-gold-dark);
     }
+
     .card-stage.stage-group-l {
       background: rgba(245, 245, 245, 0.04);
       border-color: rgba(245, 245, 245, 0.15);
@@ -789,26 +841,31 @@
       border-color: rgba(26, 58, 107, 0.5);
       color: #A0C4FF;
     }
+
     .card-stage.stage-r16 {
       background: rgba(74, 144, 217, 0.2);
       border-color: rgba(74, 144, 217, 0.5);
       color: var(--color-white);
     }
+
     .card-stage.stage-qf {
       background: rgba(0, 40, 104, 0.3);
       border-color: var(--color-navy-blue);
       color: var(--color-white);
     }
+
     .card-stage.stage-sf {
       background: rgba(212, 175, 55, 0.15);
       border-color: var(--color-trophy-gold);
       color: var(--color-trophy-gold);
     }
+
     .card-stage.stage-3rd {
       background: rgba(184, 134, 11, 0.2);
       border-color: var(--color-gold-dark);
       color: var(--color-gold-light);
     }
+
     .card-stage.stage-final {
       background: var(--gradient-world-cup-gold);
       border-color: var(--color-trophy-gold);
@@ -835,7 +892,7 @@
       letter-spacing: 0.12em;
       border-radius: 4px;
       text-transform: uppercase;
-      box-shadow: 0 2px 8px rgba(200,16,46,0.4);
+      box-shadow: 0 2px 8px rgba(200, 16, 46, 0.4);
     }
 
     /* LIVE 閃爍圓點 */
@@ -876,7 +933,8 @@
       align-items: center;
       gap: 8px;
       flex: 1;
-      min-width: 0; /* 允許縮小以防止溢出 */
+      min-width: 0;
+      /* 允許縮小以防止溢出 */
     }
 
     /* 主隊（靠右對齊，國旗在右） */
@@ -909,11 +967,12 @@
       height: 20px;
       object-fit: cover;
       border-radius: 2px;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .team-name {
-      font-size: 0.9rem; /* 手機端字型稍小 */
+      font-size: 0.9rem;
+      /* 手機端字型稍小 */
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.2;
@@ -931,7 +990,8 @@
       gap: 6px;
       padding: 0 10px;
       flex-shrink: 0;
-      min-width: 80px; /* 給予固定寬度使比分對齊 */
+      min-width: 80px;
+      /* 給予固定寬度使比分對齊 */
     }
 
     .score-num {
@@ -973,7 +1033,7 @@
       gap: 6px;
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .venue-icon {
@@ -1097,6 +1157,7 @@
       .date-arrow-btn {
         display: inline-flex;
       }
+
       .datebar-inner {
         scroll-snap-type: none;
       }
@@ -1122,7 +1183,7 @@
     .loading-spinner {
       width: 44px;
       height: 44px;
-      border: 3px solid rgba(255,255,255,0.08);
+      border: 3px solid rgba(255, 255, 255, 0.08);
       border-top-color: var(--color-red);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -1210,7 +1271,7 @@
     ══════════════════════════════════════════════════════════ */
     #site-footer {
       background: var(--color-charcoal);
-      border-top: 1px solid rgba(255,255,255,0.06);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       padding: 20px 16px;
       text-align: center;
     }
@@ -1236,32 +1297,69 @@
        ANIMATIONS
     ══════════════════════════════════════════════════════════ */
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0)   scale(1); }
+      from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     @keyframes livePulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(0.7);
+      }
     }
 
     @keyframes cardIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* 卡片進場動畫 */
@@ -1271,7 +1369,10 @@
 
     /* 無障礙：不要動畫（使用者偏好）*/
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
@@ -1291,15 +1392,18 @@
     ::-webkit-scrollbar {
       width: 6px;
     }
+
     ::-webkit-scrollbar-track {
       background: var(--color-black);
     }
+
     ::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 3px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -1330,33 +1434,42 @@
       #match-list {
         padding: 12px 6px 32px;
       }
+
       .match-card {
         padding: 12px 8px;
       }
+
       .card-team {
         gap: 4px;
       }
+
       .team-flag {
         width: 24px;
       }
+
       .team-flag img {
         width: 22px;
         height: 16px;
       }
+
       .team-name {
         font-size: 0.8rem;
       }
+
       .card-score {
         min-width: 64px;
         padding: 0 4px;
       }
+
       .score-num {
         font-size: 1.6rem;
         min-width: 24px;
       }
+
       .score-sep {
         font-size: 1.1rem;
       }
+
       .score-vs {
         font-size: 0.8rem;
       }
@@ -1385,14 +1498,8 @@
 
       <!-- 右側操作 -->
       <div class="header-actions">
-        <button
-          id="lang-btn"
-          type="button"
-          aria-haspopup="listbox"
-          aria-expanded="false"
-          aria-controls="lang-dropdown"
-          aria-label="Select language"
-        >
+        <button id="lang-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-dropdown"
+          aria-label="Select language">
           <span class="lang-btn-globe" aria-hidden="true">🌐</span>
           <span class="lang-btn-code" id="lang-btn-code">EN</span>
           <span class="lang-btn-arrow" aria-hidden="true">▼</span>
@@ -1408,12 +1515,7 @@
     <div class="lang-overlay" id="lang-overlay"></div>
     <div class="lang-panel">
       <div class="lang-panel-header" id="lang-panel-label">Select Language</div>
-      <ul
-        class="lang-list"
-        role="listbox"
-        id="lang-listbox"
-        aria-labelledby="lang-panel-label"
-      >
+      <ul class="lang-list" role="listbox" id="lang-listbox" aria-labelledby="lang-panel-label">
         <!-- JS 動態填充 -->
       </ul>
     </div>
@@ -1422,11 +1524,7 @@
   <!-- ══════════════════════════════════════════════════════════
        DATE BAR（規格 Section 5.3）
   ══════════════════════════════════════════════════════════ -->
-  <nav
-    id="date-bar"
-    role="tablist"
-    aria-label="Match dates"
-  >
+  <nav id="date-bar" role="tablist" aria-label="Match dates">
     <button id="date-prev-btn" class="date-arrow-btn prev" type="button" aria-label="Previous dates">◀</button>
     <div class="datebar-inner" id="datebar-inner">
       <!-- JS 動態填充 Date Tabs -->
@@ -1485,12 +1583,12 @@
     const ICS_URL = 'https://calendar.kubeia.io/world-cup-no-alarm-with-score-no-odds.ics';
     const CACHE_KEY = 'fwc26-ics-cache';
     const CACHE_TTL = 5 * 60 * 1000;   // 5 分鐘（毫秒）
-    const LANG_KEY  = 'fwc26-lang';
+    const LANG_KEY = 'fwc26-lang';
 
     /* ╔══════════════════════════════════════════════════════════╗
        ║  2. 球隊翻譯資料庫（直接內嵌自 FWC26_Team_Translation_Map_ALL.json）
        ╚══════════════════════════════════════════════════════════╝ */
-    const TEAM_DATA_RAW = {"Group A":[{"id":"MEX","flag":"https://flagcdn.com/mx.svg","en":"Mexico","zh-TW":"墨西哥","zh-CN":"墨西哥","es":"México","pt":"México","fr":"Mexique","de":"Mexiko","ja":"メキシコ","ko":"멕시코"},{"id":"ECU","flag":"https://flagcdn.com/ec.svg","en":"Ecuador","zh-TW":"厄瓜多","zh-CN":"厄瓜多尔","es":"Ecuador","pt":"Equador","fr":"Équateur","de":"Ecuador","ja":"エクアドル","ko":"에콰도르"},{"id":"BLZ","flag":"https://flagcdn.com/bz.svg","en":"Belize","zh-TW":"貝里斯","zh-CN":"伯利兹","es":"Belice","pt":"Belize","fr":"Belize","de":"Belize","ja":"ベリーズ","ko":"벨리즈"},{"id":"CUB","flag":"https://flagcdn.com/cu.svg","en":"Cuba","zh-TW":"古巴","zh-CN":"古巴","es":"Cuba","pt":"Cuba","fr":"Cuba","de":"Kuba","ja":"キューバ","ko":"쿠바"}],"Group B":[{"id":"USA","flag":"https://flagcdn.com/us.svg","en":"United States","zh-TW":"美國","zh-CN":"美国","es":"Estados Unidos","pt":"Estados Unidos","fr":"États-Unis","de":"Vereinigte Staaten","ja":"アメリカ合衆国","ko":"미국"},{"id":"PAN","flag":"https://flagcdn.com/pa.svg","en":"Panama","zh-TW":"巴拿馬","zh-CN":"巴拿马","es":"Panamá","pt":"Panamá","fr":"Panama","de":"Panama","ja":"パナマ","ko":"파라과이"},{"id":"CRC","flag":"https://flagcdn.com/cr.svg","en":"Costa Rica","zh-TW":"哥斯大黎加","zh-CN":"哥斯达黎加","es":"Costa Rica","pt":"Costa Rica","fr":"Costa Rica","de":"Costa Rica","ja":"コスタリカ","ko":"코스타리카"},{"id":"CAN","flag":"https://flagcdn.com/ca.svg","en":"Canada","zh-TW":"加拿大","zh-CN":"加拿大","es":"Canadá","pt":"Canadá","fr":"Canada","de":"Kanada","ja":"カナダ","ko":"캐나다"}],"Group C":[{"id":"URU","flag":"https://flagcdn.com/uy.svg","en":"Uruguay","zh-TW":"烏拉圭","zh-CN":"乌拉圭","es":"Uruguay","pt":"Uruguai","fr":"Uruguay","de":"Uruguay","ja":"ウルグアイ","ko":"우루과이"},{"id":"BOL","flag":"https://flagcdn.com/bo.svg","en":"Bolivia","zh-TW":"玻利維亞","zh-CN":"玻利维亚","es":"Bolivia","pt":"Bolívia","fr":"Bolivie","de":"Bolivien","ja":"ボリビア","ko":"볼리비아"},{"id":"COL","flag":"https://flagcdn.com/co.svg","en":"Colombia","zh-TW":"哥倫比亞","zh-CN":"哥伦比亚","es":"Colombia","pt":"Colômbia","fr":"Colombie","de":"Kolumbien","ja":"コロンビア","ko":"콜롬비아"},{"id":"PAR","flag":"https://flagcdn.com/py.svg","en":"Paraguay","zh-TW":"巴拉圭","zh-CN":"巴拉圭","es":"Paraguay","pt":"Paraguai","fr":"Paraguay","de":"Paraguay","ja":"パラグアイ","ko":"파라과이"}],"Group D":[{"id":"BRA","flag":"https://flagcdn.com/br.svg","en":"Brazil","zh-TW":"巴西","zh-CN":"巴西","es":"Brasil","pt":"Brasil","fr":"Brésil","de":"Brasilien","ja":"ブラジル","ko":"브라질"},{"id":"CHI","flag":"https://flagcdn.com/cl.svg","en":"Chile","zh-TW":"智利","zh-CN":"智利","es":"Chile","pt":"Chile","fr":"Chili","de":"Chile","ja":"チリ","ko":"칠레"},{"id":"VEN","flag":"https://flagcdn.com/ve.svg","en":"Venezuela","zh-TW":"委內瑞拉","zh-CN":"委内瑞拉","es":"Venezuela","pt":"Venezuela","fr":"Venezuela","de":"Venezuela","ja":"ベネズエラ","ko":"베네수엘라"},{"id":"PER","flag":"https://flagcdn.com/pe.svg","en":"Peru","zh-TW":"秘魯","zh-CN":"秘鲁","es":"Perú","pt":"Peru","fr":"Pérou","de":"Peru","ja":"ペルー","ko":"페루"}],"Group E":[{"id":"GER","flag":"https://flagcdn.com/de.svg","en":"Germany","zh-TW":"德國","zh-CN":"德国","es":"Alemania","pt":"Alemanha","fr":"Allemagne","de":"Deutschland","ja":"ドイツ","ko":"독일"},{"id":"BEL","flag":"https://flagcdn.com/be.svg","en":"Belgium","zh-TW":"比利時","zh-CN":"比利时","es":"Bélgica","pt":"Bélgica","fr":"Belgique","de":"Belgien","ja":"ベルギー","ko":"벨기에"},{"id":"SVK","flag":"https://flagcdn.com/sk.svg","en":"Slovakia","zh-TW":"斯洛伐克","zh-CN":"斯洛伐克","es":"Eslovaquia","pt":"Eslováquia","fr":"Slovaquie","de":"Slowakei","ja":"スロバキア","ko":"슬로바키아"},{"id":"SCO","flag":"https://flagcdn.com/gb-sct.svg","en":"Scotland","zh-TW":"蘇格蘭","zh-CN":"苏格兰","es":"Escocia","pt":"Escócia","fr":"Écosse","de":"Schottland","ja":"スコットランド","ko":"스코틀랜드"}],"Group F":[{"id":"POR","flag":"https://flagcdn.com/pt.svg","en":"Portugal","zh-TW":"葡萄牙","zh-CN":"葡萄牙","es":"Portugal","pt":"Portugal","fr":"Portugal","de":"Portugal","ja":"ポルトガル","ko":"포르투갈"},{"id":"TUR","flag":"https://flagcdn.com/tr.svg","en":"Turkey","zh-TW":"土耳其","zh-CN":"土耳其","es":"Turquía","pt":"Turquia","fr":"Turquie","de":"Türkei","ja":"トルコ","ko":"터키"},{"id":"CZE","flag":"https://flagcdn.com/cz.svg","en":"Czech Republic","zh-TW":"捷克","zh-CN":"捷克","es":"República Checa","pt":"República Checa","fr":"République tchèque","de":"Tschechien","ja":"チェコ","ko":"체코"},{"id":"GEO","flag":"https://flagcdn.com/ge.svg","en":"Georgia","zh-TW":"喬治亞","zh-CN":"格鲁吉亚","es":"Georgia","pt":"Geórgia","fr":"Géorgie","de":"Georgien","ja":"ジョージア","ko":"조지아"}],"Group G":[{"id":"ESP","flag":"https://flagcdn.com/es.svg","en":"Spain","zh-TW":"西班牙","zh-CN":"西班牙","es":"España","pt":"Espanha","fr":"Espagne","de":"Spanien","ja":"スペイン","ko":"스페인"},{"id":"NED","flag":"https://flagcdn.com/nl.svg","en":"Netherlands","zh-TW":"荷蘭","zh-CN":"荷兰","es":"Países Bajos","pt":"Países Baixos","fr":"Pays-Bas","de":"Niederlande","ja":"オランダ","ko":"네덜란드"},{"id":"SRB","flag":"https://flagcdn.com/rs.svg","en":"Serbia","zh-TW":"塞爾維亞","zh-CN":"塞尔维亚","es":"Serbia","pt":"Sérvia","fr":"Serbie","de":"Serbien","ja":"セルビア","ko":"세르비아"},{"id":"DEN","flag":"https://flagcdn.com/dk.svg","en":"Denmark","zh-TW":"丹麥","zh-CN":"丹麦","es":"Dinamarca","pt":"Dinamarca","fr":"Danemark","de":"Dänemark","ja":"デンマーク","ko":"덴마크"}],"Group H":[{"id":"ENG","flag":"https://flagcdn.com/gb-eng.svg","en":"England","zh-TW":"英格蘭","zh-CN":"英格兰","es":"Inglaterra","pt":"Inglaterra","fr":"Angleterre","de":"England","ja":"イングランド","ko":"잉글랜드"},{"id":"AUT","flag":"https://flagcdn.com/at.svg","en":"Austria","zh-TW":"奧地利","zh-CN":"奥地利","es":"Austria","pt":"Áustria","fr":"Autriche","de":"Österreich","ja":"オーストリア","ko":"오스트리아"},{"id":"ALB","flag":"https://flagcdn.com/al.svg","en":"Albania","zh-TW":"阿爾巴尼亞","zh-CN":"阿尔巴尼亚","es":"Albania","pt":"Albânia","fr":"Albanie","de":"Albanien","ja":"アルバニア","ko":"알바니아"},{"id":"HUN","flag":"https://flagcdn.com/hu.svg","en":"Hungary","zh-TW":"匈牙利","zh-CN":"匈牙利","es":"Hungría","pt":"Hungria","fr":"Hongrie","de":"Ungarn","ja":"ハンガリー","ko":"헝가리"}],"Group I":[{"id":"FRA","flag":"https://flagcdn.com/fr.svg","en":"France","zh-TW":"法國","zh-CN":"法国","es":"Francia","pt":"França","fr":"France","de":"Frankreich","ja":"フランス","ko":"프랑스"},{"id":"POL","flag":"https://flagcdn.com/pl.svg","en":"Poland","zh-TW":"波蘭","zh-CN":"波兰","es":"Polonia","pt":"Polónia","fr":"Pologne","de":"Polen","ja":"ポーランド","ko":"폴란드"},{"id":"UKR","flag":"https://flagcdn.com/ua.svg","en":"Ukraine","zh-TW":"烏克蘭","zh-CN":"乌克兰","es":"Ucrania","pt":"Ucrânia","fr":"Ukraine","de":"Ukraine","ja":"ウクライナ","ko":"우크라이나"},{"id":"WAL","flag":"https://flagcdn.com/gb-wls.svg","en":"Wales","zh-TW":"威爾斯","zh-CN":"威尔士","es":"Gales","pt":"País de Gales","fr":"Pays de Galles","de":"Wales","ja":"ウェールズ","ko":"웨일스"}],"Group J":[{"id":"ARG","flag":"https://flagcdn.com/ar.svg","en":"Argentina","zh-TW":"阿根廷","zh-CN":"阿根廷","es":"Argentina","pt":"Argentina","fr":"Argentine","de":"Argentinien","ja":"アルゼンチン","ko":"아르헨티나"},{"id":"CHN","flag":"https://flagcdn.com/cn.svg","en":"China PR","zh-TW":"中國","zh-CN":"中国","es":"China","pt":"China","fr":"Chine","de":"China","ja":"中国","ko":"중국"},{"id":"KSA","flag":"https://flagcdn.com/sa.svg","en":"Saudi Arabia","zh-TW":"沙烏地阿拉伯","zh-CN":"沙特阿拉伯","es":"Arabia Saudita","pt":"Arábia Saudita","fr":"Arabie saoudite","de":"Saudi-Arabien","ja":"サウジアラビア","ko":"사우디아라비아"},{"id":"IRQ","flag":"https://flagcdn.com/iq.svg","en":"Iraq","zh-TW":"伊拉克","zh-CN":"伊拉克","es":"Irak","pt":"Iraque","fr":"Irak","de":"Irak","ja":"イラク","ko":"이라크"}],"Group K":[{"id":"JPN","flag":"https://flagcdn.com/jp.svg","en":"Japan","zh-TW":"日本","zh-CN":"日本","es":"Japón","pt":"Japão","fr":"Japon","de":"Japan","ja":"日本","ko":"일본"},{"id":"KOR","flag":"https://flagcdn.com/kr.svg","en":"South Korea","zh-TW":"南韓","zh-CN":"韩国","es":"Corea del Sur","pt":"Coreia do Sul","fr":"Corée du Sud","de":"Südkorea","ja":"韓国","ko":"대한민국"},{"id":"IRN","flag":"https://flagcdn.com/ir.svg","en":"Iran","zh-TW":"伊朗","zh-CN":"伊朗","es":"Irán","pt":"Irão","fr":"Iran","de":"Iran","ja":"イラン","ko":"이란"},{"id":"UZB","flag":"https://flagcdn.com/uz.svg","en":"Uzbekistan","zh-TW":"烏茲別克","zh-CN":"乌兹别克斯坦","es":"Uzbekistán","pt":"Usbequistão","fr":"Ouzbékistan","de":"Usbekistan","ja":"ウズベキスタン","ko":"우즈베키스탄"}],"Group L":[{"id":"MAR","flag":"https://flagcdn.com/ma.svg","en":"Morocco","zh-TW":"摩洛哥","zh-CN":"摩洛哥","es":"Marruecos","pt":"Marrocos","fr":"Maroc","de":"Marokko","ja":"モロッコ","ko":"모로코"},{"id":"EGY","flag":"https://flagcdn.com/eg.svg","en":"Egypt","zh-TW":"埃及","zh-CN":"埃及","es":"Egipto","pt":"Egito","fr":"Égypte","de":"Ägypten","ja":"エジプト","ko":"이집트"},{"id":"SEN","flag":"https://flagcdn.com/sn.svg","en":"Senegal","zh-TW":"塞內加爾","zh-CN":"塞内加尔","es":"Senegal","pt":"Senegal","fr":"Sénégal","de":"Senegal","ja":"セネガル","ko":"세네갈"},{"id":"RSA","flag":"https://flagcdn.com/za.svg","en":"South Africa","zh-TW":"南非","zh-CN":"南非","es":"Sudáfrica","pt":"África do Sul","fr":"Afrique du Sud","de":"Südkorea","ja":"南アフリカ","ko":"남아프리카공화국"}]};
+    const TEAM_DATA_RAW = { "Group A": [{ "id": "MEX", "flag": "https://flagcdn.com/mx.svg", "en": "Mexico", "zh-TW": "墨西哥", "zh-CN": "墨西哥", "es": "México", "pt": "México", "fr": "Mexique", "de": "Mexiko", "ja": "メキシコ", "ko": "멕시코" }, { "id": "ECU", "flag": "https://flagcdn.com/ec.svg", "en": "Ecuador", "zh-TW": "厄瓜多", "zh-CN": "厄瓜多尔", "es": "Ecuador", "pt": "Equador", "fr": "Équateur", "de": "Ecuador", "ja": "エクアドル", "ko": "에콰도르" }, { "id": "BLZ", "flag": "https://flagcdn.com/bz.svg", "en": "Belize", "zh-TW": "貝里斯", "zh-CN": "伯利兹", "es": "Belice", "pt": "Belize", "fr": "Belize", "de": "Belize", "ja": "ベリーズ", "ko": "벨리즈" }, { "id": "CUB", "flag": "https://flagcdn.com/cu.svg", "en": "Cuba", "zh-TW": "古巴", "zh-CN": "古巴", "es": "Cuba", "pt": "Cuba", "fr": "Cuba", "de": "Kuba", "ja": "キューバ", "ko": "쿠바" }], "Group B": [{ "id": "USA", "flag": "https://flagcdn.com/us.svg", "en": "United States", "zh-TW": "美國", "zh-CN": "美国", "es": "Estados Unidos", "pt": "Estados Unidos", "fr": "États-Unis", "de": "Vereinigte Staaten", "ja": "アメリカ合衆国", "ko": "미국" }, { "id": "PAN", "flag": "https://flagcdn.com/pa.svg", "en": "Panama", "zh-TW": "巴拿馬", "zh-CN": "巴拿马", "es": "Panamá", "pt": "Panamá", "fr": "Panama", "de": "Panama", "ja": "パナマ", "ko": "파라과이" }, { "id": "CRC", "flag": "https://flagcdn.com/cr.svg", "en": "Costa Rica", "zh-TW": "哥斯大黎加", "zh-CN": "哥斯达黎加", "es": "Costa Rica", "pt": "Costa Rica", "fr": "Costa Rica", "de": "Costa Rica", "ja": "コスタリカ", "ko": "코스타리카" }, { "id": "CAN", "flag": "https://flagcdn.com/ca.svg", "en": "Canada", "zh-TW": "加拿大", "zh-CN": "加拿大", "es": "Canadá", "pt": "Canadá", "fr": "Canada", "de": "Kanada", "ja": "カナダ", "ko": "캐나다" }], "Group C": [{ "id": "URU", "flag": "https://flagcdn.com/uy.svg", "en": "Uruguay", "zh-TW": "烏拉圭", "zh-CN": "乌拉圭", "es": "Uruguay", "pt": "Uruguai", "fr": "Uruguay", "de": "Uruguay", "ja": "ウルグアイ", "ko": "우루과이" }, { "id": "BOL", "flag": "https://flagcdn.com/bo.svg", "en": "Bolivia", "zh-TW": "玻利維亞", "zh-CN": "玻利维亚", "es": "Bolivia", "pt": "Bolívia", "fr": "Bolivie", "de": "Bolivien", "ja": "ボリビア", "ko": "볼리비아" }, { "id": "COL", "flag": "https://flagcdn.com/co.svg", "en": "Colombia", "zh-TW": "哥倫比亞", "zh-CN": "哥伦比亚", "es": "Colombia", "pt": "Colômbia", "fr": "Colombie", "de": "Kolumbien", "ja": "コロンビア", "ko": "콜롬비아" }, { "id": "PAR", "flag": "https://flagcdn.com/py.svg", "en": "Paraguay", "zh-TW": "巴拉圭", "zh-CN": "巴拉圭", "es": "Paraguay", "pt": "Paraguai", "fr": "Paraguay", "de": "Paraguay", "ja": "パラグアイ", "ko": "파라과이" }], "Group D": [{ "id": "BRA", "flag": "https://flagcdn.com/br.svg", "en": "Brazil", "zh-TW": "巴西", "zh-CN": "巴西", "es": "Brasil", "pt": "Brasil", "fr": "Brésil", "de": "Brasilien", "ja": "ブラジル", "ko": "브라질" }, { "id": "CHI", "flag": "https://flagcdn.com/cl.svg", "en": "Chile", "zh-TW": "智利", "zh-CN": "智利", "es": "Chile", "pt": "Chile", "fr": "Chili", "de": "Chile", "ja": "チリ", "ko": "칠레" }, { "id": "VEN", "flag": "https://flagcdn.com/ve.svg", "en": "Venezuela", "zh-TW": "委內瑞拉", "zh-CN": "委内瑞拉", "es": "Venezuela", "pt": "Venezuela", "fr": "Venezuela", "de": "Venezuela", "ja": "ベネズエラ", "ko": "베네수엘라" }, { "id": "PER", "flag": "https://flagcdn.com/pe.svg", "en": "Peru", "zh-TW": "秘魯", "zh-CN": "秘鲁", "es": "Perú", "pt": "Peru", "fr": "Pérou", "de": "Peru", "ja": "ペルー", "ko": "페루" }], "Group E": [{ "id": "GER", "flag": "https://flagcdn.com/de.svg", "en": "Germany", "zh-TW": "德國", "zh-CN": "德国", "es": "Alemania", "pt": "Alemanha", "fr": "Allemagne", "de": "Deutschland", "ja": "ドイツ", "ko": "독일" }, { "id": "BEL", "flag": "https://flagcdn.com/be.svg", "en": "Belgium", "zh-TW": "比利時", "zh-CN": "比利时", "es": "Bélgica", "pt": "Bélgica", "fr": "Belgique", "de": "Belgien", "ja": "ベルギー", "ko": "벨기에" }, { "id": "SVK", "flag": "https://flagcdn.com/sk.svg", "en": "Slovakia", "zh-TW": "斯洛伐克", "zh-CN": "斯洛伐克", "es": "Eslovaquia", "pt": "Eslováquia", "fr": "Slovaquie", "de": "Slowakei", "ja": "スロバキア", "ko": "슬로바키아" }, { "id": "SCO", "flag": "https://flagcdn.com/gb-sct.svg", "en": "Scotland", "zh-TW": "蘇格蘭", "zh-CN": "苏格兰", "es": "Escocia", "pt": "Escócia", "fr": "Écosse", "de": "Schottland", "ja": "スコットランド", "ko": "스코틀랜드" }], "Group F": [{ "id": "POR", "flag": "https://flagcdn.com/pt.svg", "en": "Portugal", "zh-TW": "葡萄牙", "zh-CN": "葡萄牙", "es": "Portugal", "pt": "Portugal", "fr": "Portugal", "de": "Portugal", "ja": "ポルトガル", "ko": "포르투갈" }, { "id": "TUR", "flag": "https://flagcdn.com/tr.svg", "en": "Turkey", "zh-TW": "土耳其", "zh-CN": "土耳其", "es": "Turquía", "pt": "Turquia", "fr": "Turquie", "de": "Türkei", "ja": "トルコ", "ko": "터키" }, { "id": "CZE", "flag": "https://flagcdn.com/cz.svg", "en": "Czech Republic", "zh-TW": "捷克", "zh-CN": "捷克", "es": "República Checa", "pt": "República Checa", "fr": "République tchèque", "de": "Tschechien", "ja": "チェコ", "ko": "체코" }, { "id": "GEO", "flag": "https://flagcdn.com/ge.svg", "en": "Georgia", "zh-TW": "喬治亞", "zh-CN": "格鲁吉亚", "es": "Georgia", "pt": "Geórgia", "fr": "Géorgie", "de": "Georgien", "ja": "ジョージア", "ko": "조지아" }], "Group G": [{ "id": "ESP", "flag": "https://flagcdn.com/es.svg", "en": "Spain", "zh-TW": "西班牙", "zh-CN": "西班牙", "es": "España", "pt": "Espanha", "fr": "Espagne", "de": "Spanien", "ja": "スペイン", "ko": "스페인" }, { "id": "NED", "flag": "https://flagcdn.com/nl.svg", "en": "Netherlands", "zh-TW": "荷蘭", "zh-CN": "荷兰", "es": "Países Bajos", "pt": "Países Baixos", "fr": "Pays-Bas", "de": "Niederlande", "ja": "オランダ", "ko": "네덜란드" }, { "id": "SRB", "flag": "https://flagcdn.com/rs.svg", "en": "Serbia", "zh-TW": "塞爾維亞", "zh-CN": "塞尔维亚", "es": "Serbia", "pt": "Sérvia", "fr": "Serbie", "de": "Serbien", "ja": "セルビア", "ko": "세르비아" }, { "id": "DEN", "flag": "https://flagcdn.com/dk.svg", "en": "Denmark", "zh-TW": "丹麥", "zh-CN": "丹麦", "es": "Dinamarca", "pt": "Dinamarca", "fr": "Danemark", "de": "Dänemark", "ja": "デンマーク", "ko": "덴마크" }], "Group H": [{ "id": "ENG", "flag": "https://flagcdn.com/gb-eng.svg", "en": "England", "zh-TW": "英格蘭", "zh-CN": "英格兰", "es": "Inglaterra", "pt": "Inglaterra", "fr": "Angleterre", "de": "England", "ja": "イングランド", "ko": "잉글랜드" }, { "id": "AUT", "flag": "https://flagcdn.com/at.svg", "en": "Austria", "zh-TW": "奧地利", "zh-CN": "奥地利", "es": "Austria", "pt": "Áustria", "fr": "Autriche", "de": "Österreich", "ja": "オーストリア", "ko": "오스트리아" }, { "id": "ALB", "flag": "https://flagcdn.com/al.svg", "en": "Albania", "zh-TW": "阿爾巴尼亞", "zh-CN": "阿尔巴尼亚", "es": "Albania", "pt": "Albânia", "fr": "Albanie", "de": "Albanien", "ja": "アルバニア", "ko": "알바니아" }, { "id": "HUN", "flag": "https://flagcdn.com/hu.svg", "en": "Hungary", "zh-TW": "匈牙利", "zh-CN": "匈牙利", "es": "Hungría", "pt": "Hungria", "fr": "Hongrie", "de": "Ungarn", "ja": "ハンガリー", "ko": "헝가리" }], "Group I": [{ "id": "FRA", "flag": "https://flagcdn.com/fr.svg", "en": "France", "zh-TW": "法國", "zh-CN": "法国", "es": "Francia", "pt": "França", "fr": "France", "de": "Frankreich", "ja": "フランス", "ko": "프랑스" }, { "id": "POL", "flag": "https://flagcdn.com/pl.svg", "en": "Poland", "zh-TW": "波蘭", "zh-CN": "波兰", "es": "Polonia", "pt": "Polónia", "fr": "Pologne", "de": "Polen", "ja": "ポーランド", "ko": "폴란드" }, { "id": "UKR", "flag": "https://flagcdn.com/ua.svg", "en": "Ukraine", "zh-TW": "烏克蘭", "zh-CN": "乌克兰", "es": "Ucrania", "pt": "Ucrânia", "fr": "Ukraine", "de": "Ukraine", "ja": "ウクライナ", "ko": "우크라이나" }, { "id": "WAL", "flag": "https://flagcdn.com/gb-wls.svg", "en": "Wales", "zh-TW": "威爾斯", "zh-CN": "威尔士", "es": "Gales", "pt": "País de Gales", "fr": "Pays de Galles", "de": "Wales", "ja": "ウェールズ", "ko": "웨일스" }], "Group J": [{ "id": "ARG", "flag": "https://flagcdn.com/ar.svg", "en": "Argentina", "zh-TW": "阿根廷", "zh-CN": "阿根廷", "es": "Argentina", "pt": "Argentina", "fr": "Argentine", "de": "Argentinien", "ja": "アルゼンチン", "ko": "아르헨티나" }, { "id": "CHN", "flag": "https://flagcdn.com/cn.svg", "en": "China PR", "zh-TW": "中國", "zh-CN": "中国", "es": "China", "pt": "China", "fr": "Chine", "de": "China", "ja": "中国", "ko": "중국" }, { "id": "KSA", "flag": "https://flagcdn.com/sa.svg", "en": "Saudi Arabia", "zh-TW": "沙烏地阿拉伯", "zh-CN": "沙特阿拉伯", "es": "Arabia Saudita", "pt": "Arábia Saudita", "fr": "Arabie saoudite", "de": "Saudi-Arabien", "ja": "サウジアラビア", "ko": "사우디아라비아" }, { "id": "IRQ", "flag": "https://flagcdn.com/iq.svg", "en": "Iraq", "zh-TW": "伊拉克", "zh-CN": "伊拉克", "es": "Irak", "pt": "Iraque", "fr": "Irak", "de": "Irak", "ja": "イラク", "ko": "이라크" }], "Group K": [{ "id": "JPN", "flag": "https://flagcdn.com/jp.svg", "en": "Japan", "zh-TW": "日本", "zh-CN": "日本", "es": "Japón", "pt": "Japão", "fr": "Japon", "de": "Japan", "ja": "日本", "ko": "일본" }, { "id": "KOR", "flag": "https://flagcdn.com/kr.svg", "en": "South Korea", "zh-TW": "南韓", "zh-CN": "韩国", "es": "Corea del Sur", "pt": "Coreia do Sul", "fr": "Corée du Sud", "de": "Südkorea", "ja": "韓国", "ko": "대한민국" }, { "id": "IRN", "flag": "https://flagcdn.com/ir.svg", "en": "Iran", "zh-TW": "伊朗", "zh-CN": "伊朗", "es": "Irán", "pt": "Irão", "fr": "Iran", "de": "Iran", "ja": "イラン", "ko": "이란" }, { "id": "UZB", "flag": "https://flagcdn.com/uz.svg", "en": "Uzbekistan", "zh-TW": "烏茲別克", "zh-CN": "乌兹别克斯坦", "es": "Uzbekistán", "pt": "Usbequistão", "fr": "Ouzbékistan", "de": "Usbekistan", "ja": "ウズベキスタン", "ko": "우즈베키스탄" }], "Group L": [{ "id": "MAR", "flag": "https://flagcdn.com/ma.svg", "en": "Morocco", "zh-TW": "摩洛哥", "zh-CN": "摩洛哥", "es": "Marruecos", "pt": "Marrocos", "fr": "Maroc", "de": "Marokko", "ja": "モロッコ", "ko": "모로코" }, { "id": "EGY", "flag": "https://flagcdn.com/eg.svg", "en": "Egypt", "zh-TW": "埃及", "zh-CN": "埃及", "es": "Egipto", "pt": "Egito", "fr": "Égypte", "de": "Ägypten", "ja": "エジプト", "ko": "이집트" }, { "id": "SEN", "flag": "https://flagcdn.com/sn.svg", "en": "Senegal", "zh-TW": "塞內加爾", "zh-CN": "塞内加尔", "es": "Senegal", "pt": "Senegal", "fr": "Sénégal", "de": "Senegal", "ja": "セネガル", "ko": "세네갈" }, { "id": "RSA", "flag": "https://flagcdn.com/za.svg", "en": "South Africa", "zh-TW": "南非", "zh-CN": "南非", "es": "Sudáfrica", "pt": "África do Sul", "fr": "Afrique du Sud", "de": "Südkorea", "ja": "南アフリカ", "ko": "남아프리카공화국" }] };
 
     /* ── 建立英文名稱 → 各語系翻譯的扁平查找表 ── */
     const TEAM_MAP = {};   // { "Mexico": { en: "Mexico", "zh-TW": "墨西哥", ... }, ... }
@@ -1549,15 +1647,15 @@
        ║  3. 多語言 UI 字串（規格 Section 6.3）                   ║
        ╚══════════════════════════════════════════════════════════╝ */
     const LANGS = [
-      { code: 'en',    abbr: 'EN',  name: 'English',    hour12: true  },
-      { code: 'zh-TW', abbr: '繁中', name: '繁體中文',   hour12: false },
-      { code: 'zh-CN', abbr: '简中', name: '简体中文',   hour12: false },
-      { code: 'es',    abbr: 'ES',  name: 'Español',    hour12: false },
-      { code: 'pt',    abbr: 'PT',  name: 'Português',  hour12: false },
-      { code: 'fr',    abbr: 'FR',  name: 'Français',   hour12: false },
-      { code: 'de',    abbr: 'DE',  name: 'Deutsch',    hour12: false },
-      { code: 'ja',    abbr: 'JA',  name: '日本語',     hour12: false },
-      { code: 'ko',    abbr: 'KO',  name: '한국어',     hour12: false },
+      { code: 'en', abbr: 'EN', name: 'English', hour12: true },
+      { code: 'zh-TW', abbr: '繁中', name: '繁體中文', hour12: false },
+      { code: 'zh-CN', abbr: '简中', name: '简体中文', hour12: false },
+      { code: 'es', abbr: 'ES', name: 'Español', hour12: false },
+      { code: 'pt', abbr: 'PT', name: 'Português', hour12: false },
+      { code: 'fr', abbr: 'FR', name: 'Français', hour12: false },
+      { code: 'de', abbr: 'DE', name: 'Deutsch', hour12: false },
+      { code: 'ja', abbr: 'JA', name: '日本語', hour12: false },
+      { code: 'ko', abbr: 'KO', name: '한국어', hour12: false },
     ];
 
     const UI = {
@@ -1608,37 +1706,37 @@
         de: 'Gruppe {X}', ja: 'グループ{X}', ko: '조 {X}',
       },
       /* 賽事階段 */
-      'stage.r32':   { en: 'Round of 32', 'zh-TW': '三十二強', 'zh-CN': '三十二强', es: 'Dieciseisavos', pt: 'Dezesseis-avos', fr: 'Seizièmes', de: 'Sechzehntelfinale', ja: 'ラウンド32', ko: '32강' },
-      'stage.r16':   { en: 'Round of 16', 'zh-TW': '十六強', 'zh-CN': '十六强', es: 'Octavos', pt: 'Oitavas', fr: 'Huitièmes', de: 'Achtelfinale', ja: 'ラウンド16', ko: '16강' },
-      'stage.qf':    { en: 'Quarter-final', 'zh-TW': '八強', 'zh-CN': '八强', es: 'Cuartos', pt: 'Quartas', fr: 'Quarts', de: 'Viertelfinale', ja: '準々決勝', ko: '8강' },
-      'stage.sf':    { en: 'Semi-final', 'zh-TW': '四強', 'zh-CN': '四强', es: 'Semifinal', pt: 'Semifinal', fr: 'Demi-finale', de: 'Halbfinale', ja: '準決勝', ko: '4강' },
+      'stage.r32': { en: 'Round of 32', 'zh-TW': '三十二強', 'zh-CN': '三十二强', es: 'Dieciseisavos', pt: 'Dezesseis-avos', fr: 'Seizièmes', de: 'Sechzehntelfinale', ja: 'ラウンド32', ko: '32강' },
+      'stage.r16': { en: 'Round of 16', 'zh-TW': '十六強', 'zh-CN': '十六强', es: 'Octavos', pt: 'Oitavas', fr: 'Huitièmes', de: 'Achtelfinale', ja: 'ラウンド16', ko: '16강' },
+      'stage.qf': { en: 'Quarter-final', 'zh-TW': '八強', 'zh-CN': '八强', es: 'Cuartos', pt: 'Quartas', fr: 'Quarts', de: 'Viertelfinale', ja: '準々決勝', ko: '8강' },
+      'stage.sf': { en: 'Semi-final', 'zh-TW': '四強', 'zh-CN': '四强', es: 'Semifinal', pt: 'Semifinal', fr: 'Demi-finale', de: 'Halbfinale', ja: '準決勝', ko: '4강' },
       'stage.final': { en: 'Final', 'zh-TW': '決賽', 'zh-CN': '决赛', es: 'Final', pt: 'Final', fr: 'Finale', de: 'Finale', ja: '決勝', ko: '결승' },
-      'stage.3rd':   { en: '3rd Place', 'zh-TW': '季軍賽', 'zh-CN': '季军赛', es: '3er Lugar', pt: '3º Lugar', fr: '3e Place', de: 'Platz 3', ja: '3位決定戦', ko: '3·4위전' },
+      'stage.3rd': { en: '3rd Place', 'zh-TW': '季軍賽', 'zh-CN': '季军赛', es: '3er Lugar', pt: '3º Lugar', fr: '3e Place', de: 'Platz 3', ja: '3位決定戦', ko: '3·4위전' },
       /* Loading */
-      'loading':     { en: 'Loading schedule…', 'zh-TW': '載入賽程中…', 'zh-CN': '加载赛程中…', es: 'Cargando…', pt: 'Carregando…', fr: 'Chargement…', de: 'Laden…', ja: '読み込み中…', ko: '불러오는 중…' },
+      'loading': { en: 'Loading schedule…', 'zh-TW': '載入賽程中…', 'zh-CN': '加载赛程中…', es: 'Cargando…', pt: 'Carregando…', fr: 'Chargement…', de: 'Laden…', ja: '読み込み中…', ko: '불러오는 중…' },
       /* Error */
       'error.title': { en: 'Unable to load schedule', 'zh-TW': '無法載入賽程', 'zh-CN': '无法加载赛程', es: 'No se pudo cargar', pt: 'Não foi possível carregar', fr: 'Impossible de charger', de: 'Laden fehlgeschlagen', ja: '読み込みに失敗', ko: '불러오기 실패' },
-      'error.msg':   { en: 'Please check your connection and try again.', 'zh-TW': '請確認網路連線後重試。', 'zh-CN': '请检查网络连接后重试。', es: 'Comprueba tu conexión e inténtalo de nuevo.', pt: 'Verifique sua conexão e tente novamente.', fr: 'Vérifiez votre connexion et réessayez.', de: 'Bitte Verbindung prüfen und erneut versuchen.', ja: 'ネットワーク接続を確認して再試行してください。', ko: '인터넷 연결을 확인하고 다시 시도하세요.' },
-      'retry':       { en: 'Retry', 'zh-TW': '重試', 'zh-CN': '重试', es: 'Reintentar', pt: 'Tentar novamente', fr: 'Réessayer', de: 'Erneut versuchen', ja: '再試行', ko: '다시 시도' },
+      'error.msg': { en: 'Please check your connection and try again.', 'zh-TW': '請確認網路連線後重試。', 'zh-CN': '请检查网络连接后重试。', es: 'Comprueba tu conexión e inténtalo de nuevo.', pt: 'Verifique sua conexão e tente novamente.', fr: 'Vérifiez votre connexion et réessayez.', de: 'Bitte Verbindung prüfen und erneut versuchen.', ja: 'ネットワーク接続を確認して再試行してください。', ko: '인터넷 연결을 확인하고 다시 시도하세요.' },
+      'retry': { en: 'Retry', 'zh-TW': '重試', 'zh-CN': '重试', es: 'Reintentar', pt: 'Tentar novamente', fr: 'Réessayer', de: 'Erneut versuchen', ja: '再試行', ko: '다시 시도' },
       /* Language panel header */
       'lang.select': { en: 'Select Language', 'zh-TW': '選擇語言', 'zh-CN': '选择语言', es: 'Seleccionar idioma', pt: 'Selecionar idioma', fr: 'Choisir la langue', de: 'Sprache wählen', ja: '言語を選択', ko: '언어 선택' },
       /* No matches */
-      'no.matches':  { en: 'No matches on this date', 'zh-TW': '此日期無比賽', 'zh-CN': '此日期无比赛', es: 'Sin partidos este día', pt: 'Sem jogos neste dia', fr: 'Aucun match ce jour', de: 'Keine Spiele an diesem Tag', ja: 'この日程に試合なし', ko: '이 날짜에 경기 없음' },
+      'no.matches': { en: 'No matches on this date', 'zh-TW': '此日期無比賽', 'zh-CN': '此日期无比赛', es: 'Sin partidos este día', pt: 'Sem jogos neste dia', fr: 'Aucun match ce jour', de: 'Keine Spiele an diesem Tag', ja: 'この日程に試合なし', ko: '이 날짜에 경기 없음' },
       /* Data updated */
       'data.updated': { en: 'Data updated:', 'zh-TW': '資料更新：', 'zh-CN': '数据更新：', es: 'Datos actualizados:', pt: 'Dados atualizados:', fr: 'Données mises à jour:', de: 'Daten aktualisiert:', ja: 'データ更新:', ko: '데이터 업데이트:' },
     };
 
     /* SEO Meta 資料（依語言）*/
     const SEO_META = {
-      'en':    { title: 'FIFA World Cup 2026™ Match Schedule', description: 'View the complete FIFA World Cup 2026™ match schedule. Find match times, venues, and results for all 48 teams.', ogLocale: 'en_US' },
+      'en': { title: 'FIFA World Cup 2026™ Match Schedule', description: 'View the complete FIFA World Cup 2026™ match schedule. Find match times, venues, and results for all 48 teams.', ogLocale: 'en_US' },
       'zh-TW': { title: 'FIFA 世界盃 2026™ 賽程表', description: '查看 FIFA 世界盃 2026™ 完整賽程，包含所有 48 支球隊的比賽時間、場館與賽果。', ogLocale: 'zh_TW' },
       'zh-CN': { title: 'FIFA 世界杯 2026™ 赛程表', description: '查看 FIFA 世界杯 2026™ 完整赛程，包含所有 48 支球队的比赛时间、场馆与赛果。', ogLocale: 'zh_CN' },
-      'es':    { title: 'Calendario FIFA Copa Mundial 2026™', description: 'Consulta el calendario completo de la FIFA Copa Mundial 2026™.', ogLocale: 'es_ES' },
-      'pt':    { title: 'Calendário FIFA Copa do Mundo 2026™', description: 'Veja o calendário completo da FIFA Copa do Mundo 2026™.', ogLocale: 'pt_BR' },
-      'fr':    { title: 'Calendrier FIFA Coupe du Monde 2026™', description: 'Consultez le calendrier complet de la FIFA Coupe du Monde 2026™.', ogLocale: 'fr_FR' },
-      'de':    { title: 'FIFA Weltmeisterschaft 2026™ Spielplan', description: 'Den vollständigen Spielplan der FIFA Weltmeisterschaft 2026™ ansehen.', ogLocale: 'de_DE' },
-      'ja':    { title: 'FIFAワールドカップ 2026™ 試合スケジュール', description: 'FIFAワールドカップ 2026™ の全試合スケジュールを確認。', ogLocale: 'ja_JP' },
-      'ko':    { title: 'FIFA 월드컵 2026™ 경기 일정', description: 'FIFA 월드컵 2026™ 전체 경기 일정을 확인하세요.', ogLocale: 'ko_KR' },
+      'es': { title: 'Calendario FIFA Copa Mundial 2026™', description: 'Consulta el calendario completo de la FIFA Copa Mundial 2026™.', ogLocale: 'es_ES' },
+      'pt': { title: 'Calendário FIFA Copa do Mundo 2026™', description: 'Veja o calendário completo da FIFA Copa do Mundo 2026™.', ogLocale: 'pt_BR' },
+      'fr': { title: 'Calendrier FIFA Coupe du Monde 2026™', description: 'Consultez le calendrier complet de la FIFA Coupe du Monde 2026™.', ogLocale: 'fr_FR' },
+      'de': { title: 'FIFA Weltmeisterschaft 2026™ Spielplan', description: 'Den vollständigen Spielplan der FIFA Weltmeisterschaft 2026™ ansehen.', ogLocale: 'de_DE' },
+      'ja': { title: 'FIFAワールドカップ 2026™ 試合スケジュール', description: 'FIFAワールドカップ 2026™ の全試合スケジュールを確認。', ogLocale: 'ja_JP' },
+      'ko': { title: 'FIFA 월드컵 2026™ 경기 일정', description: 'FIFA 월드컵 2026™ 전체 경기 일정을 확인하세요.', ogLocale: 'ko_KR' },
     };
 
     /* 語言偵測 Mapping */
@@ -1779,12 +1877,12 @@
       }
 
       // 淘汰賽各類型
-      if (/round of 32/i.test(s))      { stageType = 'r32'; }
+      if (/round of 32/i.test(s)) { stageType = 'r32'; }
       else if (/round of 16/i.test(s)) { stageType = 'r16'; }
       else if (/quarter.?final/i.test(s)) { stageType = 'qf'; }
-      else if (/semi.?final/i.test(s))    { stageType = 'sf'; }
+      else if (/semi.?final/i.test(s)) { stageType = 'sf'; }
       else if (/3rd place|third place/i.test(s)) { stageType = '3rd'; }
-      else if (/final/i.test(s))          { stageType = 'final'; }
+      else if (/final/i.test(s)) { stageType = 'final'; }
 
       return { stageType, groupLetter, matchNumber, rawStage: s };
     }
@@ -1876,7 +1974,7 @@
           };
 
           const dtStart = parseDT(dtStartRaw);
-          const dtEnd   = parseDT(dtEndRaw);
+          const dtEnd = parseDT(dtEndRaw);
           if (!dtStart) continue;
 
           // ── 解析 SUMMARY ──
@@ -1965,7 +2063,7 @@
             const locMatch = location.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
             if (locMatch) {
               venue = locMatch[1].trim();
-              city  = locMatch[2].trim();
+              city = locMatch[2].trim();
             } else {
               venue = location.trim();
             }
@@ -1975,7 +2073,7 @@
           const { stageType, groupLetter, matchNumber, rawStage } = parseStage(stageRaw);
 
           events.push({
-            uid:          uid || `event-${events.length}`,
+            uid: uid || `event-${events.length}`,
             dtStart,
             dtEnd,
             homeTeam,
@@ -2076,7 +2174,7 @@
     function getMatchStatus(event) {
       const now = Date.now();
       const start = event.dtStart.getTime();
-      const end   = event.dtEnd ? event.dtEnd.getTime() : start + 2 * 3600 * 1000;
+      const end = event.dtEnd ? event.dtEnd.getTime() : start + 2 * 3600 * 1000;
 
       // 有比分 → 已結束
       if (!event.isVs && event.homeScore !== null && event.awayScore !== null) {
@@ -2201,10 +2299,10 @@
       const currentIdx = allDates.indexOf(state.selectedDate);
 
       let nextIdx;
-      if (e.key === 'ArrowLeft')  nextIdx = Math.max(0, currentIdx - 1);
+      if (e.key === 'ArrowLeft') nextIdx = Math.max(0, currentIdx - 1);
       if (e.key === 'ArrowRight') nextIdx = Math.min(allDates.length - 1, currentIdx + 1);
-      if (e.key === 'Home')       nextIdx = 0;
-      if (e.key === 'End')        nextIdx = allDates.length - 1;
+      if (e.key === 'Home') nextIdx = 0;
+      if (e.key === 'End') nextIdx = allDates.length - 1;
 
       if (nextIdx !== undefined && nextIdx !== currentIdx) {
         selectDate(allDates[nextIdx]);
@@ -2368,7 +2466,7 @@
       // ── article 容器 ──
       const article = document.createElement('article');
       article.className = 'match-card';
-      if (status === 'live')     article.classList.add('is-live');
+      if (status === 'live') article.classList.add('is-live');
       if (status === 'finished') article.classList.add('is-finished');
       article.style.animationDelay = `${animDelay}ms`;
 
@@ -2643,11 +2741,15 @@
      * 偵測初始語言
      */
     function detectLanguage() {
-      // 優先 localStorage
+      // 最優先：URL ?lang= 參數（讓分享連結可直接套用語言）
+      const urlLang = new URLSearchParams(window.location.search).get('lang');
+      if (urlLang && LANGS.some(l => l.code === urlLang)) return urlLang;
+
+      // 次優先：localStorage（使用者上次選擇的語言）
       const stored = localStorage.getItem(LANG_KEY);
       if (stored && LANGS.some(l => l.code === stored)) return stored;
 
-      // navigator.language
+      // 最後備援：navigator.language
       const navLang = navigator.language || navigator.languages?.[0] || 'en';
       // 嘗試完整匹配（如 zh-TW）
       if (LANG_MAP[navLang]) return LANG_MAP[navLang];
@@ -2812,10 +2914,18 @@
        ║  12. SEO 動態更新                                        ║
        ╚══════════════════════════════════════════════════════════╝ */
 
+    // 實際發佈的頁面網址
+    const BASE_URL = 'https://undiff.net/tools/WC2026.html';
+
     function updateSEOMeta(lang) {
       const meta = SEO_META[lang] ?? SEO_META['en'];
 
       document.title = meta.title;
+
+      // 計算此語言的完整 URL（英文預設不加 ?lang=）
+      const pageUrl = (lang === 'en')
+        ? BASE_URL
+        : `${BASE_URL}?lang=${lang}`;
 
       // description
       const descEl = document.getElementById('meta-description');
@@ -2823,8 +2933,7 @@
 
       // og
       const ogUrl = document.getElementById('og-url');
-      const langSlug = lang.toLowerCase().replace('-', '-');
-      if (ogUrl) ogUrl.setAttribute('content', `https://nynjfwc26.com/${langSlug}/schedule`);
+      if (ogUrl) ogUrl.setAttribute('content', pageUrl);
 
       const ogTitle = document.getElementById('og-title');
       if (ogTitle) ogTitle.setAttribute('content', meta.title);
@@ -2843,7 +2952,17 @@
 
       // canonical
       const canonical = document.getElementById('canonical-url');
-      if (canonical) canonical.setAttribute('href', `https://nynjfwc26.com/${langSlug}/schedule`);
+      if (canonical) canonical.setAttribute('href', pageUrl);
+
+      // 同步更新瀏覽器網址列（不觸發頁面重載）
+      // 讓使用者複製/分享網址時可直接帶入語言參數
+      try {
+        if (lang === 'en') {
+          history.replaceState(null, '', window.location.pathname);
+        } else {
+          history.replaceState(null, '', `?lang=${lang}`);
+        }
+      } catch (_) { /* 在 file:// 等環境下 history API 可能受限，忽略錯誤 */ }
     }
 
     /**
@@ -2879,7 +2998,7 @@
         '@context': 'https://schema.org',
         '@type': 'ItemList',
         name: 'FIFA World Cup 2026™ Match Schedule',
-        url: 'https://nynjfwc26.com/en/schedule',
+        url: BASE_URL,
         numberOfItems: events.length,
         itemListElement: items,
       };
@@ -2908,7 +3027,7 @@
         const updateArrowVisibility = () => {
           const scrollLeft = container.scrollLeft;
           const maxScroll = container.scrollWidth - container.clientWidth;
-          
+
           if (scrollLeft <= 5) {
             prevBtn.style.opacity = '0';
             prevBtn.style.pointerEvents = 'none';
@@ -2996,7 +3115,7 @@
     // Retry 按鈕
     document.getElementById('retry-btn').addEventListener('click', () => {
       // 清除快取，強制重新 fetch
-      try { localStorage.removeItem(CACHE_KEY); } catch (_) {}
+      try { localStorage.removeItem(CACHE_KEY); } catch (_) { }
       init();
     });
 
@@ -3017,4 +3136,5 @@
 
   </script>
 </body>
+
 </html>
