@@ -590,7 +590,7 @@
     #match-list {
       max-width: var(--max-content-width);
       margin: 0 auto;
-      padding: 16px 12px 40px;
+      padding: 24px 12px 40px;
       min-height: calc(100vh - var(--header-height-mobile) - var(--datebar-height));
     }
 
@@ -1647,6 +1647,8 @@
     /* ╔══════════════════════════════════════════════════════════╗
        ║  4. 應用程式狀態                                         ║
        ╚══════════════════════════════════════════════════════════╝ */
+    let lastDateBarScroll = 0; // 記錄點擊「全部」前的橫向滾動位置
+
     const state = {
       lang: 'en',          // 目前語言
       events: [],          // 解析後的 MatchEvent 陣列
@@ -2131,6 +2133,14 @@
       allTab.setAttribute('tabindex', state.selectedDate === 'ALL' ? '0' : '-1');
       allTab.id = 'tab-ALL';
       allTab.textContent = t('date.all');
+
+      // 避免點擊時橫向滾動軸被自動拉回 0
+      const recordScroll = () => {
+        lastDateBarScroll = container.scrollLeft;
+      };
+      allTab.addEventListener('mousedown', recordScroll);
+      allTab.addEventListener('touchstart', recordScroll, { passive: true });
+
       frag.appendChild(allTab);
 
 
@@ -2229,15 +2239,37 @@
         tab.setAttribute('tabindex', isSelected ? '0' : '-1');
       });
 
-      // 捲動 Date Bar 使選中 Tab 置中可見
-      scrollTabIntoView(dateStr);
+      // 暫時停用 html 的平滑滾動以確保能瞬間重設為 0，避免因為 DOM 高度驟縮導致平滑滾動被瀏覽器中斷/忽略
+      const htmlEl = document.documentElement;
+      const originalScrollBehavior = htmlEl.style.scrollBehavior;
+
+      if (dateStr !== 'ALL') {
+        htmlEl.style.scrollBehavior = 'auto';
+        window.scrollTo(0, 0);
+      }
 
       // 重新渲染賽事列表
       renderMatches();
 
       // 除「全部」選項外，切換日期時，賽事列表應捲動到最上面
       if (dateStr !== 'ALL') {
+        // 捲動 Date Bar 使選中 Tab 置中可見
+        scrollTabIntoView(dateStr);
+
+        // 再次確保置頂
         window.scrollTo(0, 0);
+        
+        // 在下一個 Frame 恢復原本的 scroll-behavior
+        requestAnimationFrame(() => {
+          htmlEl.style.scrollBehavior = originalScrollBehavior;
+        });
+      } else {
+        // 點擊「全部」時，將滾動軸回復至點擊前的記錄值，避免拉回 0
+        const container = document.getElementById('datebar-inner');
+        if (container) {
+          container.scrollLeft = lastDateBarScroll;
+        }
+        htmlEl.style.scrollBehavior = originalScrollBehavior;
       }
     }
 
