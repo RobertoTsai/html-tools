@@ -3061,7 +3061,77 @@
     }
 
     /* ╔══════════════════════════════════════════════════════════╗
-       ║  13. 主程式入口                                          ║
+       ║  13. 觸控滑動切換日期                                    ║
+       ╚══════════════════════════════════════════════════════════╝ */
+
+    /**
+     * 在賽事列表區塊上，左右滑動切換日期（僅觸控裝置）
+     * 向左滑 → 下一個日期；向右滑 → 上一個日期
+     */
+    function setupSwipeGesture() {
+      // 僅在有觸控功能的裝置上啟用
+      if (!('ontouchstart' in window) && !(navigator.maxTouchPoints > 0)) return;
+
+      const matchList = document.getElementById('match-list');
+      if (!matchList) return;
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let swipeDir = null; // null | 'horizontal' | 'vertical'
+
+      const LOCK_THRESHOLD = 10;  // 判斷方向的最小移動量（px）
+      const SWIPE_THRESHOLD = 50; // 觸發切換的最小橫向位移（px）
+
+      matchList.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        swipeDir = null;
+      }, { passive: true });
+
+      // passive: false 才能在確定為橫向滑動時呼叫 preventDefault()
+      matchList.addEventListener('touchmove', (e) => {
+        if (swipeDir === 'vertical') return; // 縱向捲動，不干預
+
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = e.touches[0].clientY - touchStartY;
+
+        if (swipeDir === null) {
+          if (Math.abs(dx) < LOCK_THRESHOLD && Math.abs(dy) < LOCK_THRESHOLD) return;
+          swipeDir = Math.abs(dx) >= Math.abs(dy) ? 'horizontal' : 'vertical';
+        }
+
+        if (swipeDir === 'horizontal') {
+          // 鎖定橫向後阻止頁面縱向滾動，以免衝突
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      matchList.addEventListener('touchend', (e) => {
+        if (swipeDir !== 'horizontal') return;
+
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) < SWIPE_THRESHOLD) return; // 位移太短，忽略
+
+        const allDates = ['ALL', ...state.dates];
+        const currentIdx = allDates.indexOf(state.selectedDate);
+
+        let nextIdx;
+        if (dx < 0) {
+          // 向左滑 → 下一個日期
+          nextIdx = Math.min(allDates.length - 1, currentIdx + 1);
+        } else {
+          // 向右滑 → 上一個日期
+          nextIdx = Math.max(0, currentIdx - 1);
+        }
+
+        if (nextIdx !== undefined && nextIdx !== currentIdx) {
+          selectDate(allDates[nextIdx]);
+        }
+      }, { passive: true });
+    }
+
+    /* ╔══════════════════════════════════════════════════════════╗
+       ║  14. 主程式入口                                          ║
        ╚══════════════════════════════════════════════════════════╝ */
 
     async function init() {
@@ -3131,6 +3201,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       init().then(() => {
         setupDateBarArrows();
+        setupSwipeGesture();
       });
     });
 
