@@ -1576,6 +1576,421 @@
     .flash-update {
       animation: flash-update 1.2s cubic-bezier(0.25, 1, 0.5, 1);
     }
+
+    /* ── Team Filter Floating Container ── */
+    #filter-floating-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 98;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .filter-btn-floating {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: rgba(26, 26, 46, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      transition: all var(--transition-base);
+      transform: translateY(0);
+    }
+
+    .filter-btn-floating:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-gold);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 8px rgba(212, 175, 55, 0.3);
+    }
+
+    .filter-btn-floating.active {
+      background: var(--gradient-pride);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 20px rgba(200, 16, 46, 0.4), 0 0 8px rgba(200, 16, 46, 0.4);
+    }
+
+    .filter-btn-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-gold);
+      color: var(--color-black);
+      font-size: 0.75rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      line-height: 1;
+    }
+
+    .filter-clear-floating {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: rgba(200, 16, 46, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      color: var(--color-white);
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      transition: all var(--transition-base);
+      opacity: 0;
+      transform: scale(0.8) rotate(-45deg);
+      visibility: hidden;
+    }
+
+    .filter-clear-floating.show {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+      visibility: visible;
+    }
+
+    .filter-clear-floating:hover {
+      background: var(--color-red-bright);
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 6px 20px rgba(232, 25, 44, 0.5);
+    }
+
+    /* ── Filter Modal ── */
+    #filter-modal {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 300;
+      display: none;
+    }
+
+    #filter-modal.open {
+      display: block;
+    }
+
+    .filter-modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      animation: fadeIn 0.25s ease;
+    }
+
+    .filter-modal-panel {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 650px;
+      max-height: 80vh;
+      background: #151525;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(214, 175, 55, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUpModal {
+      from {
+        transform: translate(-50%, 30px);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+
+    .filter-modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1a1a2e;
+    }
+
+    .filter-modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.03em;
+    }
+
+    .filter-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    .filter-modal-close:hover {
+      color: var(--color-white);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      background: #11111e;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    }
+
+    .filter-modal-body::-webkit-scrollbar {
+      width: 6px;
+    }
+    .filter-modal-body::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    /* Group Row Block */
+    .filter-group-block {
+      margin-bottom: 24px;
+    }
+
+    .filter-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .filter-group-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-gold);
+      letter-spacing: 0.05em;
+    }
+
+    .filter-group-select-all {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all var(--transition-fast);
+    }
+
+    .filter-group-select-all:hover {
+      color: var(--color-white);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .filter-group-select-all input {
+      cursor: pointer;
+      accent-color: var(--color-red);
+    }
+
+    /* Teams Grid */
+    .filter-teams-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    @media (min-width: 480px) {
+      .filter-teams-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 600px) {
+      .filter-teams-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* Country Card checkbox button */
+    .filter-team-card {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: all var(--transition-fast);
+    }
+
+    .filter-team-card:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .filter-team-card.checked {
+      background: rgba(200, 16, 46, 0.15);
+      border-color: var(--color-red);
+    }
+
+    .filter-team-card input {
+      accent-color: var(--color-red);
+      cursor: pointer;
+    }
+
+    .filter-team-card .team-flag {
+      width: 20px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .filter-team-card .team-flag img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .filter-team-card .team-name-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-body);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .filter-team-card.checked .team-name-label {
+      color: var(--color-white);
+      font-weight: 600;
+    }
+
+    /* Footer Buttons */
+    .filter-modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #1a1a2e;
+    }
+
+    .filter-footer-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      outline: none;
+    }
+
+    .filter-btn-clear-all {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-secondary);
+    }
+
+    .filter-btn-clear-all:hover {
+      color: var(--color-white);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .filter-footer-right {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-btn-cancel {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+    }
+
+    .filter-btn-cancel:hover {
+      color: var(--color-white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .filter-btn-apply {
+      background: var(--color-red);
+      border: 1px solid var(--color-red);
+      color: var(--color-white);
+      box-shadow: 0 4px 10px rgba(200, 16, 46, 0.3);
+    }
+
+    .filter-btn-apply:hover {
+      background: var(--color-red-bright);
+      border-color: var(--color-red-bright);
+      box-shadow: 0 4px 14px rgba(232, 25, 44, 0.4);
+    }
+
+    /* Responsive adjustments for modal height on mobile */
+    @media (max-width: 600px) {
+      .filter-modal-panel {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        transform: none;
+        width: 100%;
+        max-width: 100%;
+        max-height: 85vh;
+        border-radius: 16px 16px 0 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        animation: slideUpMobileModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @keyframes slideUpMobileModal {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+    }
   </style>
 </head>
 
@@ -1702,7 +2117,656 @@
     /* ╔══════════════════════════════════════════════════════════╗
        ║  2. 球隊翻譯資料庫（直接內嵌自 FWC26_Team_Translation_Map_ALL.json）
        ╚══════════════════════════════════════════════════════════╝ */
-    const TEAM_DATA_RAW = { "Group A": [{ "id": "MEX", "flag": "https://flagcdn.com/mx.svg", "en": "Mexico", "zh-TW": "墨西哥", "zh-CN": "墨西哥", "es": "México", "pt": "México", "fr": "Mexique", "de": "Mexiko", "ja": "メキシコ", "ko": "멕시코" }, { "id": "ECU", "flag": "https://flagcdn.com/ec.svg", "en": "Ecuador", "zh-TW": "厄瓜多", "zh-CN": "厄瓜多尔", "es": "Ecuador", "pt": "Equador", "fr": "Équateur", "de": "Ecuador", "ja": "エクアドル", "ko": "에콰도르" }, { "id": "BLZ", "flag": "https://flagcdn.com/bz.svg", "en": "Belize", "zh-TW": "貝里斯", "zh-CN": "伯利兹", "es": "Belice", "pt": "Belize", "fr": "Belize", "de": "Belize", "ja": "ベリーズ", "ko": "벨리즈" }, { "id": "CUB", "flag": "https://flagcdn.com/cu.svg", "en": "Cuba", "zh-TW": "古巴", "zh-CN": "古巴", "es": "Cuba", "pt": "Cuba", "fr": "Cuba", "de": "Kuba", "ja": "キューバ", "ko": "쿠바" }], "Group B": [{ "id": "USA", "flag": "https://flagcdn.com/us.svg", "en": "United States", "zh-TW": "美國", "zh-CN": "美国", "es": "Estados Unidos", "pt": "Estados Unidos", "fr": "États-Unis", "de": "Vereinigte Staaten", "ja": "アメリカ合衆国", "ko": "미국" }, { "id": "PAN", "flag": "https://flagcdn.com/pa.svg", "en": "Panama", "zh-TW": "巴拿馬", "zh-CN": "巴拿马", "es": "Panamá", "pt": "Panamá", "fr": "Panama", "de": "Panama", "ja": "パナマ", "ko": "파라과이" }, { "id": "CRC", "flag": "https://flagcdn.com/cr.svg", "en": "Costa Rica", "zh-TW": "哥斯大黎加", "zh-CN": "哥斯达黎加", "es": "Costa Rica", "pt": "Costa Rica", "fr": "Costa Rica", "de": "Costa Rica", "ja": "コスタリカ", "ko": "코스타리카" }, { "id": "CAN", "flag": "https://flagcdn.com/ca.svg", "en": "Canada", "zh-TW": "加拿大", "zh-CN": "加拿大", "es": "Canadá", "pt": "Canadá", "fr": "Canada", "de": "Kanada", "ja": "カナダ", "ko": "캐나다" }], "Group C": [{ "id": "URU", "flag": "https://flagcdn.com/uy.svg", "en": "Uruguay", "zh-TW": "烏拉圭", "zh-CN": "乌拉圭", "es": "Uruguay", "pt": "Uruguai", "fr": "Uruguay", "de": "Uruguay", "ja": "ウルグアイ", "ko": "우루과이" }, { "id": "BOL", "flag": "https://flagcdn.com/bo.svg", "en": "Bolivia", "zh-TW": "玻利維亞", "zh-CN": "玻利维亚", "es": "Bolivia", "pt": "Bolívia", "fr": "Bolivie", "de": "Bolivien", "ja": "ボリビア", "ko": "볼리비아" }, { "id": "COL", "flag": "https://flagcdn.com/co.svg", "en": "Colombia", "zh-TW": "哥倫比亞", "zh-CN": "哥伦比亚", "es": "Colombia", "pt": "Colômbia", "fr": "Colombie", "de": "Kolumbien", "ja": "コロンビア", "ko": "콜롬비아" }, { "id": "PAR", "flag": "https://flagcdn.com/py.svg", "en": "Paraguay", "zh-TW": "巴拉圭", "zh-CN": "巴拉圭", "es": "Paraguay", "pt": "Paraguai", "fr": "Paraguay", "de": "Paraguay", "ja": "パラグアイ", "ko": "파라과이" }], "Group D": [{ "id": "BRA", "flag": "https://flagcdn.com/br.svg", "en": "Brazil", "zh-TW": "巴西", "zh-CN": "巴西", "es": "Brasil", "pt": "Brasil", "fr": "Brésil", "de": "Brasilien", "ja": "ブラジル", "ko": "브라질" }, { "id": "CHI", "flag": "https://flagcdn.com/cl.svg", "en": "Chile", "zh-TW": "智利", "zh-CN": "智利", "es": "Chile", "pt": "Chile", "fr": "Chili", "de": "Chile", "ja": "チリ", "ko": "칠레" }, { "id": "VEN", "flag": "https://flagcdn.com/ve.svg", "en": "Venezuela", "zh-TW": "委內瑞拉", "zh-CN": "委内瑞拉", "es": "Venezuela", "pt": "Venezuela", "fr": "Venezuela", "de": "Venezuela", "ja": "ベネズエラ", "ko": "베네수엘라" }, { "id": "PER", "flag": "https://flagcdn.com/pe.svg", "en": "Peru", "zh-TW": "秘魯", "zh-CN": "秘鲁", "es": "Perú", "pt": "Peru", "fr": "Pérou", "de": "Peru", "ja": "ペルー", "ko": "페루" }], "Group E": [{ "id": "GER", "flag": "https://flagcdn.com/de.svg", "en": "Germany", "zh-TW": "德國", "zh-CN": "德国", "es": "Alemania", "pt": "Alemanha", "fr": "Allemagne", "de": "Deutschland", "ja": "ドイツ", "ko": "독일" }, { "id": "BEL", "flag": "https://flagcdn.com/be.svg", "en": "Belgium", "zh-TW": "比利時", "zh-CN": "比利时", "es": "Bélgica", "pt": "Bélgica", "fr": "Belgique", "de": "Belgien", "ja": "ベルギー", "ko": "벨기에" }, { "id": "SVK", "flag": "https://flagcdn.com/sk.svg", "en": "Slovakia", "zh-TW": "斯洛伐克", "zh-CN": "斯洛伐克", "es": "Eslovaquia", "pt": "Eslováquia", "fr": "Slovaquie", "de": "Slowakei", "ja": "スロバキア", "ko": "슬로바키아" }, { "id": "SCO", "flag": "https://flagcdn.com/gb-sct.svg", "en": "Scotland", "zh-TW": "蘇格蘭", "zh-CN": "苏格兰", "es": "Escocia", "pt": "Escócia", "fr": "Écosse", "de": "Schottland", "ja": "スコットランド", "ko": "스코틀랜드" }], "Group F": [{ "id": "POR", "flag": "https://flagcdn.com/pt.svg", "en": "Portugal", "zh-TW": "葡萄牙", "zh-CN": "葡萄牙", "es": "Portugal", "pt": "Portugal", "fr": "Portugal", "de": "Portugal", "ja": "ポルトガル", "ko": "포르투갈" }, { "id": "TUR", "flag": "https://flagcdn.com/tr.svg", "en": "Turkey", "zh-TW": "土耳其", "zh-CN": "土耳其", "es": "Turquía", "pt": "Turquia", "fr": "Turquie", "de": "Türkei", "ja": "トルコ", "ko": "터키" }, { "id": "CZE", "flag": "https://flagcdn.com/cz.svg", "en": "Czech Republic", "zh-TW": "捷克", "zh-CN": "捷克", "es": "República Checa", "pt": "República Checa", "fr": "République tchèque", "de": "Tschechien", "ja": "チェコ", "ko": "체코" }, { "id": "GEO", "flag": "https://flagcdn.com/ge.svg", "en": "Georgia", "zh-TW": "喬治亞", "zh-CN": "格鲁吉亚", "es": "Georgia", "pt": "Geórgia", "fr": "Géorgie", "de": "Georgien", "ja": "ジョージア", "ko": "조지아" }], "Group G": [{ "id": "ESP", "flag": "https://flagcdn.com/es.svg", "en": "Spain", "zh-TW": "西班牙", "zh-CN": "西班牙", "es": "España", "pt": "Espanha", "fr": "Espagne", "de": "Spanien", "ja": "スペイン", "ko": "스페인" }, { "id": "NED", "flag": "https://flagcdn.com/nl.svg", "en": "Netherlands", "zh-TW": "荷蘭", "zh-CN": "荷兰", "es": "Países Bajos", "pt": "Países Baixos", "fr": "Pays-Bas", "de": "Niederlande", "ja": "オランダ", "ko": "네덜란드" }, { "id": "SRB", "flag": "https://flagcdn.com/rs.svg", "en": "Serbia", "zh-TW": "塞爾維亞", "zh-CN": "塞尔维亚", "es": "Serbia", "pt": "Sérvia", "fr": "Serbie", "de": "Serbien", "ja": "セルビア", "ko": "세르비아" }, { "id": "DEN", "flag": "https://flagcdn.com/dk.svg", "en": "Denmark", "zh-TW": "丹麥", "zh-CN": "丹麦", "es": "Dinamarca", "pt": "Dinamarca", "fr": "Danemark", "de": "Dänemark", "ja": "デンマーク", "ko": "덴마크" }], "Group H": [{ "id": "ENG", "flag": "https://flagcdn.com/gb-eng.svg", "en": "England", "zh-TW": "英格蘭", "zh-CN": "英格兰", "es": "Inglaterra", "pt": "Inglaterra", "fr": "Angleterre", "de": "England", "ja": "イングランド", "ko": "잉글랜드" }, { "id": "AUT", "flag": "https://flagcdn.com/at.svg", "en": "Austria", "zh-TW": "奧地利", "zh-CN": "奥地利", "es": "Austria", "pt": "Áustria", "fr": "Autriche", "de": "Österreich", "ja": "オーストリア", "ko": "오스트리아" }, { "id": "ALB", "flag": "https://flagcdn.com/al.svg", "en": "Albania", "zh-TW": "阿爾巴尼亞", "zh-CN": "阿尔巴尼亚", "es": "Albania", "pt": "Albânia", "fr": "Albanie", "de": "Albanien", "ja": "アルバニア", "ko": "알바니아" }, { "id": "HUN", "flag": "https://flagcdn.com/hu.svg", "en": "Hungary", "zh-TW": "匈牙利", "zh-CN": "匈牙利", "es": "Hungría", "pt": "Hungria", "fr": "Hongrie", "de": "Ungarn", "ja": "ハンガリー", "ko": "헝가리" }], "Group I": [{ "id": "FRA", "flag": "https://flagcdn.com/fr.svg", "en": "France", "zh-TW": "法國", "zh-CN": "法国", "es": "Francia", "pt": "França", "fr": "France", "de": "Frankreich", "ja": "フランス", "ko": "프랑스" }, { "id": "POL", "flag": "https://flagcdn.com/pl.svg", "en": "Poland", "zh-TW": "波蘭", "zh-CN": "波兰", "es": "Polonia", "pt": "Polónia", "fr": "Pologne", "de": "Polen", "ja": "ポーランド", "ko": "폴란드" }, { "id": "UKR", "flag": "https://flagcdn.com/ua.svg", "en": "Ukraine", "zh-TW": "烏克蘭", "zh-CN": "乌克兰", "es": "Ucrania", "pt": "Ucrânia", "fr": "Ukraine", "de": "Ukraine", "ja": "ウクライナ", "ko": "우크라이나" }, { "id": "WAL", "flag": "https://flagcdn.com/gb-wls.svg", "en": "Wales", "zh-TW": "威爾斯", "zh-CN": "威尔士", "es": "Gales", "pt": "País de Gales", "fr": "Pays de Galles", "de": "Wales", "ja": "ウェールズ", "ko": "웨일스" }], "Group J": [{ "id": "ARG", "flag": "https://flagcdn.com/ar.svg", "en": "Argentina", "zh-TW": "阿根廷", "zh-CN": "阿根廷", "es": "Argentina", "pt": "Argentina", "fr": "Argentine", "de": "Argentinien", "ja": "アルゼンチン", "ko": "아르헨티나" }, { "id": "CHN", "flag": "https://flagcdn.com/cn.svg", "en": "China PR", "zh-TW": "中國", "zh-CN": "中国", "es": "China", "pt": "China", "fr": "Chine", "de": "China", "ja": "中国", "ko": "중국" }, { "id": "KSA", "flag": "https://flagcdn.com/sa.svg", "en": "Saudi Arabia", "zh-TW": "沙烏地阿拉伯", "zh-CN": "沙特阿拉伯", "es": "Arabia Saudita", "pt": "Arábia Saudita", "fr": "Arabie saoudite", "de": "Saudi-Arabien", "ja": "サウジアラビア", "ko": "사우디아라비아" }, { "id": "IRQ", "flag": "https://flagcdn.com/iq.svg", "en": "Iraq", "zh-TW": "伊拉克", "zh-CN": "伊拉克", "es": "Irak", "pt": "Iraque", "fr": "Irak", "de": "Irak", "ja": "イラク", "ko": "이라크" }], "Group K": [{ "id": "JPN", "flag": "https://flagcdn.com/jp.svg", "en": "Japan", "zh-TW": "日本", "zh-CN": "日本", "es": "Japón", "pt": "Japão", "fr": "Japon", "de": "Japan", "ja": "日本", "ko": "일본" }, { "id": "KOR", "flag": "https://flagcdn.com/kr.svg", "en": "South Korea", "zh-TW": "南韓", "zh-CN": "韩国", "es": "Corea del Sur", "pt": "Coreia do Sul", "fr": "Corée du Sud", "de": "Südkorea", "ja": "韓国", "ko": "대한민국" }, { "id": "IRN", "flag": "https://flagcdn.com/ir.svg", "en": "Iran", "zh-TW": "伊朗", "zh-CN": "伊朗", "es": "Irán", "pt": "Irão", "fr": "Iran", "de": "Iran", "ja": "イラン", "ko": "이란" }, { "id": "UZB", "flag": "https://flagcdn.com/uz.svg", "en": "Uzbekistan", "zh-TW": "烏茲別克", "zh-CN": "乌兹别克斯坦", "es": "Uzbekistán", "pt": "Usbequistão", "fr": "Ouzbékistan", "de": "Usbekistan", "ja": "ウズベキスタン", "ko": "우즈베키스탄" }], "Group L": [{ "id": "MAR", "flag": "https://flagcdn.com/ma.svg", "en": "Morocco", "zh-TW": "摩洛哥", "zh-CN": "摩洛哥", "es": "Marruecos", "pt": "Marrocos", "fr": "Maroc", "de": "Marokko", "ja": "モロッコ", "ko": "모로코" }, { "id": "EGY", "flag": "https://flagcdn.com/eg.svg", "en": "Egypt", "zh-TW": "埃及", "zh-CN": "埃及", "es": "Egipto", "pt": "Egito", "fr": "Égypte", "de": "Ägypten", "ja": "エジプト", "ko": "이집트" }, { "id": "SEN", "flag": "https://flagcdn.com/sn.svg", "en": "Senegal", "zh-TW": "塞內加爾", "zh-CN": "塞内加尔", "es": "Senegal", "pt": "Senegal", "fr": "Sénégal", "de": "Senegal", "ja": "セネガル", "ko": "세네갈" }, { "id": "RSA", "flag": "https://flagcdn.com/za.svg", "en": "South Africa", "zh-TW": "南非", "zh-CN": "南非", "es": "Sudáfrica", "pt": "África do Sul", "fr": "Afrique du Sud", "de": "Südkorea", "ja": "南アフリカ", "ko": "남아프리카공화국" }] };
+    const TEAM_DATA_RAW = {
+  "Group A": [
+    {
+      "id": "MEX",
+      "flag": "https://flagcdn.com/mx.svg",
+      "en": "Mexico",
+      "zh-TW": "墨西哥",
+      "zh-CN": "墨西哥",
+      "es": "México",
+      "pt": "México",
+      "fr": "Mexique",
+      "de": "Mexiko",
+      "ja": "メキシコ",
+      "ko": "멕시코"
+    },
+    {
+      "id": "KOR",
+      "flag": "https://flagcdn.com/kr.svg",
+      "en": "South Korea",
+      "zh-TW": "南韓",
+      "zh-CN": "韩国",
+      "es": "Corea del Sur",
+      "pt": "Coreia do Sul",
+      "fr": "Corée du Sud",
+      "de": "Südkorea",
+      "ja": "韓国",
+      "ko": "대한민국"
+    },
+    {
+      "id": "CZE",
+      "flag": "https://flagcdn.com/cz.svg",
+      "en": "Czech Republic",
+      "zh-TW": "捷克",
+      "zh-CN": "捷克",
+      "es": "República Checa",
+      "pt": "República Checa",
+      "fr": "République tchèque",
+      "de": "Tschechien",
+      "ja": "チェコ",
+      "ko": "체코"
+    },
+    {
+      "id": "RSA",
+      "flag": "https://flagcdn.com/za.svg",
+      "en": "South Africa",
+      "zh-TW": "南非",
+      "zh-CN": "南非",
+      "es": "Sudáfrica",
+      "pt": "África do Sul",
+      "fr": "Afrique du Sud",
+      "de": "Südafrika",
+      "ja": "南アフリカ",
+      "ko": "남아프리카공화국"
+    }
+  ],
+  "Group B": [
+    {
+      "id": "CAN",
+      "flag": "https://flagcdn.com/ca.svg",
+      "en": "Canada",
+      "zh-TW": "加拿大",
+      "zh-CN": "加拿大",
+      "es": "Canadá",
+      "pt": "Canadá",
+      "fr": "Canada",
+      "de": "Kanada",
+      "ja": "カナダ",
+      "ko": "캐나다"
+    },
+    {
+      "id": "BIH",
+      "flag": "https://flagcdn.com/ba.svg",
+      "en": "Bosnia and Herzegovina",
+      "zh-TW": "波士尼亞與赫塞哥維納",
+      "zh-CN": "波斯尼亚和黑塞哥维那",
+      "es": "Bosnia y Herzegovina",
+      "pt": "Bósnia e Herzegovina",
+      "fr": "Bosnie-Herzégovine",
+      "de": "Bosnien und Herzegowina",
+      "ja": "ボスニア・ヘルツェゴビナ",
+      "ko": "보스니아 헤르체고비나"
+    },
+    {
+      "id": "QAT",
+      "flag": "https://flagcdn.com/qa.svg",
+      "en": "Qatar",
+      "zh-TW": "卡達",
+      "zh-CN": "卡塔尔",
+      "es": "Catar",
+      "pt": "Catar",
+      "fr": "Qatar",
+      "de": "Katar",
+      "ja": "カタール",
+      "ko": "카타르"
+    },
+    {
+      "id": "SUI",
+      "flag": "https://flagcdn.com/ch.svg",
+      "en": "Switzerland",
+      "zh-TW": "瑞士",
+      "zh-CN": "瑞士",
+      "es": "Suiza",
+      "pt": "Suíça",
+      "fr": "Suisse",
+      "de": "Schweiz",
+      "ja": "スイス",
+      "ko": "스위스"
+    }
+  ],
+  "Group C": [
+    {
+      "id": "BRA",
+      "flag": "https://flagcdn.com/br.svg",
+      "en": "Brazil",
+      "zh-TW": "巴西",
+      "zh-CN": "巴西",
+      "es": "Brasil",
+      "pt": "Brasil",
+      "fr": "Brésil",
+      "de": "Brasilien",
+      "ja": "ブラジル",
+      "ko": "브라질"
+    },
+    {
+      "id": "MAR",
+      "flag": "https://flagcdn.com/ma.svg",
+      "en": "Morocco",
+      "zh-TW": "摩洛哥",
+      "zh-CN": "摩洛哥",
+      "es": "Marruecos",
+      "pt": "Marrocos",
+      "fr": "Maroc",
+      "de": "Marokko",
+      "ja": "モロッコ",
+      "ko": "모로코"
+    },
+    {
+      "id": "HAI",
+      "flag": "https://flagcdn.com/ht.svg",
+      "en": "Haiti",
+      "zh-TW": "海地",
+      "zh-CN": "海地",
+      "es": "Haití",
+      "pt": "Haiti",
+      "fr": "Haïti",
+      "de": "Haiti",
+      "ja": "ハイチ",
+      "ko": "아이티"
+    },
+    {
+      "id": "SCO",
+      "flag": "https://flagcdn.com/gb-sct.svg",
+      "en": "Scotland",
+      "zh-TW": "蘇格蘭",
+      "zh-CN": "苏格兰",
+      "es": "Escocia",
+      "pt": "Escócia",
+      "fr": "Écosse",
+      "de": "Schottland",
+      "ja": "スコットランド",
+      "ko": "스코틀랜드"
+    }
+  ],
+  "Group D": [
+    {
+      "id": "USA",
+      "flag": "https://flagcdn.com/us.svg",
+      "en": "USA",
+      "zh-TW": "美國",
+      "zh-CN": "美国",
+      "es": "Estados Unidos",
+      "pt": "Estados Unidos",
+      "fr": "États-Unis",
+      "de": "Vereinigte Staaten",
+      "ja": "アメリカ合衆国",
+      "ko": "미국"
+    },
+    {
+      "id": "PAR",
+      "flag": "https://flagcdn.com/py.svg",
+      "en": "Paraguay",
+      "zh-TW": "巴拉圭",
+      "zh-CN": "巴拉圭",
+      "es": "Paraguay",
+      "pt": "Paraguai",
+      "fr": "Paraguay",
+      "de": "Paraguay",
+      "ja": "パラグアイ",
+      "ko": "파라과이"
+    },
+    {
+      "id": "AUS",
+      "flag": "https://flagcdn.com/au.svg",
+      "en": "Australia",
+      "zh-TW": "澳洲",
+      "zh-CN": "澳大利亚",
+      "es": "Australia",
+      "pt": "Austrália",
+      "fr": "Australie",
+      "de": "Australien",
+      "ja": "オーストラリア",
+      "ko": "호주"
+    },
+    {
+      "id": "TUR",
+      "flag": "https://flagcdn.com/tr.svg",
+      "en": "Turkey",
+      "zh-TW": "土耳其",
+      "zh-CN": "土耳其",
+      "es": "Turquía",
+      "pt": "Turquia",
+      "fr": "Turquie",
+      "de": "Türkei",
+      "ja": "トルコ",
+      "ko": "터키"
+    }
+  ],
+  "Group E": [
+    {
+      "id": "GER",
+      "flag": "https://flagcdn.com/de.svg",
+      "en": "Germany",
+      "zh-TW": "德國",
+      "zh-CN": "德国",
+      "es": "Alemania",
+      "pt": "Alemanha",
+      "fr": "Allemagne",
+      "de": "Deutschland",
+      "ja": "ドイツ",
+      "ko": "독일"
+    },
+    {
+      "id": "CUW",
+      "flag": "https://flagcdn.com/cw.svg",
+      "en": "Curacao",
+      "zh-TW": "庫拉索",
+      "zh-CN": "库拉索",
+      "es": "Curazao",
+      "pt": "Curaçao",
+      "fr": "Curaçao",
+      "de": "Curaçao",
+      "ja": "キュラソー",
+      "ko": "퀴라소"
+    },
+    {
+      "id": "CIV",
+      "flag": "https://flagcdn.com/ci.svg",
+      "en": "Ivory Coast",
+      "zh-TW": "象牙海岸",
+      "zh-CN": "科特迪瓦",
+      "es": "Costa de Marfil",
+      "pt": "Costa do Marfim",
+      "fr": "Côte d'Ivoire",
+      "de": "Elfenbeinküste",
+      "ja": "コートジボワール",
+      "ko": "코트디부아르"
+    },
+    {
+      "id": "ECU",
+      "flag": "https://flagcdn.com/ec.svg",
+      "en": "Ecuador",
+      "zh-TW": "厄瓜多",
+      "zh-CN": "厄瓜多尔",
+      "es": "Ecuador",
+      "pt": "Equador",
+      "fr": "Équateur",
+      "de": "Ecuador",
+      "ja": "エクアドル",
+      "ko": "에콰도르"
+    }
+  ],
+  "Group F": [
+    {
+      "id": "NED",
+      "flag": "https://flagcdn.com/nl.svg",
+      "en": "Netherlands",
+      "zh-TW": "荷蘭",
+      "zh-CN": "荷兰",
+      "es": "Países Bajos",
+      "pt": "Países Baixos",
+      "fr": "Pays-Bas",
+      "de": "Niederlande",
+      "ja": "オランダ",
+      "ko": "네덜란드"
+    },
+    {
+      "id": "JPN",
+      "flag": "https://flagcdn.com/jp.svg",
+      "en": "Japan",
+      "zh-TW": "日本",
+      "zh-CN": "日本",
+      "es": "Japón",
+      "pt": "Japão",
+      "fr": "Japon",
+      "de": "Japan",
+      "ja": "日本",
+      "ko": "일본"
+    },
+    {
+      "id": "SWE",
+      "flag": "https://flagcdn.com/se.svg",
+      "en": "Sweden",
+      "zh-TW": "瑞典",
+      "zh-CN": "瑞典",
+      "es": "Suecia",
+      "pt": "Suécia",
+      "fr": "Suède",
+      "de": "Schweden",
+      "ja": "スウェーデン",
+      "ko": "스웨덴"
+    },
+    {
+      "id": "TUN",
+      "flag": "https://flagcdn.com/tn.svg",
+      "en": "Tunisia",
+      "zh-TW": "突尼西亞",
+      "zh-CN": "突尼斯",
+      "es": "Túnez",
+      "pt": "Tunísia",
+      "fr": "Tunisie",
+      "de": "Tunesien",
+      "ja": "チュニジア",
+      "ko": "튀니지"
+    }
+  ],
+  "Group G": [
+    {
+      "id": "BEL",
+      "flag": "https://flagcdn.com/be.svg",
+      "en": "Belgium",
+      "zh-TW": "比利時",
+      "zh-CN": "比利时",
+      "es": "Bélgica",
+      "pt": "Bélgica",
+      "fr": "Belgique",
+      "de": "Belgien",
+      "ja": "ベルギー",
+      "ko": "벨기에"
+    },
+    {
+      "id": "EGY",
+      "flag": "https://flagcdn.com/eg.svg",
+      "en": "Egypt",
+      "zh-TW": "埃及",
+      "zh-CN": "埃及",
+      "es": "Egipto",
+      "pt": "Egito",
+      "fr": "Égypte",
+      "de": "Ägypten",
+      "ja": "エジプト",
+      "ko": "이집트"
+    },
+    {
+      "id": "IRN",
+      "flag": "https://flagcdn.com/ir.svg",
+      "en": "Iran",
+      "zh-TW": "伊朗",
+      "zh-CN": "伊朗",
+      "es": "Irán",
+      "pt": "Irã",
+      "fr": "Iran",
+      "de": "Iran",
+      "ja": "イラン",
+      "ko": "이란"
+    },
+    {
+      "id": "NZL",
+      "flag": "https://flagcdn.com/nz.svg",
+      "en": "New Zealand",
+      "zh-TW": "紐西蘭",
+      "zh-CN": "新西兰",
+      "es": "Nueva Zelanda",
+      "pt": "Nova Zelândia",
+      "fr": "Nouvelle-Zélande",
+      "de": "Neuseeland",
+      "ja": "ニュージーランド",
+      "ko": "뉴질랜드"
+    }
+  ],
+  "Group H": [
+    {
+      "id": "ESP",
+      "flag": "https://flagcdn.com/es.svg",
+      "en": "Spain",
+      "zh-TW": "西班牙",
+      "zh-CN": "西班牙",
+      "es": "España",
+      "pt": "Espanha",
+      "fr": "Espagne",
+      "de": "Spanien",
+      "ja": "スペイン",
+      "ko": "스페인"
+    },
+    {
+      "id": "CPV",
+      "flag": "https://flagcdn.com/cv.svg",
+      "en": "Cape Verde",
+      "zh-TW": "維德角",
+      "zh-CN": "佛得角",
+      "es": "Cabo Verde",
+      "pt": "Cabo Verde",
+      "fr": "Cap-Vert",
+      "de": "Kap Verde",
+      "ja": "カーボベルデ",
+      "ko": "카보베르데"
+    },
+    {
+      "id": "KSA",
+      "flag": "https://flagcdn.com/sa.svg",
+      "en": "Saudi Arabia",
+      "zh-TW": "沙烏地阿拉伯",
+      "zh-CN": "沙特阿拉伯",
+      "es": "Arabia Saudita",
+      "pt": "Arábia Saudita",
+      "fr": "Arabie saoudite",
+      "de": "Saudi-Arabien",
+      "ja": "サウジアラビア",
+      "ko": "사우디아라비아"
+    },
+    {
+      "id": "URU",
+      "flag": "https://flagcdn.com/uy.svg",
+      "en": "Uruguay",
+      "zh-TW": "烏拉圭",
+      "zh-CN": "乌拉圭",
+      "es": "Uruguay",
+      "pt": "Uruguai",
+      "fr": "Uruguay",
+      "de": "Uruguay",
+      "ja": "ウルグアイ",
+      "ko": "우루과이"
+    }
+  ],
+  "Group I": [
+    {
+      "id": "FRA",
+      "flag": "https://flagcdn.com/fr.svg",
+      "en": "France",
+      "zh-TW": "法國",
+      "zh-CN": "法国",
+      "es": "Francia",
+      "pt": "França",
+      "fr": "France",
+      "de": "Frankreich",
+      "ja": "フランス",
+      "ko": "프랑스"
+    },
+    {
+      "id": "SEN",
+      "flag": "https://flagcdn.com/sn.svg",
+      "en": "Senegal",
+      "zh-TW": "塞內加爾",
+      "zh-CN": "塞内加尔",
+      "es": "Senegal",
+      "pt": "Senegal",
+      "fr": "Sénégal",
+      "de": "Senegal",
+      "ja": "セネガル",
+      "ko": "세네갈"
+    },
+    {
+      "id": "IRQ",
+      "flag": "https://flagcdn.com/iq.svg",
+      "en": "Iraq",
+      "zh-TW": "伊拉克",
+      "zh-CN": "伊拉克",
+      "es": "Irak",
+      "pt": "Iraque",
+      "fr": "Irak",
+      "de": "Irak",
+      "ja": "イラク",
+      "ko": "이라크"
+    },
+    {
+      "id": "NOR",
+      "flag": "https://flagcdn.com/no.svg",
+      "en": "Norway",
+      "zh-TW": "挪威",
+      "zh-CN": "挪威",
+      "es": "Noruega",
+      "pt": "Noruega",
+      "fr": "Norvège",
+      "de": "Norwegen",
+      "ja": "ノルウェー",
+      "ko": "노르웨이"
+    }
+  ],
+  "Group J": [
+    {
+      "id": "ARG",
+      "flag": "https://flagcdn.com/ar.svg",
+      "en": "Argentina",
+      "zh-TW": "阿根廷",
+      "zh-CN": "阿根廷",
+      "es": "Argentina",
+      "pt": "Argentina",
+      "fr": "Argentine",
+      "de": "Argentinien",
+      "ja": "アルゼンチン",
+      "ko": "아르헨티나"
+    },
+    {
+      "id": "ALG",
+      "flag": "https://flagcdn.com/dz.svg",
+      "en": "Algeria",
+      "zh-TW": "阿爾及利亞",
+      "zh-CN": "阿尔及利亚",
+      "es": "Argelia",
+      "pt": "Argélia",
+      "fr": "Algérie",
+      "de": "Algerien",
+      "ja": "アルジェリア",
+      "ko": "알제리"
+    },
+    {
+      "id": "AUT",
+      "flag": "https://flagcdn.com/at.svg",
+      "en": "Austria",
+      "zh-TW": "奧地利",
+      "zh-CN": "奥地利",
+      "es": "Austria",
+      "pt": "Áustria",
+      "fr": "Autriche",
+      "de": "Österreich",
+      "ja": "オーストリア",
+      "ko": "오스트리아"
+    },
+    {
+      "id": "JOR",
+      "flag": "https://flagcdn.com/jo.svg",
+      "en": "Jordan",
+      "zh-TW": "約旦",
+      "zh-CN": "约旦",
+      "es": "Jordania",
+      "pt": "Jordânia",
+      "fr": "Jordanie",
+      "de": "Jordanien",
+      "ja": "ヨルダン",
+      "ko": "요르단"
+    }
+  ],
+  "Group K": [
+    {
+      "id": "POR",
+      "flag": "https://flagcdn.com/pt.svg",
+      "en": "Portugal",
+      "zh-TW": "葡萄牙",
+      "zh-CN": "葡萄牙",
+      "es": "Portugal",
+      "pt": "Portugal",
+      "fr": "Portugal",
+      "de": "Portugal",
+      "ja": "ポルトガル",
+      "ko": "포르투갈"
+    },
+    {
+      "id": "COD",
+      "flag": "https://flagcdn.com/cd.svg",
+      "en": "Democratic Republic of the Congo",
+      "zh-TW": "剛果民主共和國",
+      "zh-CN": "刚果民主共和国",
+      "es": "República Democrática del Congo",
+      "pt": "República Democrática do Congo",
+      "fr": "République démocratique du Congo",
+      "de": "Demokratische Republik Kongo",
+      "ja": "コンゴ民主共和国",
+      "ko": "콩고 민주 공화국"
+    },
+    {
+      "id": "UZB",
+      "flag": "https://flagcdn.com/uz.svg",
+      "en": "Uzbekistan",
+      "zh-TW": "烏茲別克",
+      "zh-CN": "乌兹别克斯坦",
+      "es": "Uzbekistán",
+      "pt": "Uzbequistão",
+      "fr": "Ouzbékistan",
+      "de": "Usbekistan",
+      "ja": "ウズベキスタン",
+      "ko": "우즈베키스탄"
+    },
+    {
+      "id": "COL",
+      "flag": "https://flagcdn.com/co.svg",
+      "en": "Colombia",
+      "zh-TW": "哥倫比亞",
+      "zh-CN": "哥伦比亚",
+      "es": "Colombia",
+      "pt": "Colômbia",
+      "fr": "Colombie",
+      "de": "Kolumbien",
+      "ja": "コロンビア",
+      "ko": "콜롬비아"
+    }
+  ],
+  "Group L": [
+    {
+      "id": "ENG",
+      "flag": "https://flagcdn.com/gb-eng.svg",
+      "en": "England",
+      "zh-TW": "英格蘭",
+      "zh-CN": "英格兰",
+      "es": "Inglaterra",
+      "pt": "Inglaterra",
+      "fr": "Angleterre",
+      "de": "England",
+      "ja": "イングランド",
+      "ko": "잉글랜드"
+    },
+    {
+      "id": "CRO",
+      "flag": "https://flagcdn.com/hr.svg",
+      "en": "Croatia",
+      "zh-TW": "克羅埃西亞",
+      "zh-CN": "克罗地亚",
+      "es": "Croacia",
+      "pt": "Croácia",
+      "fr": "Croatie",
+      "de": "Kroatien",
+      "ja": "クロアチア",
+      "ko": "크로아티아"
+    },
+    {
+      "id": "GHA",
+      "flag": "https://flagcdn.com/gh.svg",
+      "en": "Ghana",
+      "zh-TW": "迦納",
+      "zh-CN": "加纳",
+      "es": "Ghana",
+      "pt": "Gana",
+      "fr": "Ghana",
+      "de": "Ghana",
+      "ja": "ガーナ",
+      "ko": "가나"
+    },
+    {
+      "id": "PAN",
+      "flag": "https://flagcdn.com/pa.svg",
+      "en": "Panama",
+      "zh-TW": "巴拿馬",
+      "zh-CN": "巴拿马",
+      "es": "Panamá",
+      "pt": "Panamá",
+      "fr": "Panama",
+      "de": "Panama",
+      "ja": "パナマ",
+      "ko": "파나마"
+    }
+  ]
+};
 
     /* ── 建立英文名稱 → 各語系翻譯的扁平查找表 ── */
     const TEAM_MAP = {};   // { "Mexico": { en: "Mexico", "zh-TW": "墨西哥", ... }, ... }
@@ -1874,6 +2938,84 @@
       },
     };
 
+    UI['filter.title'] = {
+      en: 'Filter Teams',
+      'zh-TW': '篩選隊伍',
+      'zh-CN': '筛选队伍',
+      es: 'Filtrar equipos',
+      pt: 'Filtrar equipes',
+      fr: 'Filtrer les équipes',
+      de: 'Teams filtern',
+      ja: 'チーム絞り込み',
+      ko: '팀 필터',
+    };
+    UI['filter.clear'] = {
+      en: 'Clear',
+      'zh-TW': '清除',
+      'zh-CN': '清除',
+      es: 'Limpiar',
+      pt: 'Limpar',
+      fr: 'Effacer',
+      de: 'Löschen',
+      ja: 'クリア',
+      ko: '초기화',
+    };
+    UI['filter.selectAll'] = {
+      en: 'Select All',
+      'zh-TW': '全選',
+      'zh-CN': '全选',
+      es: 'Sel. todo',
+      pt: 'Sel. todos',
+      fr: 'Tout sélec.',
+      de: 'Alle wählen',
+      ja: 'すべて選択',
+      ko: '전체 선택',
+    };
+    UI['filter.apply'] = {
+      en: 'Apply',
+      'zh-TW': '套用',
+      'zh-CN': '套用',
+      es: 'Aplicar',
+      pt: 'Aplicar',
+      fr: 'Appliquer',
+      de: 'Anwenden',
+      ja: '適用',
+      ko: '적용',
+    };
+    UI['filter.cancel'] = {
+      en: 'Cancel',
+      'zh-TW': '取消',
+      'zh-CN': '取消',
+      es: 'Cancelar',
+      pt: 'Cancelar',
+      fr: 'Annuler',
+      de: 'Abbrechen',
+      ja: 'キャンセル',
+      ko: '취소',
+    };
+    UI['filter.clearAll'] = {
+      en: 'Clear All',
+      'zh-TW': '清除全部',
+      'zh-CN': '清除全部',
+      es: 'Limpiar todo',
+      pt: 'Limpar todos',
+      fr: 'Effacer tout',
+      de: 'Alle löschen',
+      ja: 'すべてクリア',
+      ko: '모두 초기화',
+    };
+    UI['filter.noMatches'] = {
+      en: 'No matches match the selected teams',
+      'zh-TW': '無符合篩選隊伍的賽事',
+      'zh-CN': '无符合筛选队伍的赛事',
+      es: 'Ningún partido coincide con los equipos seleccionados',
+      pt: 'Nenhum jogo corresponde às equipes selecionadas',
+      fr: 'Aucun match ne correspond aux équipes sélectionnées',
+      de: 'Keine Spiele entsprechen den ausgewählten Teams',
+      ja: '選択したチームの試合はありません',
+      ko: '선택한 팀의 경기가 없습니다',
+    };
+
     /* SEO Meta 資料（依語言）*/
     const SEO_META = {
       'en': { title: 'FIFA World Cup 2026™ Match Schedule', description: 'View the complete FIFA World Cup 2026™ match schedule. Find match times, venues, and results for all 48 teams.', ogLocale: 'en_US' },
@@ -1909,6 +3051,7 @@
       dates: [],           // 有比賽的日期陣列（YYYY-MM-DD，裝置時區）
       selectedDate: 'ALL', // 目前選中的日期 Tab（'ALL' 或 'YYYY-MM-DD'）
       userTZ: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      selectedTeams: [],   // 篩選選中的國家隊伍（英文名稱陣列）
     };
 
     /* ╔══════════════════════════════════════════════════════════╗
@@ -2482,6 +3625,12 @@
      */
     function selectDate(dateStr) {
       state.selectedDate = dateStr;
+
+      // 更新篩選按鈕的可見性
+      if (typeof updateFilterFloatingVisibility === 'function') {
+        updateFilterFloatingVisibility();
+      }
+
       const matchList = document.getElementById('match-list');
       const htmlEl = document.documentElement;
 
@@ -2786,10 +3935,18 @@
         // ── ALL 模式：依日期分組 ──
         let todayGroupEl = null;
         const todayStr = getLocalDateString(new Date());
+        let totalRenderedEvents = 0;
 
         for (const dateStr of state.dates) {
-          const dayEvents = state.events.filter(e => getLocalDateString(e.dtStart) === dateStr);
+          let dayEvents = state.events.filter(e => getLocalDateString(e.dtStart) === dateStr);
+
+          // 篩選國家隊伍
+          if (state.selectedTeams && state.selectedTeams.length > 0) {
+            dayEvents = dayEvents.filter(e => state.selectedTeams.includes(e.homeTeam) || state.selectedTeams.includes(e.awayTeam));
+          }
+
           if (!dayEvents.length) continue;
+          totalRenderedEvents += dayEvents.length;
 
           const group = document.createElement('section');
           group.className = 'date-group';
@@ -2836,21 +3993,39 @@
           }
         }
 
+        if (totalRenderedEvents === 0) {
+          // 顯示篩選無符合賽事之空狀態
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          const icon = document.createElement('div');
+          icon.className = 'empty-icon';
+          icon.setAttribute('aria-hidden', 'true');
+          icon.textContent = '🔍';
+          const text = document.createElement('p');
+          text.className = 'empty-text';
+          text.textContent = t('filter.noMatches');
+          empty.appendChild(icon);
+          empty.appendChild(text);
+          frag.appendChild(empty);
+        }
+
         container.innerHTML = '';
         container.appendChild(frag);
 
-        // 自動捲動到當天（或最近）日期分組
-        if (todayGroupEl) {
-          requestAnimationFrame(() => {
-            todayGroupEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
-        } else {
-          // 嘗試用 ID 找
-          const todayEl = document.getElementById(`group-${todayStr}`);
-          if (todayEl) {
+        // 自動捲動到當天（或最近）日期分組（僅在未篩選時）
+        if (state.selectedTeams && state.selectedTeams.length === 0) {
+          if (todayGroupEl) {
             requestAnimationFrame(() => {
-              todayEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              todayGroupEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
+          } else {
+            // 嘗試用 ID 找
+            const todayEl = document.getElementById(`group-${todayStr}`);
+            if (todayEl) {
+              requestAnimationFrame(() => {
+                todayEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              });
+            }
           }
         }
 
@@ -2967,6 +4142,11 @@
       // 同步 Pull-to-refresh 提示文字（恢復為「下拉」提示）
       const ptrTextEl = document.querySelector('#ptr-indicator .ptr-text');
       if (ptrTextEl) ptrTextEl.textContent = t('ptr.pull');
+
+      // 更新篩選按鈕文字
+      if (typeof updateFilterButtonText === 'function') {
+        updateFilterButtonText();
+      }
 
       // 更新 SEO Meta
       updateSEOMeta(lang);
@@ -3738,6 +4918,7 @@
       init().then(() => {
         setupDateBarArrows();
         setupSwipeGesture();
+        setupFilterSystem();
       });
     });
 
@@ -3749,7 +4930,334 @@
       }
     }, 30000);
 
+    /* ╔══════════════════════════════════════════════════════════╗
+       ║  15. 國家隊伍篩選系統                                    ║
+       ╚══════════════════════════════════════════════════════════╝ */
+
+    let tempSelectedTeams = new Set();
+
+    function updateFilterFloatingVisibility() {
+      const filterContainer = document.getElementById('filter-floating-container');
+      if (filterContainer) {
+        if (state.selectedDate === 'ALL') {
+          filterContainer.style.display = 'flex';
+        } else {
+          filterContainer.style.display = 'none';
+        }
+      }
+    }
+
+    function updateFilterButtonText() {
+      const textEl = document.getElementById('filter-btn-text');
+      const badgeEl = document.getElementById('filter-badge');
+      const clearBtn = document.getElementById('filter-clear-floating-btn');
+
+      if (textEl) {
+        textEl.textContent = t('filter.title');
+      }
+
+      if (state.selectedTeams && state.selectedTeams.length > 0) {
+        document.getElementById('filter-floating-btn')?.classList.add('active');
+        if (badgeEl) {
+          badgeEl.textContent = state.selectedTeams.length;
+          badgeEl.style.display = 'inline-flex';
+        }
+        if (clearBtn) {
+          clearBtn.classList.add('show');
+        }
+      } else {
+        document.getElementById('filter-floating-btn')?.classList.remove('active');
+        if (badgeEl) {
+          badgeEl.style.display = 'none';
+        }
+        if (clearBtn) {
+          clearBtn.classList.remove('show');
+        }
+      }
+    }
+
+    function renderFilterModalBody() {
+      const body = document.getElementById('filter-modal-body');
+      if (!body) return;
+      body.innerHTML = '';
+
+      const frag = document.createDocumentFragment();
+      const groupNames = Object.keys(TEAM_DATA_RAW).sort();
+
+      for (const groupName of groupNames) {
+        const groupLetter = groupName.replace('Group ', '');
+        const groupTitle = t('stage.group', state.lang, { X: groupLetter });
+        
+        const rawTeams = TEAM_DATA_RAW[groupName];
+        const teams = rawTeams.map(t => t.en);
+        const sortedTeams = [...teams].sort((a, b) => a.localeCompare(b));
+
+        const block = document.createElement('div');
+        block.className = 'filter-group-block';
+
+        // Group Header
+        const header = document.createElement('div');
+        header.className = 'filter-group-header';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'filter-group-name';
+        nameSpan.textContent = groupTitle;
+        header.appendChild(nameSpan);
+
+        // Select All for this Group
+        const selectAllLabel = document.createElement('label');
+        selectAllLabel.className = 'filter-group-select-all';
+
+        const selectAllInput = document.createElement('input');
+        selectAllInput.type = 'checkbox';
+
+        // Check if all teams in this group are currently selected
+        const allSelected = sortedTeams.every(teamName => tempSelectedTeams.has(teamName));
+        selectAllInput.checked = allSelected;
+
+        const selectAllText = document.createElement('span');
+        selectAllText.textContent = t('filter.selectAll');
+
+        selectAllLabel.appendChild(selectAllInput);
+        selectAllLabel.appendChild(selectAllText);
+        header.appendChild(selectAllLabel);
+        block.appendChild(header);
+
+        // Teams Grid
+        const grid = document.createElement('div');
+        grid.className = 'filter-teams-grid';
+
+        sortedTeams.forEach(teamName => {
+          const card = document.createElement('div');
+          card.className = 'filter-team-card';
+          if (tempSelectedTeams.has(teamName)) {
+            card.classList.add('checked');
+          }
+          card.dataset.teamEn = teamName;
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = tempSelectedTeams.has(teamName);
+
+          // Flag element using createFlagEl (look up flag from TEAM_FLAG_MAP populated from TEAM_DATA_RAW)
+          const flagEl = createFlagEl(teamName, null);
+
+          // Team Name localized (look up localized name from TEAM_MAP populated from TEAM_DATA_RAW)
+          const nameLabel = document.createElement('span');
+          nameLabel.className = 'team-name-label';
+          nameLabel.textContent = getTeamName(teamName);
+
+          card.appendChild(checkbox);
+          card.appendChild(flagEl);
+          card.appendChild(nameLabel);
+
+          // Event listener on card click
+          card.addEventListener('click', (e) => {
+            if (e.target === checkbox) return;
+
+            checkbox.checked = !checkbox.checked;
+            toggleTeamSelection(teamName, checkbox.checked, card, selectAllInput, sortedTeams);
+          });
+
+          checkbox.addEventListener('change', () => {
+            toggleTeamSelection(teamName, checkbox.checked, card, selectAllInput, sortedTeams);
+          });
+
+          grid.appendChild(card);
+        });
+
+        // Event listener for select all group checkbox
+        selectAllInput.addEventListener('change', () => {
+          const shouldSelect = selectAllInput.checked;
+          sortedTeams.forEach(teamName => {
+            if (shouldSelect) {
+              tempSelectedTeams.add(teamName);
+            } else {
+              tempSelectedTeams.delete(teamName);
+            }
+          });
+
+          // Update visual states for this group
+          const cards = grid.querySelectorAll('.filter-team-card');
+          cards.forEach(card => {
+            const teamEn = card.dataset.teamEn;
+            const cb = card.querySelector('input[type="checkbox"]');
+            if (cb) cb.checked = shouldSelect;
+            if (shouldSelect) {
+              card.classList.add('checked');
+            } else {
+              card.classList.remove('checked');
+            }
+          });
+
+          updateApplyButtonText();
+        });
+
+        block.appendChild(grid);
+        frag.appendChild(block);
+      }
+
+      body.appendChild(frag);
+    }
+
+    function toggleTeamSelection(teamEn, isChecked, cardEl, groupSelectAllInput, groupTeams) {
+      if (isChecked) {
+        tempSelectedTeams.add(teamEn);
+        cardEl.classList.add('checked');
+      } else {
+        tempSelectedTeams.delete(teamEn);
+        cardEl.classList.remove('checked');
+      }
+
+      // Update Group Select All state
+      const allSelected = groupTeams.every(teamName => tempSelectedTeams.has(teamName));
+      groupSelectAllInput.checked = allSelected;
+
+      updateApplyButtonText();
+    }
+
+    function updateApplyButtonText() {
+      const applyBtn = document.getElementById('filter-btn-apply');
+      if (applyBtn) {
+        if (tempSelectedTeams.size > 0) {
+          applyBtn.textContent = `${t('filter.apply')} (${tempSelectedTeams.size})`;
+        } else {
+          applyBtn.textContent = t('filter.apply');
+        }
+      }
+    }
+
+    function openFilterModal() {
+      tempSelectedTeams = new Set(state.selectedTeams);
+      renderFilterModalBody();
+      updateApplyButtonText();
+
+      // Localize other labels in modal
+      const titleEl = document.getElementById('filter-modal-title');
+      if (titleEl) titleEl.textContent = t('filter.title');
+
+      const clearAllBtn = document.getElementById('filter-btn-clear-all');
+      if (clearAllBtn) clearAllBtn.textContent = t('filter.clearAll');
+
+      const cancelBtn = document.getElementById('filter-btn-cancel');
+      if (cancelBtn) cancelBtn.textContent = t('filter.cancel');
+
+      const modal = document.getElementById('filter-modal');
+      if (modal) {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeFilterModal() {
+      const modal = document.getElementById('filter-modal');
+      if (modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function setupFilterSystem() {
+      const filterFloatingBtn = document.getElementById('filter-floating-btn');
+      const filterClearFloatingBtn = document.getElementById('filter-clear-floating-btn');
+      const filterModalClose = document.getElementById('filter-modal-close');
+      const filterModalOverlay = document.getElementById('filter-modal-overlay');
+      const filterBtnCancel = document.getElementById('filter-btn-cancel');
+      const filterBtnClearAll = document.getElementById('filter-btn-clear-all');
+      const filterBtnApply = document.getElementById('filter-btn-apply');
+
+      if (filterFloatingBtn) {
+        filterFloatingBtn.addEventListener('click', openFilterModal);
+      }
+
+      if (filterClearFloatingBtn) {
+        filterClearFloatingBtn.addEventListener('click', () => {
+          state.selectedTeams = [];
+          updateFilterButtonText();
+          renderMatches();
+        });
+      }
+
+      if (filterModalClose) filterModalClose.addEventListener('click', closeFilterModal);
+      if (filterModalOverlay) filterModalOverlay.addEventListener('click', closeFilterModal);
+      if (filterBtnCancel) filterBtnCancel.addEventListener('click', closeFilterModal);
+
+      if (filterBtnClearAll) {
+        filterBtnClearAll.addEventListener('click', () => {
+          tempSelectedTeams.clear();
+          const checkboxes = document.querySelectorAll('#filter-modal-body input[type="checkbox"]');
+          checkboxes.forEach(cb => cb.checked = false);
+          const cards = document.querySelectorAll('#filter-modal-body .filter-team-card');
+          cards.forEach(card => card.classList.remove('checked'));
+          updateApplyButtonText();
+        });
+      }
+
+      if (filterBtnApply) {
+        filterBtnApply.addEventListener('click', () => {
+          state.selectedTeams = Array.from(tempSelectedTeams);
+          closeFilterModal();
+          updateFilterButtonText();
+          renderMatches();
+          if (state.selectedTeams.length > 0) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      }
+
+      // Esc key to close modal
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('filter-modal');
+          if (modal && modal.classList.contains('open')) {
+            closeFilterModal();
+          }
+        }
+      });
+
+      // Update visual visibility of floating filter button
+      updateFilterFloatingVisibility();
+      updateFilterButtonText();
+    }
+
   </script>
+
+  <!-- ══════════════════════════════════════════════════════════
+       Team Filter Floating Buttons (Only visible in ALL page)
+  ══════════════════════════════════════════════════════════ -->
+  <div id="filter-floating-container" style="display: none;">
+    <button id="filter-clear-floating-btn" class="filter-clear-floating" type="button" aria-label="Clear filters">
+      ✕
+    </button>
+    <button id="filter-floating-btn" class="filter-btn-floating" type="button" aria-label="Filter teams">
+      <span class="filter-btn-icon">🔍</span>
+      <span id="filter-btn-text">Filter Teams</span>
+      <span id="filter-badge" class="filter-btn-badge" style="display: none;">0</span>
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       Team Filter Modal
+  ══════════════════════════════════════════════════════════ -->
+  <div id="filter-modal" role="dialog" aria-label="Filter teams modal" aria-modal="true">
+    <div class="filter-modal-overlay" id="filter-modal-overlay"></div>
+    <div class="filter-modal-panel">
+      <header class="filter-modal-header">
+        <h2 class="filter-modal-title" id="filter-modal-title">Filter Teams</h2>
+        <button class="filter-modal-close" id="filter-modal-close" type="button" aria-label="Close modal">✕</button>
+      </header>
+      <div class="filter-modal-body" id="filter-modal-body">
+        <!-- Group-wise teams checkboxes will be dynamically rendered here -->
+      </div>
+      <footer class="filter-modal-footer">
+        <button class="filter-footer-btn filter-btn-clear-all" id="filter-btn-clear-all" type="button">Clear All</button>
+        <div class="filter-footer-right">
+          <button class="filter-footer-btn filter-btn-cancel" id="filter-btn-cancel" type="button">Cancel</button>
+          <button class="filter-footer-btn filter-btn-apply" id="filter-btn-apply" type="button">Apply</button>
+        </div>
+      </footer>
+    </div>
+  </div>
 </body>
 
 </html>
