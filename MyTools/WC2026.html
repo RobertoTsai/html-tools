@@ -1494,7 +1494,8 @@
     }
 
     .ptr-indicator.ptr-pulling {
-      transition: none; /* 即時拖曳回饋 */
+      transition: none;
+      /* 即時拖曳回饋 */
       opacity: 1;
     }
 
@@ -1558,6 +1559,7 @@
         background-color: rgba(212, 175, 55, 0.4);
         border-radius: 4px;
       }
+
       100% {
         background-color: transparent;
       }
@@ -1683,7 +1685,7 @@
     /* ╔══════════════════════════════════════════════════════════╗
        ║  1. 常數設定                                             ║
        ╚══════════════════════════════════════════════════════════╝ */
-    const ICS_URL = 'https://wc2026-ics.roberto-954.workers.dev/';
+    const ICS_URL = 'https://wc2026.undiff.net/';
     const CACHE_KEY = 'fwc26-ics-cache';
     const CACHE_TTL = 5 * 60 * 1000;   // 5 分鐘（毫秒）
     const LANG_KEY = 'fwc26-lang';
@@ -3610,8 +3612,8 @@
         const newDates = [...dateSet].sort();
 
         // 判斷是否需要完整重繪 (例如初始載入，或日期數改變了)
-        const needsFullRender = (state.events.length === 0) || 
-                               (JSON.stringify(state.dates) !== JSON.stringify(newDates));
+        const needsFullRender = (state.events.length === 0) ||
+          (JSON.stringify(state.dates) !== JSON.stringify(newDates));
 
         // 更新全域狀態
         state.events = newEvents;
@@ -3622,14 +3624,14 @@
           if (state.selectedDate === 'ALL' && state.dates.length) {
             state.selectedDate = getDefaultDate(state.dates);
           }
-          
+
           if (!isBackground) {
             document.getElementById('loading-state').style.display = 'none';
           }
-          
+
           renderDateBar();
           renderMatches();
-          
+
           requestAnimationFrame(() => {
             scrollTabIntoView(state.selectedDate);
           });
@@ -3704,7 +3706,7 @@
 
       if (hasCache) {
         // 如果有快取，在背景靜默更新資料
-        updateScheduleData(true, true).catch(() => {});
+        updateScheduleData(true, true).catch(() => { });
       } else {
         // 無快取，進行前台完整載入
         try {
