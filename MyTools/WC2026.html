@@ -1826,19 +1826,19 @@
     /* Teams Grid */
     .filter-teams-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
     }
 
     @media (min-width: 480px) {
       .filter-teams-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (min-width: 600px) {
       .filter-teams-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
     }
 
@@ -1854,6 +1854,7 @@
       cursor: pointer;
       user-select: none;
       transition: all var(--transition-fast);
+      min-width: 0;
     }
 
     .filter-team-card:hover {
@@ -1869,6 +1870,7 @@
     .filter-team-card input {
       accent-color: var(--color-red);
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .filter-team-card .team-flag {
@@ -1880,6 +1882,7 @@
       border-radius: 2px;
       overflow: hidden;
       box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      flex-shrink: 0;
     }
 
     .filter-team-card .team-flag img {
