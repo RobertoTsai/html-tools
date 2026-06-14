@@ -1523,14 +1523,15 @@
       position: relative;
     }
 
-    .ptr-arrow {
-      font-size: 1rem;
+    .ptr-arrow-svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--color-red);
       transition: transform 0.2s ease;
-      color: var(--color-red);
-      line-height: 1;
+      display: block;
     }
 
-    .ptr-indicator.ptr-release .ptr-arrow {
+    .ptr-indicator.ptr-release .ptr-arrow-svg {
       transform: rotate(180deg);
     }
 
@@ -1544,7 +1545,7 @@
       animation: spin 0.8s linear infinite;
     }
 
-    .ptr-indicator.ptr-refreshing .ptr-arrow {
+    .ptr-indicator.ptr-refreshing .ptr-arrow-svg {
       display: none;
     }
 
@@ -1633,7 +1634,10 @@
     <div id="ptr-indicator" class="ptr-indicator" aria-hidden="true">
       <div class="ptr-content">
         <div class="ptr-icon-wrap">
-          <span class="ptr-arrow">↓</span>
+          <svg class="ptr-arrow-svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+          </svg>
           <div class="ptr-loader"></div>
         </div>
         <span class="ptr-text">Pull down to refresh</span>
@@ -2572,6 +2576,7 @@
       const article = document.createElement('article');
       article.className = 'match-card';
       article.setAttribute('data-uid', event.uid);
+      article.setAttribute('data-uid', event.uid);
       if (status === 'live') article.classList.add('is-live');
       if (status === 'finished') article.classList.add('is-finished');
       article.style.animationDelay = `${animDelay}ms`;
@@ -2918,6 +2923,10 @@
         const isSelected = item.dataset.lang === lang;
         item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
       });
+
+      // 更新 Pull-to-refresh 文字
+      const ptrTextEl = document.querySelector('#ptr-indicator .ptr-text');
+      if (ptrTextEl) ptrTextEl.textContent = t('ptr.pull');
 
       // 更新 SEO Meta
       updateSEOMeta(lang);
@@ -3628,6 +3637,395 @@
        ║  14. 主程式入口                                          ║
        ╚══════════════════════════════════════════════════════════╝ */
 
+    /**
+     * 局部更新 DOM 中的賽事卡片，避免整個重繪
+     * @param {Array} newEvents - 新解析 of 賽事陣列
+     */
+    function updateMatchesDOM(newEvents) {
+      const container = document.getElementById('matches-container');
+      if (!container || container.querySelector('#loading-state') || container.querySelector('#error-state') || !container.children.length) {
+        // 如果容器為空，或處於載入/錯誤狀態，直接完整渲染
+        renderMatches();
+        return;
+      }
+
+      newEvents.forEach(newEvent => {
+        const card = container.querySelector(`.match-card[data-uid="${newEvent.uid}"]`);
+        if (!card) return; // 該卡片目前未在畫面渲染（例如在其他日期分頁）
+
+        const oldStatus = card.classList.contains('is-live') ? 'live' : (card.classList.contains('is-finished') ? 'finished' : 'notStarted');
+        const newStatus = getMatchStatus(newEvent);
+
+        const homeNameLocale = getTeamName(newEvent.homeTeam);
+        const awayNameLocale = getTeamName(newEvent.awayTeam);
+        const stageName = getStageName(newEvent);
+        const timeStr = formatTime(newEvent.dtStart);
+
+        // 1. 檢查卡片狀態 class 是否有變
+        if (oldStatus !== newStatus) {
+          card.classList.remove('is-live', 'is-finished');
+          if (newStatus === 'live') card.classList.add('is-live');
+          if (newStatus === 'finished') card.classList.add('is-finished');
+        }
+
+        // 2. 檢查/更新 ARIA Label
+        let scoreDesc = '';
+        if (newStatus === 'finished') {
+          scoreDesc = `${newEvent.homeScore} - ${newEvent.awayScore}`;
+        } else if (newStatus === 'live') {
+          scoreDesc = t('match.live');
+        } else {
+          scoreDesc = t('match.vs');
+        }
+        const newAriaLabel = `${homeNameLocale} ${scoreDesc} ${awayNameLocale}, ${timeStr}, ${stageName}${newEvent.venue ? ', ' + newEvent.venue : ''}`;
+        if (card.getAttribute('aria-label') !== newAriaLabel) {
+          card.setAttribute('aria-label', newAriaLabel);
+        }
+
+        // 3. 更新時間
+        const timeEl = card.querySelector('.card-time');
+        if (timeEl) {
+          const newIso = newEvent.dtStart.toISOString();
+          if (timeEl.getAttribute('datetime') !== newIso) {
+            timeEl.setAttribute('datetime', newIso);
+          }
+          if (timeEl.textContent !== timeStr) {
+            timeEl.textContent = timeStr;
+            timeEl.classList.remove('flash-update');
+            void timeEl.offsetWidth; // trigger reflow
+            timeEl.classList.add('flash-update');
+          }
+        }
+
+        // 4. 更新階段/組別標籤
+        const stageEl = card.querySelector('.card-stage');
+        if (stageEl) {
+          if (stageEl.textContent !== stageName) {
+            stageEl.textContent = stageName;
+            // 更新 stage class
+            stageEl.className = 'card-stage';
+            let groupClass = '';
+            if (newEvent.stageType === 'group') {
+              const letter = newEvent.groupLetter || (newEvent.rawStage || '').match(/Group\s+([A-Z])/i)?.[1];
+              if (letter) groupClass = `stage-group-${letter.toLowerCase()}`;
+            }
+            if (groupClass) {
+              stageEl.classList.add(groupClass);
+            } else {
+              stageEl.classList.add(`stage-${newEvent.stageType}`);
+            }
+          }
+        }
+
+        // 5. 更新狀態標籤 (LIVE/FT)
+        const cardTop = card.querySelector('.card-top');
+        if (cardTop) {
+          let statusWrap = cardTop.querySelector('.card-status-wrap');
+          if (newStatus === 'notStarted') {
+            if (statusWrap) statusWrap.remove();
+          } else {
+            if (!statusWrap) {
+              statusWrap = document.createElement('div');
+              statusWrap.className = 'card-status-wrap';
+              cardTop.appendChild(statusWrap);
+            }
+            let badge = statusWrap.querySelector('span');
+            const expectedClass = (newStatus === 'live') ? 'badge-live' : 'badge-ft';
+            const expectedText = (newStatus === 'live') ? t('match.live') : t('match.ft');
+            if (!badge || !badge.classList.contains(expectedClass)) {
+              statusWrap.innerHTML = '';
+              badge = document.createElement('span');
+              badge.className = expectedClass;
+              badge.setAttribute('aria-label', expectedText);
+              badge.textContent = expectedText;
+              statusWrap.appendChild(badge);
+              badge.classList.add('flash-update');
+            } else if (badge.textContent !== expectedText) {
+              badge.setAttribute('aria-label', expectedText);
+              badge.textContent = expectedText;
+              badge.classList.remove('flash-update');
+              void badge.offsetWidth;
+              badge.classList.add('flash-update');
+            }
+          }
+        }
+
+        // 6. 更新球隊名稱與國旗 (包含 1C 變更為實際國家)
+        // 主隊
+        const homeTeamEl = card.querySelector('.card-team.home');
+        if (homeTeamEl) {
+          const homeNameEl = homeTeamEl.querySelector('.team-name');
+          if (homeNameEl && homeNameEl.textContent !== homeNameLocale) {
+            homeNameEl.textContent = homeNameLocale;
+            homeNameEl.classList.remove('flash-update');
+            void homeNameEl.offsetWidth;
+            homeNameEl.classList.add('flash-update');
+
+            // 隊名改變了，國旗也必須重新生成
+            const oldFlagEl = homeTeamEl.querySelector('.team-flag');
+            if (oldFlagEl) oldFlagEl.remove();
+            const newFlagEl = createFlagEl(newEvent.homeTeam, newEvent.homeFlag);
+            homeTeamEl.insertBefore(newFlagEl, homeNameEl); // 放在文字前
+          }
+        }
+        // 客隊
+        const awayTeamEl = card.querySelector('.card-team.away');
+        if (awayTeamEl) {
+          const awayNameEl = awayTeamEl.querySelector('.team-name');
+          if (awayNameEl && awayNameEl.textContent !== awayNameLocale) {
+            awayNameEl.textContent = awayNameLocale;
+            awayNameEl.classList.remove('flash-update');
+            void awayNameEl.offsetWidth;
+            awayNameEl.classList.add('flash-update');
+
+            const oldFlagEl = awayTeamEl.querySelector('.team-flag');
+            if (oldFlagEl) oldFlagEl.remove();
+            const newFlagEl = createFlagEl(newEvent.awayTeam, newEvent.awayFlag);
+            awayTeamEl.insertBefore(newFlagEl, awayNameEl);
+          }
+        }
+
+        // 7. 更新比分區塊
+        const scoreEl = card.querySelector('.card-score');
+        if (scoreEl) {
+          if (newStatus === 'notStarted') {
+            // 確保顯示 VS
+            if (!scoreEl.querySelector('.score-vs')) {
+              scoreEl.innerHTML = '';
+              const vsEl = document.createElement('span');
+              vsEl.className = 'score-vs';
+              vsEl.textContent = t('match.vs');
+              scoreEl.appendChild(vsEl);
+            }
+          } else {
+            // 確保顯示比分
+            let homeScoreEl = scoreEl.querySelector('.home-score');
+            let awayScoreEl = scoreEl.querySelector('.away-score');
+            const newHomeScore = newEvent.homeScore ?? '?';
+            const newAwayScore = newEvent.awayScore ?? '?';
+
+            if (!homeScoreEl || !awayScoreEl) {
+              // 重新建置比分 DOM
+              scoreEl.innerHTML = '';
+              homeScoreEl = document.createElement('span');
+              homeScoreEl.className = 'score-num home-score';
+              homeScoreEl.textContent = newHomeScore;
+
+              const sepEl = document.createElement('span');
+              sepEl.className = 'score-sep';
+              sepEl.textContent = '-';
+
+              awayScoreEl = document.createElement('span');
+              awayScoreEl.className = 'score-num away-score';
+              awayScoreEl.textContent = newAwayScore;
+
+              scoreEl.appendChild(homeScoreEl);
+              scoreEl.appendChild(sepEl);
+              scoreEl.appendChild(awayScoreEl);
+
+              homeScoreEl.classList.add('flash-update');
+              awayScoreEl.classList.add('flash-update');
+            } else {
+              // 比分已存在，檢查是否更新
+              if (homeScoreEl.textContent !== String(newHomeScore)) {
+                homeScoreEl.textContent = newHomeScore;
+                homeScoreEl.classList.remove('flash-update');
+                void homeScoreEl.offsetWidth;
+                homeScoreEl.classList.add('flash-update');
+              }
+              if (awayScoreEl.textContent !== String(newAwayScore)) {
+                awayScoreEl.textContent = newAwayScore;
+                awayScoreEl.classList.remove('flash-update');
+                void awayScoreEl.offsetWidth;
+                awayScoreEl.classList.add('flash-update');
+              }
+            }
+
+            // 更新 dimmer
+            homeScoreEl.classList.remove('is-dimmed');
+            awayScoreEl.classList.remove('is-dimmed');
+            if (newStatus === 'finished' && newEvent.homeScore !== null && newEvent.awayScore !== null) {
+              if (newEvent.homeScore < newEvent.awayScore) {
+                homeScoreEl.classList.add('is-dimmed');
+              } else if (newEvent.awayScore < newEvent.homeScore) {
+                awayScoreEl.classList.add('is-dimmed');
+              }
+            }
+          }
+        }
+
+        // 8. 更新場館
+        const venueTextEl = card.querySelector('.venue-text');
+        if (venueTextEl) {
+          const venueText = newEvent.city ? `${newEvent.venue}, ${newEvent.city}` : newEvent.venue;
+          if (venueTextEl.textContent !== venueText) {
+            venueTextEl.textContent = venueText;
+            venueTextEl.title = venueText;
+          }
+        }
+      });
+    }
+
+    /**
+     * 設定下拉更新賽事資料功能
+     */
+    function setupPullToRefresh() {
+      const matchList = document.getElementById('match-list');
+      const indicator = document.getElementById('ptr-indicator');
+      if (!matchList || !indicator) return;
+
+      let touchStartY = 0;
+      let touchCurrentY = 0;
+      let ptrActive = false;
+      let pullDistance = 0;
+      const PULL_THRESHOLD = 60; // 觸發更新的下拉距離閾值
+
+      // 觸控開始
+      matchList.addEventListener('touchstart', (e) => {
+        // 僅在頁面捲動到最頂端時觸發下拉更新
+        if (window.scrollY === 0) {
+          touchStartY = e.touches[0].clientY;
+          ptrActive = true;
+        }
+      }, { passive: true });
+
+      // 觸控中
+      matchList.addEventListener('touchmove', (e) => {
+        if (!ptrActive) return;
+        touchCurrentY = e.touches[0].clientY;
+        const diffY = touchCurrentY - touchStartY;
+
+        if (diffY > 0) {
+          // 在最頂部下拉時阻止預設橡皮筋回彈效果
+          if (e.cancelable) e.preventDefault();
+
+          // 阻力計算 (阻力係數 0.4)
+          pullDistance = Math.min(diffY * 0.4, PULL_THRESHOLD + 20);
+
+          indicator.style.height = `${pullDistance}px`;
+          indicator.classList.add('ptr-pulling');
+
+          const textEl = indicator.querySelector('.ptr-text');
+          if (pullDistance >= PULL_THRESHOLD) {
+            indicator.classList.add('ptr-release');
+            if (textEl) textEl.textContent = t('ptr.release');
+          } else {
+            indicator.classList.remove('ptr-release');
+            if (textEl) textEl.textContent = t('ptr.pull');
+          }
+        } else {
+          // 向上滑動時重設
+          ptrActive = false;
+          resetPtr();
+        }
+      }, { passive: false });
+
+      // 觸控結束
+      matchList.addEventListener('touchend', (e) => {
+        if (!ptrActive) return;
+        ptrActive = false;
+
+        if (pullDistance >= PULL_THRESHOLD) {
+          triggerPtrUpdate();
+        } else {
+          resetPtr();
+        }
+      }, { passive: true });
+
+      function resetPtr() {
+        pullDistance = 0;
+        indicator.style.height = '0';
+        indicator.classList.remove('ptr-pulling', 'ptr-release', 'ptr-refreshing');
+        const textEl = indicator.querySelector('.ptr-text');
+        if (textEl) textEl.textContent = t('ptr.pull');
+      }
+
+      async function triggerPtrUpdate() {
+        indicator.style.height = '50px';
+        indicator.classList.remove('ptr-pulling', 'ptr-release');
+        indicator.classList.add('ptr-refreshing');
+        const textEl = indicator.querySelector('.ptr-text');
+        if (textEl) textEl.textContent = t('ptr.updating');
+
+        try {
+          // 強制重新 Fetch (清除快取)
+          await updateScheduleData(true);
+        } catch (err) {
+          console.error('[FWC26] 下拉更新失敗：', err);
+        } finally {
+          resetPtr();
+        }
+      }
+    }
+
+    /**
+     * 更新賽事資料
+     * @param {boolean} bypassCache - 是否繞過快取強制從伺服器載入
+     * @param {boolean} isBackground - 是否為背景載入 (不顯示 Loading/Error UI)
+     */
+    async function updateScheduleData(bypassCache = false, isBackground = false) {
+      if (!isBackground) {
+        document.getElementById('loading-state').style.display = 'flex';
+        document.getElementById('error-state').style.display = 'none';
+        document.getElementById('matches-container').innerHTML = '';
+      }
+
+      try {
+        const icsText = await fetchICS(bypassCache);
+        const newEvents = parseICS(icsText);
+
+        // 計算有比賽的日期（裝置時區）
+        const dateSet = new Set(newEvents.map(e => getLocalDateString(e.dtStart)));
+        const newDates = [...dateSet].sort();
+
+        // 判斷是否需要完整重繪 (例如初始載入，或日期數改變了)
+        const needsFullRender = (state.events.length === 0) || 
+                               (JSON.stringify(state.dates) !== JSON.stringify(newDates));
+
+        // 更新全域狀態
+        state.events = newEvents;
+        state.dates = newDates;
+
+        if (needsFullRender) {
+          // 決定預設選中日期 (如果是全新載入)
+          if (state.selectedDate === 'ALL' && state.dates.length) {
+            state.selectedDate = getDefaultDate(state.dates);
+          }
+          
+          if (!isBackground) {
+            document.getElementById('loading-state').style.display = 'none';
+          }
+          
+          renderDateBar();
+          renderMatches();
+          
+          requestAnimationFrame(() => {
+            scrollTabIntoView(state.selectedDate);
+          });
+        } else {
+          // 僅局部更新 DOM 有異動的欄位
+          if (!isBackground) {
+            document.getElementById('loading-state').style.display = 'none';
+          }
+          updateMatchesDOM(newEvents);
+        }
+
+        // 注入 JSON-LD
+        injectJSONLD(state.events);
+
+      } catch (err) {
+        console.error('[FWC26] 資料更新失敗：', err);
+        if (!isBackground) {
+          document.getElementById('loading-state').style.display = 'none';
+          document.getElementById('error-state').style.display = 'flex';
+        } else {
+          // 背景更新失敗，不中斷使用者操作，僅 console.warn
+          console.warn('[FWC26] 背景更新失敗，保留原有資料');
+        }
+        throw err;
+      }
+    }
+
     async function init() {
       // 偵測語言
       state.lang = detectLanguage();
@@ -3707,5 +4105,4 @@
 
   </script>
 </body>
-
 </html>
