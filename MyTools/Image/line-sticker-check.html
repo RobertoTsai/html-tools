@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>貼圖留白檢查工具</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+    h1 { text-align: center; font-size: 1.8rem; margin-bottom: 6px; color: #2c3e50; }
+    .subtitle { text-align: center; color: #666; font-size: 0.95rem; margin-bottom: 28px; }
+
+    .upload-area {
+      border: 3px dashed #a0b4c8;
+      border-radius: 16px;
+      background: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+    .upload-area:hover, .upload-area.dragover { border-color: #3498db; background: #eaf4fd; }
+    .upload-icon { font-size: 3rem; margin-bottom: 10px; }
+    .upload-area p { color: #555; font-size: 1rem; }
+    .upload-area span { color: #3498db; font-weight: bold; }
+    #fileInput { display: none; }
+
+    .settings {
+      max-width: 700px;
+      margin: 0 auto 24px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      flex-wrap: wrap;
+    }
+    .settings label { font-size: 0.95rem; color: #444; font-weight: 500; }
+    .settings input[type=number] {
+      width: 70px; padding: 6px 10px;
+      border: 1px solid #ccc; border-radius: 8px;
+      font-size: 1rem; text-align: center;
+    }
+    .settings .hint { color: #888; font-size: 0.85rem; }
+    .btn-clear {
+      margin-left: auto;
+      background: #e74c3c; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 8px 18px; cursor: pointer;
+      font-size: 0.9rem; transition: background 0.2s;
+    }
+    .btn-clear:hover { background: #c0392b; }
+
+    .summary-bar {
+      max-width: 1100px;
+      margin: 0 auto 20px;
+      display: flex; gap: 14px; flex-wrap: wrap;
+    }
+    .summary-card {
+      flex: 1; min-width: 140px;
+      background: #fff; border-radius: 12px;
+      padding: 14px 20px; text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, border 0.15s;
+      border: 2px solid transparent;
+      user-select: none;
+    }
+    .summary-card:hover { transform: translateY(-2px); box-shadow: 0 5px 16px rgba(0,0,0,0.13); }
+    .summary-card.active-filter { border-width: 2px; border-style: solid; transform: translateY(-2px); box-shadow: 0 5px 16px rgba(0,0,0,0.15); }
+    .summary-card.total.active-filter { border-color: #3498db; background: #eaf4fd; }
+    .summary-card.pass.active-filter  { border-color: #27ae60; background: #eafaf1; }
+    .summary-card.fail.active-filter  { border-color: #e74c3c; background: #fdedec; }
+    .summary-card .num { font-size: 2rem; font-weight: bold; }
+    .summary-card .lbl { font-size: 0.82rem; color: #888; margin-top: 2px; }
+    .summary-card.total .num { color: #3498db; }
+    .summary-card.pass .num  { color: #27ae60; }
+    .summary-card.fail .num  { color: #e74c3c; }
+
+    .filter-bar {
+      max-width: 1100px;
+      margin: 0 auto 18px;
+      display: flex; align-items: center;
+      gap: 10px; flex-wrap: wrap;
+    }
+    .filter-bar .filter-label { font-size: 0.88rem; color: #888; margin-right: 4px; }
+    .tab-btn {
+      padding: 7px 20px; border-radius: 30px;
+      border: 2px solid #ddd; background: #fff;
+      font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: all 0.18s; color: #555;
+    }
+    .tab-btn:hover { border-color: #aaa; color: #333; }
+    .tab-btn.active-all  { background: #3498db; border-color: #3498db; color: #fff; }
+    .tab-btn.active-pass { background: #27ae60; border-color: #27ae60; color: #fff; }
+    .tab-btn.active-fail { background: #e74c3c; border-color: #e74c3c; color: #fff; }
+
+    .btn-fix-all {
+      margin-left: auto;
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: #fff; border: none; border-radius: 8px;
+      padding: 8px 18px; cursor: pointer;
+      font-size: 0.88rem; font-weight: 600;
+      transition: opacity 0.2s, transform 0.15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-fix-all:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .empty-state {
+      max-width: 1100px; margin: 0 auto;
+      text-align: center; padding: 50px 20px;
+      color: #aaa; font-size: 1rem;
+    }
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 10px; }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 20px; max-width: 1100px; margin: 0 auto;
+    }
+    .card {
+      background: #fff; border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.09);
+      transition: transform 0.15s;
+    }
+    .card:hover { transform: translateY(-3px); }
+    .card.hidden { display: none; }
+    .card-header {
+      padding: 10px 14px; font-size: 0.85rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .card.pass .card-header { background: #eafaf1; color: #1e8449; }
+    .card.fail .card-header { background: #fdedec; color: #c0392b; }
+    .card-body { padding: 12px; }
+    .canvas-wrap {
+      position: relative; display: flex; justify-content: center;
+      background: #f7f7f7; border-radius: 8px;
+      overflow: hidden; margin-bottom: 10px;
+    }
+    .canvas-wrap canvas { display: block; max-width: 100%; }
+    .badge {
+      display: inline-block; padding: 3px 10px;
+      border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px;
+    }
+    .badge.pass   { background: #eafaf1; color: #1e8449; }
+    .badge.fail   { background: #fdedec; color: #c0392b; }
+    .badge.fixed  { background: #fef9e7; color: #d68910; }
+
+    .margin-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .margin-table th, .margin-table td { padding: 5px 8px; text-align: center; border: 1px solid #eee; }
+    .margin-table th { background: #f5f5f5; color: #555; }
+    .margin-table td.ok { color: #27ae60; font-weight: bold; }
+    .margin-table td.ng { color: #e74c3c; font-weight: bold; }
+
+    .size-info {
+      font-size: 0.78rem; color: #aaa;
+      margin-top: 6px; text-align: right;
+      display: flex; justify-content: flex-end; align-items: center; gap: 6px;
+    }
+    .size-badge {
+      display: inline-block; padding: 1px 7px;
+      border-radius: 10px; font-size: 0.72rem; font-weight: 600;
+    }
+    .size-badge.even { background: #eafaf1; color: #1e8449; }
+    .size-badge.odd  { background: #fef9e7; color: #d68910; }
+
+    .btn-fix {
+      width: 100%; margin-top: 10px;
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: #fff; border: none; border-radius: 8px;
+      padding: 8px 0; cursor: pointer;
+      font-size: 0.88rem; font-weight: 600;
+      transition: opacity 0.2s, transform 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-fix:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-download {
+      width: 100%; margin-top: 6px;
+      background: linear-gradient(135deg, #27ae60, #1e8449);
+      color: #fff; border: none; border-radius: 8px;
+      padding: 8px 0; cursor: pointer;
+      font-size: 0.88rem; font-weight: 600;
+      transition: opacity 0.2s, transform 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      text-decoration: none;
+    }
+    .btn-download:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .loading {
+      text-align: center; padding: 40px; color: #888; font-size: 1rem;
+    }
+    .spinner {
+      display: inline-block; width: 28px; height: 28px;
+      border: 3px solid #ddd; border-top-color: #3498db;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+      vertical-align: middle; margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: #fff; border-radius: 16px;
+      padding: 28px 28px 22px;
+      max-width: 500px; width: 90%;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      animation: popIn 0.2s ease;
+    }
+    @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal h3 { font-size: 1.1rem; margin-bottom: 14px; color: #2c3e50; }
+    .modal .option-row {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .modal .option-row label { font-size: 0.9rem; color: #444; min-width: 90px; }
+    .modal .option-row input[type=number] {
+      width: 70px; padding: 6px 10px;
+      border: 1px solid #ccc; border-radius: 8px;
+      font-size: 0.95rem; text-align: center;
+    }
+    .modal .option-row select {
+      padding: 6px 10px; border: 1px solid #ccc;
+      border-radius: 8px; font-size: 0.9rem;
+      background: #fff; cursor: pointer;
+    }
+    .modal .color-row {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .modal .color-row label { font-size: 0.9rem; color: #444; min-width: 90px; }
+    .color-swatch {
+      width: 32px; height: 32px; border-radius: 6px;
+      border: 2px solid #ddd; cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .color-swatch.selected { border-color: #3498db; box-shadow: 0 0 0 2px #3498db44; }
+    .modal .hint-text {
+      font-size: 0.8rem; color: #aaa; margin-bottom: 16px;
+      background: #f8f9fa; border-radius: 8px; padding: 8px 12px;
+      line-height: 1.6;
+    }
+    .hint-text .even-tag {
+      display: inline-block; padding: 1px 6px;
+      background: #eafaf1; color: #1e8449;
+      border-radius: 6px; font-weight: 600; font-size: 0.75rem;
+    }
+    .modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
+    .modal-btns button {
+      padding: 9px 22px; border-radius: 8px;
+      border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .modal-btns button:hover { opacity: 0.85; }
+    .btn-cancel-modal  { background: #eee; color: #555; }
+    .btn-confirm-modal { background: linear-gradient(135deg, #f39c12, #e67e22); color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>🖼️ 貼圖留白檢查工具</h1>
+  <p class="subtitle">上傳貼圖圖片，自動檢查圖像距離邊緣是否符合留白規範，並可一鍵修正</p>
+
+  <div class="settings">
+    <label>最小留白距離：</label>
+    <input type="number" id="minMargin" value="10" min="1" max="100" />
+    <span style="font-size:0.95rem;color:#555">px</span>
+    <span class="hint">（建議 10px，符合 LINE 貼圖規範）</span>
+    <button class="btn-clear" id="btnClear" style="display:none">🗑 清除全部</button>
+  </div>
+
+  <div class="upload-area" id="uploadArea">
+    <div class="upload-icon">📂</div>
+    <p>拖曳圖片至此，或 <span>點擊選擇檔案</span></p>
+    <p style="font-size:0.82rem;color:#aaa;margin-top:6px">支援 PNG / JPG / GIF（可多選）</p>
+    <input type="file" id="fileInput" accept="image/*" multiple />
+  </div>
+
+  <div class="summary-bar" id="summaryBar" style="display:none">
+    <div class="summary-card total active-filter" id="cardTotal" data-filter="all">
+      <div class="num" id="sumTotal">0</div><div class="lbl">🗂 全部圖片</div>
+    </div>
+    <div class="summary-card pass" id="cardPass" data-filter="pass">
+      <div class="num" id="sumPass">0</div><div class="lbl">✅ 符合規範</div>
+    </div>
+    <div class="summary-card fail" id="cardFail" data-filter="fail">
+      <div class="num" id="sumFail">0</div><div class="lbl">❌ 不符合規範</div>
+    </div>
+  </div>
+
+  <div class="filter-bar" id="filterBar" style="display:none">
+    <span class="filter-label">🔍 篩選：</span>
+    <button class="tab-btn active-all" data-filter="all">全部</button>
+    <button class="tab-btn" data-filter="pass">✅ 符合規範</button>
+    <button class="tab-btn" data-filter="fail">❌ 不符合規範</button>
+    <button class="btn-fix-all" id="btnFixAll" style="display:none">🔧 一鍵修正所有未符合圖片</button>
+  </div>
+
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="empty-icon">🔎</div>
+    <div>此篩選條件下沒有圖片</div>
+  </div>
+
+  <div class="results-grid" id="resultsGrid"></div>
+
+  <!-- Fix Options Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>🔧 修正留白設定</h3>
+      <div class="option-row">
+        <label>目標留白：</label>
+        <input type="number" id="fixMarginVal" value="10" min="1" max="200" />
+        <span style="font-size:0.9rem;color:#555">px（四邊均等）</span>
+      </div>
+      <div class="option-row">
+        <label>縮放模式：</label>
+        <select id="fixMode">
+          <option value="expand">擴大畫布（保持原圖大小）</option>
+          <option value="shrink">縮小圖像（保持原畫布大小）</option>
+        </select>
+      </div>
+      <div class="color-row">
+        <label>填充顏色：</label>
+        <div class="color-swatch selected" data-color="transparent"
+          style="background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 0 0 / 10px 10px;" title="透明"></div>
+        <div class="color-swatch" data-color="#ffffff" style="background:#ffffff;" title="白色"></div>
+        <div class="color-swatch" data-color="#000000" style="background:#000000;" title="黑色"></div>
+        <div class="color-swatch" data-color="#f0f4f8" style="background:#f0f4f8;" title="淺灰"></div>
+        <input type="color" id="customColor" value="#ffffff" title="自訂顏色"
+          style="width:32px;height:32px;border-radius:6px;border:2px solid #ddd;cursor:pointer;padding:2px;">
+      </div>
+      <div class="hint-text">
+        💡 修正後尺寸將自動調整為<span class="even-tag">偶數 px</span>（若計算結果為奇數，會向上補 1px 並填充背景色）<br>
+        * 擴大畫布：在原圖四周補上留白空間；縮小圖像：壓縮圖像使其在原尺寸內留有空白
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cancel-modal" id="btnCancelModal">取消</button>
+        <button class="btn-confirm-modal" id="btnConfirmModal">✅ 確認修正</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const uploadArea      = document.getElementById('uploadArea');
+    const fileInput       = document.getElementById('fileInput');
+    const resultsGrid     = document.getElementById('resultsGrid');
+    const summaryBar      = document.getElementById('summaryBar');
+    const filterBar       = document.getElementById('filterBar');
+    const btnClear        = document.getElementById('btnClear');
+    const btnFixAll       = document.getElementById('btnFixAll');
+    const minMarginInput  = document.getElementById('minMargin');
+    const emptyState      = document.getElementById('emptyState');
+    const modalOverlay    = document.getElementById('modalOverlay');
+    const btnCancelModal  = document.getElementById('btnCancelModal');
+    const btnConfirmModal = document.getElementById('btnConfirmModal');
+    const fixMarginVal    = document.getElementById('fixMarginVal');
+    const fixModeSelect   = document.getElementById('fixMode');
+    const customColorInput= document.getElementById('customColor');
+
+    let allResults        = [];
+    let currentFilter     = 'all';
+    let fixTarget         = null;
+    let selectedFillColor = 'transparent';
+    let pendingCount      = 0;
+
+    // ── 工具：將數值無條件進位至偶數 ────────────────────────
+    function toEven(n) {
+      return n % 2 === 0 ? n : n + 1;
+    }
+
+    // ── Color swatches ───────────────────────────────────────
+    document.querySelectorAll('.color-swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+        sw.classList.add('selected');
+        selectedFillColor = sw.dataset.color;
+      });
+    });
+    customColorInput.addEventListener('input', () => {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      selectedFillColor = customColorInput.value;
+    });
+
+    // ── Upload ───────────────────────────────────────────────
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+    uploadArea.addEventListener('drop', e => {
+      e.preventDefault(); uploadArea.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+    btnClear.addEventListener('click', () => {
+      allResults = []; pendingCount = 0;
+      resultsGrid.innerHTML = '';
+      summaryBar.style.display  = 'none';
+      filterBar.style.display   = 'none';
+      emptyState.style.display  = 'none';
+      btnClear.style.display    = 'none';
+      btnFixAll.style.display   = 'none';
+      fileInput.value = '';
+      currentFilter = 'all';
+      setActiveTab('all');
+      setActiveSummaryCard('all');
+    });
+
+    // ── Fix All ──────────────────────────────────────────────
+    btnFixAll.addEventListener('click', () => {
+      const failCards = Array.from(resultsGrid.querySelectorAll('.card[data-status="fail"]'));
+      if (failCards.length === 0) return;
+      fixTarget = 'all';
+      fixMarginVal.value = minMarginInput.value || 10;
+      openModal();
+    });
+
+    // ── Modal ────────────────────────────────────────────────
+    function openModal()  { modalOverlay.classList.add('show'); }
+    function closeModal() { modalOverlay.classList.remove('show'); fixTarget = null; }
+    btnCancelModal.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+
+    btnConfirmModal.addEventListener('click', () => {
+      const margin = parseInt(fixMarginVal.value) || 10;
+      const mode   = fixModeSelect.value;
+      const fill   = selectedFillColor;
+
+      if (fixTarget === 'all') {
+        const failCards = Array.from(resultsGrid.querySelectorAll('.card[data-status="fail"]'));
+        failCards.forEach(card => {
+          const idx = parseInt(card.dataset.idx);
+          if (!isNaN(idx) && allResults[idx]) applyFix(card, allResults[idx], margin, mode, fill);
+        });
+      } else if (fixTarget instanceof Element) {
+        const idx = parseInt(fixTarget.dataset.idx);
+        if (!isNaN(idx) && allResults[idx]) applyFix(fixTarget, allResults[idx], margin, mode, fill);
+      }
+      closeModal();
+    });
+
+    // ── Filter ───────────────────────────────────────────────
+    filterBar.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentFilter = btn.dataset.filter;
+        setActiveTab(currentFilter);
+        setActiveSummaryCard(currentFilter);
+        applyFilter();
+      });
+    });
+    document.getElementById('cardTotal').addEventListener('click', () => switchFilter('all'));
+    document.getElementById('cardPass').addEventListener('click',  () => switchFilter('pass'));
+    document.getElementById('cardFail').addEventListener('click',  () => switchFilter('fail'));
+
+    function switchFilter(f) {
+      currentFilter = f; setActiveTab(f); setActiveSummaryCard(f); applyFilter();
+    }
+    function setActiveTab(f) {
+      filterBar.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = 'tab-btn';
+        if (b.dataset.filter === f) b.classList.add('active-' + f);
+      });
+    }
+    function setActiveSummaryCard(f) {
+      ['cardTotal','cardPass','cardFail'].forEach(id => document.getElementById(id).classList.remove('active-filter'));
+      const map = { all:'cardTotal', pass:'cardPass', fail:'cardFail' };
+      if (map[f]) document.getElementById(map[f]).classList.add('active-filter');
+    }
+    function applyFilter() {
+      const loadingCards = resultsGrid.querySelectorAll('.card:not([data-status])');
+      let visibleCount = 0;
+      resultsGrid.querySelectorAll('.card').forEach(card => {
+        const status = card.dataset.status;
+        if (!status) { card.classList.remove('hidden'); visibleCount++; return; }
+        const show = currentFilter === 'all' || status === currentFilter;
+        card.classList.toggle('hidden', !show);
+        if (show) visibleCount++;
+      });
+      const hasLoading  = loadingCards.length > 0;
+      const hasFinished = allResults.length > 0;
+      emptyState.style.display = (!hasLoading && hasFinished && visibleCount === 0) ? 'block' : 'none';
+    }
+
+    // ── Process files ────────────────────────────────────────
+    function handleFiles(files) {
+      if (!files.length) return;
+      btnClear.style.display   = '';
+      summaryBar.style.display = 'flex';
+      filterBar.style.display  = 'flex';
+      Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        pendingCount++;
+        const reader = new FileReader();
+        reader.onload = e => processImage(file.name, e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function processImage(name, src) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-header">⏳ ${escHtml(name)}</div>
+        <div class="card-body"><div class="loading"><span class="spinner"></span>分析中...</div></div>`;
+      resultsGrid.appendChild(card);
+
+      const img = new Image();
+      img.onload = () => {
+        const minMargin = parseInt(minMarginInput.value) || 10;
+        const result    = analyzeMargin(img, minMargin);
+        result.name        = name;
+        result.originalSrc = src;
+        result.originalImg = img;
+        const idx = allResults.length;
+        allResults.push(result);
+        card.dataset.idx    = idx;
+        card.dataset.status = result.pass ? 'pass' : 'fail';
+        pendingCount = Math.max(0, pendingCount - 1);
+        renderCard(card, result, img, minMargin, false);
+        updateSummary();
+        applyFilter();
+      };
+      img.onerror = () => {
+        pendingCount = Math.max(0, pendingCount - 1);
+        card.remove(); applyFilter();
+      };
+      img.src = src;
+    }
+
+    // ── Analyse ──────────────────────────────────────────────
+    function analyzeMargin(img, minMargin) {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width; canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, img.width, img.height).data;
+      const W = img.width, H = img.height;
+      let top = H, bottom = 0, left = W, right = 0;
+
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          const i = (y * W + x) * 4;
+          const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+          if (a < 30) continue;
+          if (a > 200 && r > 240 && g > 240 && b > 240) continue;
+          if (y < top)    top    = y;
+          if (y > bottom) bottom = y;
+          if (x < left)   left   = x;
+          if (x > right)  right  = x;
+        }
+      }
+
+      if (top > bottom || left > right) {
+        return { valid:false, empty:true, pass:false,
+          marginTop:0, marginBottom:0, marginLeft:0, marginRight:0,
+          bbox:null, width:img.width, height:img.height };
+      }
+      const marginTop    = top;
+      const marginBottom = H - 1 - bottom;
+      const marginLeft   = left;
+      const marginRight  = W - 1 - right;
+      const pass = marginTop >= minMargin && marginBottom >= minMargin
+                && marginLeft >= minMargin && marginRight >= minMargin;
+      return { valid:true, empty:false, pass,
+        marginTop, marginBottom, marginLeft, marginRight,
+        bbox:{top,bottom,left,right}, width:W, height:H };
+    }
+
+    // ── Apply Fix ────────────────────────────────────────────
+    function applyFix(card, result, targetMargin, mode, fillColor) {
+      if (!result || !result.bbox || result.empty) return;
+      const img = result.originalImg;
+      const { top, bottom, left, right } = result.bbox;
+      let rawW, rawH, fixedCanvas;
+
+      if (mode === 'expand') {
+        // 計算各邊需補的量
+        const addTop    = Math.max(0, targetMargin - result.marginTop);
+        const addBottom = Math.max(0, targetMargin - result.marginBottom);
+        const addLeft   = Math.max(0, targetMargin - result.marginLeft);
+        const addRight  = Math.max(0, targetMargin - result.marginRight);
+        rawW = img.width  + addLeft + addRight;
+        rawH = img.height + addTop  + addBottom;
+
+        // 無條件進位至偶數
+        const finalW = toEven(rawW);
+        const finalH = toEven(rawH);
+        // 偶數補齊時，額外的 1px 平均分配到右/下（不影響圖像位置）
+        const extraW = finalW - rawW; // 0 or 1
+        const extraH = finalH - rawH; // 0 or 1
+
+        fixedCanvas = document.createElement('canvas');
+        fixedCanvas.width = finalW; fixedCanvas.height = finalH;
+        const ctx = fixedCanvas.getContext('2d');
+        fillBackground(ctx, finalW, finalH, fillColor);
+        ctx.drawImage(img, addLeft, addTop);
+
+      } else {
+        // shrink：保持原畫布大小，先確保畫布為偶數
+        rawW = img.width;
+        rawH = img.height;
+        const finalW = toEven(rawW);
+        const finalH = toEven(rawH);
+
+        const contentW = right  - left  + 1;
+        const contentH = bottom - top   + 1;
+        const availW   = finalW - targetMargin * 2;
+        const availH   = finalH - targetMargin * 2;
+        const scale    = Math.min(availW / contentW, availH / contentH, 1);
+        const drawW    = Math.round(contentW * scale);
+        const drawH    = Math.round(contentH * scale);
+        const drawX    = Math.round((finalW - drawW) / 2);
+        const drawY    = Math.round((finalH - drawH) / 2);
+
+        fixedCanvas = document.createElement('canvas');
+        fixedCanvas.width = finalW; fixedCanvas.height = finalH;
+        const ctx = fixedCanvas.getContext('2d');
+        fillBackground(ctx, finalW, finalH, fillColor);
+        ctx.drawImage(img, left, top, contentW, contentH, drawX, drawY, drawW, drawH);
+      }
+
+      const fixedDataUrl = fixedCanvas.toDataURL('image/png');
+      const fixedImg = new Image();
+      fixedImg.onload = () => {
+        const newResult = analyzeMargin(fixedImg, targetMargin);
+        newResult.name        = result.name;
+        newResult.originalSrc = fixedDataUrl;
+        newResult.originalImg = fixedImg;
+        const idx = parseInt(card.dataset.idx);
+        allResults[idx]       = newResult;
+        card.dataset.status   = newResult.pass ? 'pass' : 'fail';
+        card.dataset.fixedUrl = fixedDataUrl;
+        renderCard(card, newResult, fixedImg, targetMargin, true);
+        updateSummary();
+        applyFilter();
+      };
+      fixedImg.src = fixedDataUrl;
+    }
+
+    // 填充背景色輔助函式
+    function fillBackground(ctx, w, h, fillColor) {
+      if (fillColor === 'transparent') {
+        ctx.clearRect(0, 0, w, h);
+      } else {
+        ctx.fillStyle = fillColor;
+        ctx.fillRect(0, 0, w, h);
+      }
+    }
+
+    // ── Render card ──────────────────────────────────────────
+    function renderCard(card, result, img, minMargin, isFixed) {
+      const passClass = result.pass ? 'pass' : 'fail';
+      const SCALE = Math.min(1, 256 / Math.max(img.width, img.height));
+      const dw = Math.round(img.width  * SCALE);
+      const dh = Math.round(img.height * SCALE);
+
+      const offscreen = document.createElement('canvas');
+      offscreen.width = dw; offscreen.height = dh;
+      const ctx = offscreen.getContext('2d');
+
+      // 棋盤格背景（透明區域）
+      const pat = document.createElement('canvas');
+      pat.width = 10; pat.height = 10;
+      const pc = pat.getContext('2d');
+      pc.fillStyle = '#ccc'; pc.fillRect(0,0,10,10);
+      pc.fillStyle = '#fff'; pc.fillRect(0,0,5,5); pc.fillRect(5,5,5,5);
+      ctx.fillStyle = ctx.createPattern(pat, 'repeat');
+      ctx.fillRect(0, 0, dw, dh);
+      ctx.drawImage(img, 0, 0, dw, dh);
+
+      if (result.bbox) {
+        const { top, bottom, left, right } = result.bbox;
+        const st = top*SCALE, sb = bottom*SCALE, sl = left*SCALE, sr = right*SCALE;
+        ctx.strokeStyle = result.pass ? '#27ae60' : '#e74c3c';
+        ctx.lineWidth = 2; ctx.setLineDash([4,3]);
+        ctx.strokeRect(sl, st, sr-sl, sb-st);
+        ctx.setLineDash([]);
+        const drawLine = (ok, x1,y1,x2,y2) => {
+          ctx.strokeStyle = ok ? '#27ae60' : '#e74c3c';
+          ctx.lineWidth = 1.5; ctx.setLineDash([3,2]);
+          ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+          ctx.setLineDash([]);
+        };
+        const mx = sl+(sr-sl)/2, my = st+(sb-st)/2;
+        drawLine(result.marginTop    >= minMargin, mx, 0,  mx, st);
+        drawLine(result.marginBottom >= minMargin, mx, sb, mx, dh);
+        drawLine(result.marginLeft   >= minMargin, 0,  my, sl, my);
+        drawLine(result.marginRight  >= minMargin, sr, my, dw, my);
+      }
+
+      const margins = result.bbox ? [
+        { dir:'上', val:result.marginTop,    ok:result.marginTop    >= minMargin },
+        { dir:'下', val:result.marginBottom, ok:result.marginBottom >= minMargin },
+        { dir:'左', val:result.marginLeft,   ok:result.marginLeft   >= minMargin },
+        { dir:'右', val:result.marginRight,  ok:result.marginRight  >= minMargin },
+      ] : [];
+
+      const tableRows = margins.map(m =>
+        `<tr><td>${m.dir}</td><td>${m.val}px</td>
+         <td class="${m.ok?'ok':'ng'}">${m.ok ? '✅ 通過' : '❌ 不足（需 '+minMargin+'px）'}</td></tr>`
+      ).join('');
+
+      const badgeHtml = isFixed
+        ? `<span class="badge fixed">🔧 已修正</span>&nbsp;<span class="badge ${passClass}">${result.pass ? '✅ 符合規範' : '❌ 仍不符合'}</span>`
+        : `<span class="badge ${passClass}">${result.pass ? '✅ 符合規範' : '❌ 不符合規範'}</span>`;
+
+      // 尺寸資訊：標示是否為偶數
+      const wEven = img.width  % 2 === 0;
+      const hEven = img.height % 2 === 0;
+      const sizeHtml = `
+        <div class="size-info">
+          <span>${img.width}×${img.height}px</span>
+          <span class="size-badge ${wEven?'even':'odd'}">W ${wEven?'偶數✅':'奇數⚠️'}</span>
+          <span class="size-badge ${hEven?'even':'odd'}">H ${hEven?'偶數✅':'奇數⚠️'}</span>
+        </div>`;
+
+      const fixBtnHtml = !result.pass
+        ? `<button class="btn-fix">🔧 快速修正此圖片</button>`
+        : '';
+      const dlBtnHtml = isFixed
+        ? `<button class="btn-download">⬇️ 下載修正後圖片</button>`
+        : '';
+
+      card.className      = `card ${passClass}`;
+      card.dataset.status = passClass;
+      card.innerHTML = `
+        <div class="card-header">${result.pass ? '✅' : (isFixed ? '🔧' : '❌')} ${escHtml(result.name)}</div>
+        <div class="card-body">
+          <div class="canvas-wrap"><canvas width="${dw}" height="${dh}"></canvas></div>
+          <div style="margin-bottom:4px">${badgeHtml}</div>
+          ${result.empty
+            ? '<p style="color:#aaa;font-size:0.85rem">無法偵測到圖像內容</p>'
+            : `<table class="margin-table">
+                <thead><tr><th>方向</th><th>留白距離</th><th>結果</th></tr></thead>
+                <tbody>${tableRows}</tbody>
+              </table>`}
+          ${sizeHtml}
+          ${fixBtnHtml}
+          ${dlBtnHtml}
+        </div>`;
+
+      card.querySelector('canvas').getContext('2d').drawImage(offscreen, 0, 0);
+
+      const fixBtn = card.querySelector('.btn-fix');
+      if (fixBtn) {
+        fixBtn.addEventListener('click', () => {
+          fixTarget = card;
+          fixMarginVal.value = minMarginInput.value || 10;
+          openModal();
+        });
+      }
+
+      const dlBtn = card.querySelector('.btn-download');
+      if (dlBtn) {
+        dlBtn.addEventListener('click', () => {
+          const url = card.dataset.fixedUrl || result.originalSrc;
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = result.name.replace(/(\.[^.]+)$/, '_fixed$1') || 'fixed.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        });
+      }
+    }
+
+    // ── Summary ──────────────────────────────────────────────
+    function updateSummary() {
+      const total = allResults.length;
+      const pass  = allResults.filter(r => r.pass).length;
+      const fail  = total - pass;
+      document.getElementById('sumTotal').textContent = total;
+      document.getElementById('sumPass').textContent  = pass;
+      document.getElementById('sumFail').textContent  = fail;
+      btnFixAll.style.display = fail > 0 ? '' : 'none';
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>
