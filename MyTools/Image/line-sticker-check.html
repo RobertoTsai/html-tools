@@ -26,7 +26,7 @@
       box-shadow: 2px 0 16px rgba(25, 38, 52, 0.08);
       z-index: 2;
     }
-    .main { width: 100%; margin-left: 320px; padding: 18px; }
+    .main { display: flex; flex-direction: column; width: 100%; height: 100vh; margin-left: 320px; padding: 18px; overflow: hidden; }
     h1 { font-size: 1.35rem; margin-bottom: 8px; color: #17212b; }
     .subtitle { color: #657384; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px; }
     .panel { border-top: 1px solid #edf0f4; padding-top: 16px; margin-top: 16px; }
@@ -82,58 +82,48 @@
       gap: 8px;
       margin-top: 12px;
     }
-    .stat {
+    .stat-btn {
       border: 1px solid #e0e6ed;
       border-radius: 8px;
       padding: 9px;
       background: #fbfcfe;
       text-align: center;
-    }
-    .stat.total { border-color: #9cc5ff; background: #eef6ff; }
-    .stat.pass { border-color: #9ad8bd; background: #edf9f3; }
-    .stat.fail { border-color: #f0a2a2; background: #fff0f0; }
-    .stat.total b { color: #1263c7; }
-    .stat.pass b { color: #21885a; }
-    .stat.fail b { color: #c83232; }
-    .stat b { display: block; font-size: 1.35rem; }
-    .stat span { color: #68788a; font-size: 0.75rem; }
-    .filters { display: flex; gap: 8px; margin-top: 12px; }
-    .filter-btn {
-      flex: 1;
-      min-height: 34px;
-      border-radius: 8px;
-      background: #eef2f6;
       color: #405061;
-      font-weight: 700;
     }
-    .filter-btn.active { background: #17212b; color: #fff; }
-    .filter-btn[data-filter=all] { background: #e8f2ff; color: #1263c7; }
-    .filter-btn[data-filter=pass] { background: #e8f7ef; color: #21885a; }
-    .filter-btn[data-filter=fail] { background: #fff0f0; color: #c83232; }
-    .filter-btn[data-filter=all].active { background: #1263c7; color: #fff; }
-    .filter-btn[data-filter=pass].active { background: #21885a; color: #fff; }
-    .filter-btn[data-filter=fail].active { background: #c83232; color: #fff; }
+    .stat-btn[data-filter=all] { border-color: #9cc5ff; background: #eef6ff; }
+    .stat-btn[data-filter=pass] { border-color: #9ad8bd; background: #edf9f3; }
+    .stat-btn[data-filter=fail] { border-color: #f0a2a2; background: #fff0f0; }
+    .stat-btn[data-filter=all].active { background: #1263c7; color: #fff; }
+    .stat-btn[data-filter=pass].active { background: #21885a; color: #fff; }
+    .stat-btn[data-filter=fail].active { background: #c83232; color: #fff; }
+    .stat-btn b { display: block; font-size: 1.35rem; }
+    .stat-btn span { color: inherit; font-size: 0.75rem; }
+    .stat-btn:not(.active)[data-filter=all] b { color: #1263c7; }
+    .stat-btn:not(.active)[data-filter=pass] b { color: #21885a; }
+    .stat-btn:not(.active)[data-filter=fail] b { color: #c83232; }
     .toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 1;
       display: flex;
+      flex: 0 0 auto;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
+      height: 54px;
       margin-bottom: 14px;
-      padding: 10px 0;
+      padding: 0;
       background: #f4f6f8;
     }
-    .toolbar h2 { font-size: 1rem; }
-    .toolbar-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-    .toolbar-actions .btn { min-height: 34px; padding: 7px 12px; font-size: 0.84rem; }
+    .toolbar h2 { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1rem; line-height: 34px; }
+    .toolbar-actions { display: flex; flex: 0 0 auto; gap: 8px; justify-content: flex-end; }
+    .toolbar-actions .btn { width: 112px; height: 34px; min-height: 34px; padding: 0 10px; font-size: 0.84rem; white-space: nowrap; }
+    .results-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: 18px; }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 12px;
     }
     .card {
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       border: 1px solid #dfe6ee;
       border-radius: 8px;
@@ -164,7 +154,7 @@
     }
     .badge.pass { background: #21885a; }
     .badge.warn { background: #c67a00; }
-    .card-body { padding: 10px; }
+    .card-body { display: flex; flex: 1; flex-direction: column; padding: 10px; }
     .preview {
       display: grid;
       place-items: center;
@@ -198,7 +188,7 @@
     .meta .bad { color: #c83232; font-weight: 750; }
     .meta .ok { color: #21734f; font-weight: 750; }
     .issues { color: #bf3838; font-size: 0.78rem; line-height: 1.45; margin-bottom: 8px; }
-    .card-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .card-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: auto; padding-top: 8px; }
     .card-actions .btn { min-height: 34px; padding: 7px 8px; font-size: 0.82rem; }
     .empty {
       display: grid;
@@ -231,8 +221,8 @@
     @media (max-width: 760px) {
       .app { display: block; }
       .sidebar { position: static; width: auto; max-height: none; border-right: 0; border-bottom: 1px solid #dde3ea; }
-      .main { margin-left: 0; padding: 12px; }
-      .toolbar { top: 0; }
+      .main { height: auto; min-height: 100vh; margin-left: 0; padding: 12px; overflow: visible; }
+      .results-scroll { overflow: visible; }
       .grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
     }
   </style>
@@ -267,14 +257,9 @@
 
       <div class="panel">
         <div class="summary">
-          <div class="stat total"><b id="sumTotal">0</b><span>全部</span></div>
-          <div class="stat pass"><b id="sumPass">0</b><span>通過</span></div>
-          <div class="stat fail"><b id="sumFail">0</b><span>需修正</span></div>
-        </div>
-        <div class="filters">
-          <button class="filter-btn active" data-filter="all">全部</button>
-          <button class="filter-btn" data-filter="pass">通過</button>
-          <button class="filter-btn" data-filter="fail">需修正</button>
+          <button class="stat-btn active" data-filter="all"><b id="sumTotal">0</b><span>全部</span></button>
+          <button class="stat-btn" data-filter="pass"><b id="sumPass">0</b><span>通過</span></button>
+          <button class="stat-btn" data-filter="fail"><b id="sumFail">0</b><span>需修正</span></button>
         </div>
         <div class="actions">
           <button class="btn" id="btnFixAll" disabled>一鍵修正</button>
@@ -291,8 +276,10 @@
           <button class="btn danger" id="btnClear" disabled>清除全部</button>
         </div>
       </div>
-      <div class="empty" id="emptyState">上傳 PNG 後，圖片會在這裡以網格顯示。</div>
-      <div class="grid" id="resultsGrid"></div>
+      <div class="results-scroll">
+        <div class="empty" id="emptyState">上傳 PNG 後，圖片會在這裡以網格顯示。</div>
+        <div class="grid" id="resultsGrid"></div>
+      </div>
     </main>
   </div>
 
@@ -337,10 +324,10 @@
     });
     fileInput.addEventListener('change', () => handleFiles(fileInput.files));
     minMargin.addEventListener('change', recheckAll);
-    document.querySelectorAll('.filter-btn').forEach(btn => {
+    document.querySelectorAll('.stat-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         filter = btn.dataset.filter;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+        document.querySelectorAll('.stat-btn').forEach(b => b.classList.toggle('active', b === btn));
         applyFilter();
       });
     });
