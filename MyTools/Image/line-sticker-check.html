@@ -62,20 +62,34 @@
       cursor: pointer;
     }
     .upload-area.dragover { border-color: #1677ff; background: #eef6ff; }
+    .upload-area:hover { border-color: #6aa9ff; background: #f1f7ff; }
     .upload-area strong { color: #1677ff; }
     #fileInput { display: none; }
     .actions { display: grid; gap: 8px; margin-top: 12px; }
     .btn {
       min-height: 40px;
+      border: 1px solid transparent;
       border-radius: 8px;
       padding: 9px 12px;
       color: #fff;
-      background: #1677ff;
+      background: #1d6fe8;
       font-weight: 700;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
     }
-    .btn.secondary { background: #536273; }
-    .btn.danger { background: #d64545; }
-    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn:hover:not(:disabled) { background: #155cc7; }
+    .btn:focus-visible, .stat-btn:focus-visible {
+      outline: 3px solid rgba(29, 111, 232, 0.26);
+      outline-offset: 2px;
+    }
+    .btn.secondary { background: #eef2f6; border-color: #d7e0ea; color: #344252; }
+    .btn.secondary:hover:not(:disabled) { background: #e1e8f0; }
+    .btn.success { background: #168058; }
+    .btn.success:hover:not(:disabled) { background: #116943; }
+    .btn.danger { background: #d93d3d; }
+    .btn.danger:hover:not(:disabled) { background: #b92f2f; }
+    .btn.soft-danger { background: #fff1f1; border-color: #f3b7b7; color: #b92f2f; }
+    .btn.soft-danger:hover:not(:disabled) { background: #ffe2e2; border-color: #e99090; }
+    .btn:disabled { background: #e3e8ee; border-color: #d6dee7; color: #8b98a7; cursor: not-allowed; opacity: 1; }
     .summary {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -89,7 +103,9 @@
       background: #fbfcfe;
       text-align: center;
       color: #405061;
+      transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
     }
+    .stat-btn:hover { box-shadow: 0 2px 8px rgba(21, 32, 43, 0.08); }
     .stat-btn[data-filter=all] { border-color: #9cc5ff; background: #eef6ff; }
     .stat-btn[data-filter=pass] { border-color: #9ad8bd; background: #edf9f3; }
     .stat-btn[data-filter=fail] { border-color: #f0a2a2; background: #fff0f0; }
@@ -130,6 +146,7 @@
       background: #fff;
       box-shadow: 0 1px 4px rgba(21, 32, 43, 0.06);
     }
+    .card:hover { box-shadow: 0 4px 14px rgba(21, 32, 43, 0.1); }
     .card.hidden { display: none; }
     .card-head {
       display: flex;
@@ -263,7 +280,7 @@
         </div>
         <div class="actions">
           <button class="btn" id="btnFixAll" disabled>一鍵修正</button>
-          <button class="btn secondary" id="btnZip" disabled>打包修正後 PNG</button>
+          <button class="btn success" id="btnZip" disabled>打包修正後 PNG</button>
         </div>
       </div>
     </aside>
@@ -272,7 +289,7 @@
       <div class="toolbar">
         <h2 id="resultTitle">尚未上傳圖片</h2>
         <div class="toolbar-actions">
-          <button class="btn danger" id="btnDeleteSelected" disabled>刪除勾選圖片</button>
+          <button class="btn soft-danger" id="btnDeleteSelected" disabled>刪除勾選圖片</button>
           <button class="btn danger" id="btnClear" disabled>清除全部</button>
         </div>
       </div>
@@ -511,7 +528,7 @@
           ${result.issues.length ? `<div class="issues">${result.issues.map(esc).join('<br>')}</div>` : ''}
           <div class="card-actions">
             <button class="btn" data-act="fix" ${result.pass ? 'disabled' : ''}>修正</button>
-            <button class="btn secondary" data-act="download" ${result.pass ? '' : 'disabled'}>下載</button>
+            <button class="btn success" data-act="download" ${result.pass ? '' : 'disabled'}>下載</button>
             <button class="btn danger" data-act="delete">刪除</button>
           </div>
         </div>`;
