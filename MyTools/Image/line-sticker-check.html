@@ -288,6 +288,7 @@
       background: #fffefa;
       box-shadow: var(--clay-inset);
     }
+    .meta .size { grid-column: 1 / -1; }
     .meta .bad { color: var(--danger); font-weight: 750; }
     .meta .ok { color: var(--success); font-weight: 750; }
     .issues { color: var(--danger); font-size: 0.78rem; line-height: 1.45; margin-bottom: 8px; }
@@ -620,6 +621,10 @@
       const spec = SPEC;
       const preview = makePreview(result);
       const m = result.margins;
+      const fixed = row.fixedUrl && row.currentUrl === row.fixedUrl;
+      const sizeW = fixed ? row.currentImg.width : row.originalImg.width;
+      const sizeH = fixed ? row.currentImg.height : row.originalImg.height;
+      const originalSizeBad = row.originalImg.width > spec.w || row.originalImg.height > spec.h || row.originalImg.width % 2 || row.originalImg.height % 2;
       row.card.className = `card ${result.pass ? 'pass' : 'fail'}`;
       row.card.dataset.status = result.pass ? 'pass' : 'fail';
       row.card.innerHTML = `
@@ -631,8 +636,7 @@
         <div class="card-body">
           <div class="preview"></div>
           <div class="meta">
-            <div>尺寸 <span class="${result.canvas.width <= spec.w && result.canvas.height <= spec.h ? 'ok' : 'bad'}">${result.canvas.width}×${result.canvas.height}</span></div>
-            <div>類型 <span>${spec.label}</span></div>
+            <div class="size">尺寸 <span class="${fixed ? 'ok' : (originalSizeBad ? 'bad' : 'ok')}">${sizeW}×${sizeH}</span></div>
             <div>上 ${fmt(m.top)}</div><div>下 ${fmt(m.bottom)}</div>
             <div>左 ${fmt(m.left)}</div><div>右 ${fmt(m.right)}</div>
           </div>
