@@ -451,7 +451,7 @@
       const canvas = document.createElement('canvas');
       canvas.width = exact ? spec.w : dw;
       canvas.height = exact ? spec.h : dh;
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      drawResampled(img, canvas, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
       return { canvas };
     }
 
@@ -505,7 +505,7 @@
       const fixed = document.createElement('canvas');
       fixed.width = finalW;
       fixed.height = finalH;
-      fixed.getContext('2d').drawImage(base, scan.box.left, scan.box.top, contentW, contentH, drawX, drawY, drawW, drawH);
+      drawResampled(base, fixed, scan.box.left, scan.box.top, contentW, contentH, drawX, drawY, drawW, drawH);
       row.fixedUrl = fixed.toDataURL('image/png');
       const img = new Image();
       img.onload = () => {
@@ -522,8 +522,32 @@
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
       canvas.height = img.height;
-      canvas.getContext('2d').drawImage(img, 0, 0);
+      drawWithQuality(canvas.getContext('2d'), img, 0, 0);
       return canvas;
+    }
+
+    function drawResampled(src, dest, sx, sy, sw, sh, dx, dy, dw, dh) {
+      const crop = document.createElement('canvas');
+      crop.width = sw;
+      crop.height = sh;
+      drawWithQuality(crop.getContext('2d'), src, sx, sy, sw, sh, 0, 0, sw, sh);
+
+      let current = crop;
+      while (current.width * 0.5 > dw && current.height * 0.5 > dh) {
+        const next = document.createElement('canvas');
+        next.width = Math.max(dw, Math.floor(current.width * 0.5));
+        next.height = Math.max(dh, Math.floor(current.height * 0.5));
+        drawWithQuality(next.getContext('2d'), current, 0, 0, current.width, current.height, 0, 0, next.width, next.height);
+        current = next;
+      }
+
+      drawWithQuality(dest.getContext('2d'), current, 0, 0, current.width, current.height, dx, dy, dw, dh);
+    }
+
+    function drawWithQuality(ctx, img, ...args) {
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, ...args);
     }
 
     function render(row) {
@@ -572,7 +596,7 @@
       canvas.width = Math.max(1, Math.round(src.width * scale));
       canvas.height = Math.max(1, Math.round(src.height * scale));
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(src, 0, 0, canvas.width, canvas.height);
+      drawResampled(src, canvas, 0, 0, src.width, src.height, 0, 0, canvas.width, canvas.height);
       if (result.box) {
         ctx.strokeStyle = result.pass ? '#21885a' : '#d64545';
         ctx.lineWidth = 2;
