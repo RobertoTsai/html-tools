@@ -481,7 +481,7 @@
       const maxBad = !spec.exact && (normalized.canvas.width > spec.w || normalized.canvas.height > spec.h);
       const evenBad = normalized.canvas.width % 2 || normalized.canvas.height % 2;
 
-      if (img.width !== normalized.canvas.width || img.height !== normalized.canvas.height) issues.push(`大圖需縮小至 ${normalized.canvas.width}×${normalized.canvas.height}`);
+      if (img.width !== normalized.canvas.width || img.height !== normalized.canvas.height) issues.push(`大圖需縮小至 ${spec.w}×${spec.h}`);
       if (exactBad) issues.push(`尺寸需為 ${spec.w}×${spec.h}`);
       if (maxBad) issues.push(`尺寸不可超過 ${spec.w}×${spec.h}`);
       if (evenBad) issues.push('寬高需為偶數');
