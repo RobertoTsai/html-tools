@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LINE 貼圖 PNG 檢查與一鍵修正工具</title>
-  <meta name="description" content="免費檢查 LINE 貼圖 PNG 是否符合透明背景、370x320 尺寸、偶數像素與 10px 留白規範，並可一鍵修正、下載或打包通過檢查的圖片。" />
+  <meta name="description" content="上架 LINE 貼圖前的必備工具，免費檢查 PNG 是否符合透明背景、370x320 尺寸、偶數像素與 10px 留白規範，並可一鍵修正與打包下載。" />
   <meta name="keywords" content="LINE 貼圖,LINE Creators Market,貼圖尺寸,PNG 透明背景,貼圖留白檢查,貼圖修正工具" />
   <meta name="robots" content="index,follow" />
   <meta name="application-name" content="LINE 貼圖檢查工具" />
@@ -16,11 +16,11 @@
   <meta property="og:locale" content="zh_TW" />
   <meta property="og:site_name" content="HTML Tools" />
   <meta property="og:title" content="LINE 貼圖 PNG 檢查與一鍵修正工具" />
-  <meta property="og:description" content="檢查 LINE 貼圖 PNG 的透明背景、尺寸與留白規範，支援一鍵修正、單張下載與打包下載。" />
+  <meta property="og:description" content="上架 LINE 貼圖前的必備工具，檢查 PNG 透明背景、尺寸與留白規範，支援一鍵修正、單張下載與打包下載。" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="LINE 貼圖 PNG 檢查與一鍵修正工具" />
-  <meta name="twitter:description" content="快速檢查並修正 LINE 貼圖 PNG 尺寸、透明背景與留白規範。" />
+  <meta name="twitter:description" content="上架 LINE 貼圖前的必備工具，快速檢查並修正 PNG 尺寸、透明背景與留白規範。" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -30,7 +30,7 @@
       "operatingSystem": "Any",
       "inLanguage": "zh-TW",
       "isAccessibleForFree": true,
-      "description": "免費檢查 LINE 貼圖 PNG 是否符合透明背景、370x320 尺寸、偶數像素與 10px 留白規範，並可一鍵修正、下載或打包通過檢查的圖片.",
+      "description": "上架 LINE 貼圖前的必備工具，免費檢查 PNG 是否符合透明背景、370x320 尺寸、偶數像素與 10px 留白規範，並可一鍵修正與打包下載.",
       "featureList": [
         "PNG 格式檢查",
         "透明背景檢查",
@@ -305,6 +305,30 @@
       text-align: center;
       line-height: 1.7;
     }
+    .empty-card {
+      width: min(420px, 100%);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      background: var(--surface);
+      box-shadow: var(--clay-shadow);
+      padding: 30px 26px;
+    }
+    .empty-icon {
+      display: grid;
+      place-items: center;
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 16px;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      background: #b9f7c8;
+      box-shadow: var(--clay-shadow-soft);
+      color: var(--text);
+    }
+    .empty-icon svg { width: 38px; height: 38px; }
+    .empty h3 { margin-bottom: 6px; color: var(--text); font-size: 1.08rem; }
+    .empty p { margin-bottom: 18px; color: var(--muted); }
+    .empty .btn { min-width: 150px; }
     .dialog-backdrop {
       position: fixed;
       inset: 0;
@@ -385,7 +409,7 @@
         </div>
       </div>
       <div class="results-scroll">
-        <div class="empty" id="emptyState">上傳 PNG 後，圖片會在這裡以網格顯示。</div>
+        <div class="empty" id="emptyState"></div>
         <div class="grid" id="resultsGrid"></div>
       </div>
     </main>
@@ -423,6 +447,9 @@
     let filter = 'all';
 
     uploadArea.addEventListener('click', () => fileInput.click());
+    emptyState.addEventListener('click', e => {
+      if (e.target.closest('[data-act=empty-upload]')) fileInput.click();
+    });
     uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
     uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
     uploadArea.addEventListener('drop', e => {
@@ -454,6 +481,7 @@
       fileInput.value = '';
       updateSummary();
     });
+    applyFilter();
 
     function handleFiles(files) {
       Array.from(files)
@@ -700,7 +728,20 @@
       });
       const labels = { all: '全部', pass: '通過', fail: '需修正' };
       resultTitle.textContent = rows.length ? `${labels[filter]}：${visible} 張圖片` : '尚未上傳圖片';
-      emptyState.textContent = rows.length ? '此篩選條件下沒有圖片。' : '上傳 PNG 後，圖片會在這裡以網格顯示。';
+      emptyState.innerHTML = rows.length ? '此篩選條件下沒有圖片。' : `
+        <div class="empty-card">
+          <div class="empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 2v6h6"></path>
+              <path d="M12 18v-7"></path>
+              <path d="m9 14 3-3 3 3"></path>
+            </svg>
+          </div>
+          <h3>尚未上傳圖片</h3>
+          <p>選擇 PNG 後，檢查結果會以卡片顯示在這裡。</p>
+          <button class="btn" type="button" data-act="empty-upload">選擇 PNG</button>
+        </div>`;
       emptyState.style.display = visible ? 'none' : 'grid';
     }
 
