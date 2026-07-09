@@ -153,6 +153,18 @@
       line-height: 1.4;
     }
     .hint { color: var(--muted); font-size: 0.8rem; line-height: 1.55; }
+    .custom-settings {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .custom-settings[hidden] { display: none; }
+    .custom-size {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .custom-settings .field { margin-bottom: 0; }
     .upload-area {
       display: grid;
       place-items: center;
@@ -417,7 +429,30 @@
           <input type="checkbox" id="autoCenter" checked />
           修正時自動置中內容
         </label>
-        <p class="hint">修正會輸出透明背景 PNG。大圖會先縮到規範尺寸內，再用縮小後圖片計算留白。</p>
+        <label class="check-row">
+          <input type="checkbox" id="useCustomSettings" />
+          自訂設定
+        </label>
+        <div class="custom-settings" id="customSettings" hidden>
+          <div class="custom-size">
+            <div class="field">
+              <label for="customWidth">自訂圖片寬度</label>
+              <input type="number" id="customWidth" value="370" min="1" max="4096" />
+            </div>
+            <div class="field">
+              <label for="customHeight">自訂圖片高度</label>
+              <input type="number" id="customHeight" value="320" min="1" max="4096" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="customBackground">自訂背景色</label>
+            <select id="customBackground">
+              <option value="transparent">透明背景</option>
+              <option value="white">白色背景</option>
+            </select>
+          </div>
+          <p class="hint">勾選後，修正輸出會使用這裡的尺寸與背景；預設為 LINE 貼圖標準尺寸。</p>
+        </div>
       </div>
 
       <div class="panel status-panel">
@@ -465,6 +500,11 @@
     const fileInput = document.getElementById('fileInput');
     const minMargin = document.getElementById('minMargin');
     const autoCenter = document.getElementById('autoCenter');
+    const useCustomSettings = document.getElementById('useCustomSettings');
+    const customSettings = document.getElementById('customSettings');
+    const customWidth = document.getElementById('customWidth');
+    const customHeight = document.getElementById('customHeight');
+    const customBackground = document.getElementById('customBackground');
     const resultsGrid = document.getElementById('resultsGrid');
     const emptyState = document.getElementById('emptyState');
     const resultTitle = document.getElementById('resultTitle');
@@ -492,6 +532,11 @@
     });
     fileInput.addEventListener('change', () => handleFiles(fileInput.files));
     minMargin.addEventListener('change', recheckAll);
+    useCustomSettings.addEventListener('change', () => {
+      customSettings.hidden = !useCustomSettings.checked;
+      recheckAll();
+    });
+    [customWidth, customHeight, customBackground].forEach(input => input.addEventListener('change', recheckAll));
     document.querySelectorAll('.stat-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         filter = btn.dataset.filter;
@@ -515,6 +560,23 @@
       updateSummary();
     });
     applyFilter();
+
+    function activeSpec() {
+      if (!useCustomSettings.checked) return { ...SPEC, custom: false, background: 'transparent' };
+      return {
+        label: '自訂圖片',
+        w: dimension(customWidth, SPEC.w),
+        h: dimension(customHeight, SPEC.h),
+        exact: true,
+        custom: true,
+        background: customBackground.value
+      };
+    }
+
+    function dimension(input, fallback) {
+      const value = Math.round(Number(input.value));
+      return Math.max(1, value || fallback);
+    }
 
     function handleFiles(files) {
       Array.from(files)
@@ -551,47 +613,60 @@
     }
 
     function analyze(img) {
-      const spec = SPEC;
-      const normalized = fitToSpec(img, false);
-      const scan = scanAlpha(normalized.canvas);
+      const spec = activeSpec();
+      const normalized = fitToSpec(img, spec);
+      const whiteCustom = spec.custom && spec.background === 'white';
+      const scan = scanContent(normalized.canvas, whiteCustom ? 'white' : 'alpha');
       const margin = Number(minMargin.value) || 0;
       const issues = [];
-      const exactBad = spec.exact && (normalized.canvas.width !== spec.w || normalized.canvas.height !== spec.h);
-      const maxBad = !spec.exact && (normalized.canvas.width > spec.w || normalized.canvas.height > spec.h);
-      const evenBad = normalized.canvas.width % 2 || normalized.canvas.height % 2;
+      const exactBad = spec.exact && (img.width !== spec.w || img.height !== spec.h);
+      const maxBad = !spec.exact && (img.width > spec.w || img.height > spec.h);
+      const evenBad = !spec.custom && (normalized.canvas.width % 2 || normalized.canvas.height % 2);
 
-      if (img.width !== normalized.canvas.width || img.height !== normalized.canvas.height) issues.push(`大圖需縮小至 ${spec.w}×${spec.h}`);
+      if (!spec.exact && (img.width !== normalized.canvas.width || img.height !== normalized.canvas.height)) issues.push(`大圖需縮小至 ${spec.w}×${spec.h}`);
       if (exactBad) issues.push(`尺寸需為 ${spec.w}×${spec.h}`);
       if (maxBad) issues.push(`尺寸不可超過 ${spec.w}×${spec.h}`);
       if (evenBad) issues.push('寬高需為偶數');
-      if (!hasTransparency(normalized.canvas)) issues.push('背景需有透明區域');
+      if (!whiteCustom && !hasTransparency(normalized.canvas)) issues.push('背景需有透明區域');
       if (!scan.box) issues.push('未偵測到不透明內容');
-      if (scan.box && Object.values(scan.margins).some(v => v < margin)) issues.push(`透明留白需至少 ${margin}px`);
+      if (scan.box && Object.values(scan.margins).some(v => v < margin)) issues.push(`${whiteCustom ? '內容留白' : '透明留白'}需至少 ${margin}px`);
 
-      return { canvas: normalized.canvas, box: scan.box, margins: scan.margins, issues, pass: issues.length === 0 };
+      return { canvas: normalized.canvas, box: scan.box, margins: scan.margins, issues, pass: issues.length === 0, spec };
     }
 
-    function fitToSpec(img, exact) {
-      const spec = SPEC;
-      const w = exact ? spec.w : even(Math.min(img.width, spec.w));
-      const h = exact ? spec.h : even(Math.min(img.height, spec.h));
+    function fitToSpec(img, spec) {
+      const w = spec.custom ? Math.min(img.width, spec.w) : even(Math.min(img.width, spec.w));
+      const h = spec.custom ? Math.min(img.height, spec.h) : even(Math.min(img.height, spec.h));
       const scale = Math.min(w / img.width, h / img.height, 1);
-      const dw = even(Math.max(1, Math.round(img.width * scale)));
-      const dh = even(Math.max(1, Math.round(img.height * scale)));
+      const rawW = Math.max(1, Math.round(img.width * scale));
+      const rawH = Math.max(1, Math.round(img.height * scale));
       const canvas = document.createElement('canvas');
-      canvas.width = exact ? spec.w : dw;
-      canvas.height = exact ? spec.h : dh;
+      canvas.width = spec.custom ? rawW : even(rawW);
+      canvas.height = spec.custom ? rawH : even(rawH);
       drawResampled(img, canvas, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
       return { canvas };
     }
 
+    function scanContent(canvas, mode) {
+      return mode === 'white' ? scanNonWhite(canvas) : scanAlpha(canvas);
+    }
+
     function scanAlpha(canvas) {
+      return scanPixels(canvas, (data, i) => data[i + 3] > 10);
+    }
+
+    function scanNonWhite(canvas) {
+      return scanPixels(canvas, (data, i) => data[i + 3] > 10 && (data[i] < 248 || data[i + 1] < 248 || data[i + 2] < 248));
+    }
+
+    function scanPixels(canvas, isContent) {
       const { width: w, height: h } = canvas;
       const data = canvas.getContext('2d').getImageData(0, 0, w, h).data;
       let top = h, left = w, right = -1, bottom = -1;
       for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++) {
-          if (data[(y * w + x) * 4 + 3] <= 10) continue;
+          const i = (y * w + x) * 4;
+          if (!isContent(data, i)) continue;
           if (x < left) left = x;
           if (x > right) right = x;
           if (y < top) top = y;
@@ -612,7 +687,7 @@
     }
 
     function fixRow(row) {
-      const spec = SPEC;
+      const spec = activeSpec();
       const margin = Number(minMargin.value) || 0;
       const base = imageToCanvas(row.originalImg);
       const scan = scanAlpha(base);
@@ -620,21 +695,22 @@
 
       const contentW = scan.box.right - scan.box.left + 1;
       const contentH = scan.box.bottom - scan.box.top + 1;
-      const maxContentW = spec.w - margin * 2;
-      const maxContentH = spec.h - margin * 2;
+      const maxContentW = Math.max(1, spec.w - margin * 2);
+      const maxContentH = Math.max(1, spec.h - margin * 2);
       const scale = Math.min(maxContentW / contentW, maxContentH / contentH, 1);
       const drawW = Math.max(1, Math.floor(contentW * scale));
       const drawH = Math.max(1, Math.floor(contentH * scale));
       const widerThanSpec = contentW / contentH >= maxContentW / maxContentH;
-      const finalW = widerThanSpec && scale < 1 ? spec.w : Math.min(spec.w, evenUp(drawW + margin * 2));
-      const finalH = !widerThanSpec && scale < 1 ? spec.h : Math.min(spec.h, evenUp(drawH + margin * 2));
-      const keepX = margin;
-      const keepY = margin;
+      const finalW = spec.custom ? spec.w : (widerThanSpec && scale < 1 ? spec.w : Math.min(spec.w, evenUp(drawW + margin * 2)));
+      const finalH = spec.custom ? spec.h : (!widerThanSpec && scale < 1 ? spec.h : Math.min(spec.h, evenUp(drawH + margin * 2)));
+      const keepX = Math.min(margin, Math.max(0, finalW - drawW));
+      const keepY = Math.min(margin, Math.max(0, finalH - drawH));
       const drawX = autoCenter.checked ? Math.round((finalW - drawW) / 2) : keepX;
       const drawY = autoCenter.checked ? Math.round((finalH - drawH) / 2) : keepY;
       const fixed = document.createElement('canvas');
       fixed.width = finalW;
       fixed.height = finalH;
+      fillBackground(fixed, spec.background);
       drawResampled(base, fixed, scan.box.left, scan.box.top, contentW, contentH, drawX, drawY, drawW, drawH);
       row.fixedUrl = fixed.toDataURL('image/png');
       const img = new Image();
@@ -642,10 +718,23 @@
         row.currentImg = img;
         row.currentUrl = row.fixedUrl;
         row.result = analyze(img);
+        if (spec.custom) row.result = withTargetBounds(row.result, margin);
         render(row);
         updateSummary();
       };
       img.src = row.fixedUrl;
+    }
+
+    function withTargetBounds(result, margin) {
+      const w = result.canvas.width;
+      const h = result.canvas.height;
+      const x = Math.min(margin, Math.max(0, Math.floor((w - 1) / 2)));
+      const y = Math.min(margin, Math.max(0, Math.floor((h - 1) / 2)));
+      return {
+        ...result,
+        displayMargins: { top: y, right: x, bottom: y, left: x },
+        displayBox: { top: y, right: w - 1 - x, bottom: h - 1 - y, left: x }
+      };
     }
 
     function imageToCanvas(img) {
@@ -654,6 +743,13 @@
       canvas.height = img.height;
       drawWithQuality(canvas.getContext('2d'), img, 0, 0);
       return canvas;
+    }
+
+    function fillBackground(canvas, background) {
+      if (background !== 'white') return;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     function drawResampled(src, dest, sx, sy, sw, sh, dx, dy, dw, dh) {
@@ -682,13 +778,15 @@
 
     function render(row) {
       const result = row.result;
-      const spec = SPEC;
+      const spec = result.spec || activeSpec();
       const preview = makePreview(result);
-      const m = result.margins;
+      const m = result.displayMargins || result.margins;
       const fixed = row.fixedUrl && row.currentUrl === row.fixedUrl;
       const sizeW = fixed ? row.currentImg.width : row.originalImg.width;
       const sizeH = fixed ? row.currentImg.height : row.originalImg.height;
-      const originalSizeBad = row.originalImg.width > spec.w || row.originalImg.height > spec.h || row.originalImg.width % 2 || row.originalImg.height % 2;
+      const originalSizeBad = spec.exact
+        ? row.originalImg.width !== spec.w || row.originalImg.height !== spec.h
+        : row.originalImg.width > spec.w || row.originalImg.height > spec.h || row.originalImg.width % 2 || row.originalImg.height % 2;
       row.card.className = `card ${result.pass ? 'pass' : 'fail'}`;
       row.card.dataset.status = result.pass ? 'pass' : 'fail';
       row.card.innerHTML = `
@@ -724,17 +822,18 @@
 
     function makePreview(result) {
       const src = result.canvas;
+      const box = result.displayBox || result.box;
       const scale = Math.min(1, 190 / Math.max(src.width, src.height));
       const canvas = document.createElement('canvas');
       canvas.width = Math.max(1, Math.round(src.width * scale));
       canvas.height = Math.max(1, Math.round(src.height * scale));
       const ctx = canvas.getContext('2d');
       drawResampled(src, canvas, 0, 0, src.width, src.height, 0, 0, canvas.width, canvas.height);
-      if (result.box) {
+      if (box) {
         ctx.strokeStyle = result.pass ? '#21885a' : '#d64545';
         ctx.lineWidth = 2;
         ctx.setLineDash([4, 3]);
-        ctx.strokeRect(result.box.left * scale, result.box.top * scale, (result.box.right - result.box.left + 1) * scale, (result.box.bottom - result.box.top + 1) * scale);
+        ctx.strokeRect(box.left * scale, box.top * scale, (box.right - box.left + 1) * scale, (box.bottom - box.top + 1) * scale);
       }
       return canvas;
     }
