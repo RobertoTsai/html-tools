@@ -90,6 +90,8 @@
     .sidebar {
       position: fixed;
       inset: 0 auto 0 0;
+      display: flex;
+      flex-direction: column;
       width: 320px;
       padding: 20px;
       overflow-y: auto;
@@ -125,7 +127,14 @@
       box-shadow: 3px 4px 0 var(--border);
     }
     .subtitle { color: var(--muted); font-size: 0.9rem; line-height: 1.55; margin-bottom: 18px; }
-    .panel { border-top: 2px solid #d8d1c8; padding-top: 18px; margin-top: 18px; }
+    .panel { padding-top: 18px; margin-top: 18px; }
+    .status-panel {
+      position: sticky;
+      bottom: 0;
+      z-index: 1;
+      margin-top: auto;
+      background: var(--surface);
+    }
     .field { display: grid; gap: 7px; margin-bottom: 12px; }
     .field label, .check-row { font-size: 0.88rem; font-weight: 650; color: var(--text); }
     .field input[type=number], .field select {
@@ -167,7 +176,6 @@
       gap: 8px;
       margin-top: 12px;
       padding-top: 12px;
-      border-top: 2px solid #d8d1c8;
     }
     .btn {
       min-height: 40px;
@@ -376,7 +384,8 @@
     .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; }
     @media (max-width: 760px) {
       .app { display: block; }
-      .sidebar { position: static; width: auto; max-height: none; border-right: 0; border-bottom: 1px solid #d4eadf; }
+      .sidebar { position: static; display: block; width: auto; max-height: none; border-right: 0; border-bottom: 1px solid #d4eadf; }
+      .status-panel { position: static; margin-top: 18px; }
       .main { height: auto; min-height: 100vh; margin-left: 0; padding: 12px; overflow: visible; }
       .results-scroll { overflow: visible; }
       .grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
@@ -411,7 +420,7 @@
         <p class="hint">修正會輸出透明背景 PNG。大圖會先縮到規範尺寸內，再用縮小後圖片計算留白。</p>
       </div>
 
-      <div class="panel">
+      <div class="panel status-panel">
         <div class="summary">
           <button class="stat-btn active" data-filter="all"><b id="sumTotal">0</b><span>全部</span></button>
           <button class="stat-btn" data-filter="pass"><b id="sumPass">0</b><span>通過</span></button>
