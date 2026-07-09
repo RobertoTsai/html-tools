@@ -537,6 +537,10 @@
       recheckAll();
     });
     [customWidth, customHeight, customBackground].forEach(input => input.addEventListener('change', recheckAll));
+    [minMargin, customWidth, customHeight].forEach(input => {
+      input.addEventListener('click', () => selectInputText(input));
+      input.addEventListener('focus', () => selectInputText(input));
+    });
     document.querySelectorAll('.stat-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         filter = btn.dataset.filter;
@@ -576,6 +580,10 @@
     function dimension(input, fallback) {
       const value = Math.round(Number(input.value));
       return Math.max(1, value || fallback);
+    }
+
+    function selectInputText(input) {
+      input.select();
     }
 
     function handleFiles(files) {
