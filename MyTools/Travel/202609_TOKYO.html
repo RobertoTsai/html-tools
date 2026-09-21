@@ -22,7 +22,7 @@
     :root {
       color-scheme: light dark;
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-      font-size: 16px;
+      font-size: 16px; /* Stable rem baseline; keep browser zoom available. */
       --primary: #1959cf;
       --primary-fill: #1959cf;
       --bg: #f2f5fa;
@@ -37,9 +37,6 @@
       --error-bg: #fff1f2;
       --shadow: 0 8px 28px rgba(25,49,86,.06);
       --bar-height: calc(3rem + 28px);
-    }
-    @supports (font: -apple-system-body) {
-      :root { font: -apple-system-body; }
     }
     html { background: var(--bg); scroll-padding-block: 24px calc(var(--bar-height) + env(safe-area-inset-bottom, 0px)); }
     body {
@@ -62,8 +59,6 @@
     .field:last-child { margin-bottom: 0; }
     .details-card { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
     .details-card .field { margin-bottom: 0; }
-    .note-card .field { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: center; }
-    .note-card label { margin-bottom: 0; }
     label, .field-label { display: flex; align-items: baseline; gap: 5px; font-size: .8125rem; font-weight: 650; color: var(--text-sub); margin-bottom: 4px; }
     .req { color: var(--danger); }
     .opt { font-size: .75rem; font-weight: 400; }
@@ -71,7 +66,7 @@
     input, select, textarea {
       width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px;
       border: 1px solid var(--border); border-radius: 12px;
-      font-size: max(16px, 1rem); line-height: 1.4;
+      font-size: max(16px, 1rem); font-weight: 400; line-height: 1.4;
       background: var(--input-bg); color: var(--text);
       transition: border-color .18s, box-shadow .18s;
       appearance: none; -webkit-appearance: none;
@@ -94,18 +89,18 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m2 2 4 4 4-4' stroke='%23708096' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: right 12px center;
     }
-    .amount-number-input { flex: 1 1 100px; background: transparent; border-color: transparent; border-bottom-color: var(--border); border-radius: 0; text-align: right; font-size: 2rem; font-weight: 650; line-height: 1.25; padding: 6px 0; font-variant-numeric: tabular-nums; }
+    .amount-number-input { flex: 1 1 100px; background: transparent; border-color: transparent; border-bottom-color: var(--border); border-radius: 0; text-align: right; font-size: 1.375rem; font-weight: 600; line-height: 1.25; padding: 6px 0; font-variant-numeric: tabular-nums; }
     .amount-number-input::placeholder { color: var(--text-sub); }
     .amount-input-row.error-group input, .amount-input-row.error-group select { border-color: var(--danger); }
     .btn-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .opt-btn {
       min-height: 44px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 14px;
-      background: var(--input-bg); color: var(--text); font-size: 1rem; font-weight: 500;
+      background: var(--input-bg); color: var(--text); font-size: .9375rem; font-weight: 500;
       display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; overflow-wrap: anywhere;
       cursor: pointer; user-select: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
       transition: background .18s, border-color .18s, opacity .18s;
     }
-    .btn-icon { font-size: 1.25rem; line-height: 1; flex-shrink: 0; }
+    .btn-icon { font-size: 1.125rem; line-height: 1; flex-shrink: 0; }
     .opt-btn.selected { background: var(--selected); color: var(--primary); border-color: var(--primary); font-weight: 650; }
     .opt-btn.selected::after { content: ''; width: 8px; height: 5px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); margin-left: 2px; flex-shrink: 0; }
     .opt-btn:active, .btn:active { opacity: .65; }
@@ -122,7 +117,7 @@
     @supports ((backdrop-filter: blur(20px)) or (-webkit-backdrop-filter: blur(20px))) {
       .bottom-bar-inner { background: var(--glass); -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%); }
     }
-    .btn { min-height: 44px; padding: 10px 16px; border: 1px solid transparent; border-radius: 20px; font-size: 1rem; font-weight: 650; line-height: 1.4; cursor: pointer; touch-action: manipulation; transition: opacity .18s; }
+    .btn { min-height: 44px; padding: 10px 16px; border: 1px solid transparent; border-radius: 20px; font-size: .9375rem; font-weight: 600; line-height: 1.4; cursor: pointer; touch-action: manipulation; transition: opacity .18s; }
     .btn-submit { flex: 3; background: var(--primary-fill); color: #fff; box-shadow: 0 3px 8px rgba(25,89,207,.18); }
     .btn-submit:disabled { opacity: .55; cursor: wait; }
     .btn-reset { flex: 1; min-width: max-content; white-space: nowrap; background: transparent; color: var(--text-sub); }
@@ -169,7 +164,7 @@
       .bottom-bar-outer { position: static; }
     }
     @container (max-width: 15rem) {
-      .btn-group, .note-card .field { grid-template-columns: 1fr; }
+      .btn-group { grid-template-columns: 1fr; }
     }
     @media (max-height: 740px) and (orientation: portrait) {
       header { padding-block: 8px; }
@@ -179,8 +174,12 @@
     @media (max-width: 360px) {
       .amount-input-row { gap: 8px; }
       .amount-type-select { padding-left: 10px; }
-      .amount-number-input { font-size: 2rem; }
       header h1 { font-size: 1.5rem; }
+    }
+    /* Leave additional breathing room below iOS Home Screen scroll-edge effects.
+       This avoids the first line sitting at the edge; it does not disable OS blur. */
+    @media (display-mode: standalone) {
+      header { padding-top: 28px; }
     }
   </style>
 </head>
