@@ -2,336 +2,220 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
   <meta name="googlebot" content="noindex, nofollow" />
   <title>東京消費記錄</title>
 
-  <link rel="icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/24/e1/6d/24e16dee-4b28-568e-a70a-32f4c4f3d276/AppIcon-0-0-1x_U007ephone-0-1-0-85-220.png/400x400ia-75.webp" type="image/webp" />
-  <link rel="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/24/e1/6d/24e16dee-4b28-568e-a70a-32f4c4f3d276/AppIcon-0-0-1x_U007ephone-0-1-0-85-220.png/400x400ia-75.webp" />
+  <link rel="icon" href="./202609_TOKYO-icon.png" type="image/png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="./202609_TOKYO-icon.png" />
+  <link rel="manifest" href="./202609_TOKYO.webmanifest" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="東京消費記錄" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="東京記帳" />
+  <meta name="theme-color" content="#f2f5fa" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#10141d" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --danger: #dc2626;
-      --success: #16a34a;
-      --bg: #f1f5f9;
-      --card: #ffffff;
-      --border: #e2e8f0;
-      --text: #1e293b;
-      --text-sub: #64748b;
-      --input-bg: #f8fafc;
-      --radius: 12px;
-      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      color-scheme: light dark;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-size: 16px;
+      --primary: #1959cf;
+      --primary-fill: #1959cf;
+      --bg: #f2f5fa;
+      --card: #fff;
+      --text: #17243b;
+      --text-sub: #58667b;
+      --border: #d6deeb;
+      --input-bg: #f6f8fc;
+      --selected: #e9f0ff;
+      --glass: rgba(255,255,255,.88);
+      --danger: #b42332;
+      --error-bg: #fff1f2;
+      --shadow: 0 8px 28px rgba(25,49,86,.06);
+      --bar-height: calc(3rem + 28px);
     }
-
+    @supports (font: -apple-system-body) {
+      :root { font: -apple-system-body; }
+    }
+    html { background: var(--bg); scroll-padding-block: 24px calc(var(--bar-height) + env(safe-area-inset-bottom, 0px)); }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-      background: var(--bg);
+      display: flex; flex-direction: column;
       color: var(--text);
+      background: radial-gradient(ellipse at 100% 0%, var(--selected), transparent 45%), var(--bg);
       min-height: 100vh;
-      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+      min-height: 100dvh;
+      padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
+      line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
     }
-
-    header {
-      background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-      color: #fff;
-      padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.3);
-    }
-    header h1 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    .form-wrap {
-      max-width: 520px;
-      margin: 16px auto;
-      padding: 0 12px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-      margin-bottom: 12px;
-    }
-
-    .field { margin-bottom: 14px; }
+    header, .form-wrap { width: 100%; max-width: 520px; margin-inline: auto; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 4px 10px; }
+    .trip-label { color: var(--primary); font-size: .75rem; font-weight: 700; letter-spacing: .14em; margin-bottom: 2px; }
+    header h1 { font-size: 1.5rem; line-height: 1.25; letter-spacing: -.04em; font-weight: 750; }
+    .trip-icon { width: 40px; height: 40px; border-radius: 13px; flex-shrink: 0; box-shadow: 0 6px 16px rgba(25,89,207,.18); }
+    .card { container-type: inline-size; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 12px; margin-bottom: 8px; box-shadow: var(--shadow); }
+    .field { margin-bottom: 10px; min-width: 0; }
     .field:last-child { margin-bottom: 0; }
-
-    label {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-    .req { color: var(--danger); font-size: 0.9rem; line-height: 1; }
-    .opt { font-size: 0.7rem; color: var(--text-sub); font-weight: 400; }
-
+    .details-card { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .details-card .field { margin-bottom: 0; }
+    .note-card .field { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: center; }
+    .note-card label { margin-bottom: 0; }
+    label, .field-label { display: flex; align-items: baseline; gap: 5px; font-size: .8125rem; font-weight: 650; color: var(--text-sub); margin-bottom: 4px; }
+    .req { color: var(--danger); }
+    .opt { font-size: .75rem; font-weight: 400; }
+    input, select, textarea, button { font: inherit; }
     input, select, textarea {
-      width: 100%;
-      padding: 11px 13px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      background: var(--input-bg);
-      color: var(--text);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      appearance: none;
-      -webkit-appearance: none;
-      outline: none;
+      width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px;
+      border: 1px solid var(--border); border-radius: 12px;
+      font-size: max(16px, 1rem); line-height: 1.4;
+      background: var(--input-bg); color: var(--text);
+      transition: border-color .18s, box-shadow .18s;
+      appearance: none; -webkit-appearance: none;
+      scroll-margin-block: 24px;
     }
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
-      background: #fff;
-    }
-    input.error, select.error, textarea.error {
-      border-color: var(--danger);
-      background: #fff5f5;
-    }
-    textarea { resize: vertical; min-height: 72px; }
-
-    .err-msg {
-      display: none;
-      font-size: 0.72rem;
-      color: var(--danger);
-      margin-top: 4px;
-      padding-left: 2px;
-    }
+    input::placeholder, textarea::placeholder { color: var(--text-sub); opacity: 1; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: 2px solid var(--primary); outline-offset: 2px; }
+    button:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+    input[type="date"] { display: block; text-align: left; }
+    input::-webkit-date-and-time-value { text-align: left; min-height: 1.4em; }
+    textarea { resize: vertical; min-height: 44px; }
+    input.error, select.error, textarea.error, .opt-btn.error-btn { border-color: var(--danger); background: var(--error-bg); }
+    .err-msg { display: none; color: var(--danger); font-size: .8125rem; margin-top: 8px; }
     .err-msg.show { display: block; }
-
-    .amount-input-row {
-      display: flex;
-      gap: 0;
-      align-items: stretch;
-    }
+    .amount-card { background: linear-gradient(125deg, var(--card), var(--selected)); }
+    .amount-input-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
     .amount-type-select {
-      flex-shrink: 0;
-      width: auto;
-      min-width: 110px;
-      border-radius: 8px 0 0 8px !important;
-      border-right: none !important;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      padding-right: 28px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--primary);
-      cursor: pointer;
+      flex: 0 0 auto; width: auto; max-width: 100%; padding-right: 30px;
+      border-radius: 14px; background-color: var(--card); color: var(--primary); font-weight: 650; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m2 2 4 4 4-4' stroke='%23708096' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
     }
-    .amount-type-select:focus {
-      border-color: var(--primary);
-      border-right: none !important;
-      box-shadow: none;
-    }
-    .amount-number-input {
-      flex: 1;
-      border-radius: 0 8px 8px 0 !important;
-      border-left: 1.5px solid var(--border) !important;
-    }
-    .amount-input-row.error-group .amount-type-select,
-    .amount-input-row.error-group .amount-number-input {
-      border-color: var(--danger);
-      background-color: #fff5f5;
-    }
-
-    .btn-group {
-      display: grid;
-      gap: 8px;
-    }
-    .btn-group.col-2   { grid-template-columns: 1fr 1fr; }
-    .btn-group.col-2x2 { grid-template-columns: 1fr 1fr; }
-
+    .amount-number-input { flex: 1 1 100px; background: transparent; border-color: transparent; border-bottom-color: var(--border); border-radius: 0; text-align: right; font-size: 2rem; font-weight: 650; line-height: 1.25; padding: 6px 0; font-variant-numeric: tabular-nums; }
+    .amount-number-input::placeholder { color: var(--text-sub); }
+    .amount-input-row.error-group input, .amount-input-row.error-group select { border-color: var(--danger); }
+    .btn-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .opt-btn {
-      padding: 10px 8px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      background: var(--input-bg);
-      color: var(--text-sub);
-      font-size: 0.88rem;
-      font-weight: 500;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
+      min-height: 44px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 14px;
+      background: var(--input-bg); color: var(--text); font-size: 1rem; font-weight: 500;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; overflow-wrap: anywhere;
+      cursor: pointer; user-select: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+      transition: background .18s, border-color .18s, opacity .18s;
     }
-    .opt-btn .btn-icon {
-      font-size: 1.05rem;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-    .opt-btn:active { transform: scale(0.97); }
-    .opt-btn.selected {
-      background: #eff6ff;
-      border-color: var(--primary);
-      color: var(--primary);
-      font-weight: 700;
-    }
-    .opt-btn.error-btn {
-      border-color: var(--danger);
-      background: #fff5f5;
-    }
-
+    .btn-icon { font-size: 1.25rem; line-height: 1; flex-shrink: 0; }
+    .opt-btn.selected { background: var(--selected); color: var(--primary); border-color: var(--primary); font-weight: 650; }
+    .opt-btn.selected::after { content: ''; width: 8px; height: 5px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); margin-left: 2px; flex-shrink: 0; }
+    .opt-btn:active, .btn:active { opacity: .65; }
     .bottom-bar-outer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 20;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
-      padding-bottom: env(safe-area-inset-bottom);
+      position: sticky; z-index: 20; bottom: 0; margin-top: auto;
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom, 0px));
+      pointer-events: none;
     }
     .bottom-bar-inner {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 12px 16px;
-      display: flex;
-      gap: 10px;
+      max-width: 520px; margin-inline: auto; display: flex; gap: 8px; padding: 6px;
+      border-radius: 28px; background: var(--card); border: 1px solid var(--border);
+      box-shadow: 0 8px 32px rgba(10,30,65,.16), inset 0 1px 0 rgba(255,255,255,.35); pointer-events: auto;
     }
-
-    .btn {
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.1s, opacity 0.2s;
-      padding: 14px 0;
-      letter-spacing: 0.03em;
+    @supports ((backdrop-filter: blur(20px)) or (-webkit-backdrop-filter: blur(20px))) {
+      .bottom-bar-inner { background: var(--glass); -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%); }
     }
-    .btn:active { transform: scale(0.97); }
-    .btn-submit {
-      flex: 3;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #fff;
-      box-shadow: 0 3px 10px rgba(37,99,235,0.35);
-    }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-reset {
-      flex: 1;
-      background: var(--bg);
-      color: var(--text-sub);
-      border: 1.5px solid var(--border);
-    }
-
+    .btn { min-height: 44px; padding: 10px 16px; border: 1px solid transparent; border-radius: 20px; font-size: 1rem; font-weight: 650; line-height: 1.4; cursor: pointer; touch-action: manipulation; transition: opacity .18s; }
+    .btn-submit { flex: 3; background: var(--primary-fill); color: #fff; box-shadow: 0 3px 8px rgba(25,89,207,.18); }
+    .btn-submit:disabled { opacity: .55; cursor: wait; }
+    .btn-reset { flex: 1; min-width: max-content; white-space: nowrap; background: transparent; color: var(--text-sub); }
     #toast {
-      position: fixed;
-      top: calc(60px + env(safe-area-inset-top));
-      left: 50%;
-      transform: translateX(-50%) translateY(-10px);
-      background: #1e293b;
-      color: #fff;
-      padding: 12px 22px;
-      border-radius: 50px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s, transform 0.3s;
-      z-index: 100;
-      max-width: 90vw;
-      white-space: normal;
-      text-align: center;
+      position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); left: 50%; z-index: 100;
+      width: max-content; max-width: min(480px, calc(100% - 40px)); max-height: 50dvh; overflow: auto;
+      transform: translate(-50%, -8px); padding: 14px 20px; border-radius: 20px;
+      background: #24344f; color: #fff; box-shadow: var(--shadow); font-size: .9375rem;
+      opacity: 0; pointer-events: none; overflow-wrap: anywhere; transition: opacity .2s, transform .2s;
     }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #toast.success { background: #15803d; }
-    #toast.fail    { background: #b91c1c; }
-
+    #toast.show { opacity: 1; transform: translate(-50%, 0); }
+    #toast.success { background: #176b43; }
+    #toast.fail { background: #a21d2d; }
     .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 50;
-      align-items: flex-end;
-      justify-content: center;
+      position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; max-width: none; max-height: none;
+      border: 0; margin: 0; background: transparent; color: var(--text);
+      padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
     }
-    .modal-overlay.show { display: flex; }
-    .modal-box {
-      background: #fff;
-      border-radius: 16px 16px 0 0;
-      padding: 24px 20px calc(28px + env(safe-area-inset-bottom));
-      width: 100%;
-      max-width: 520px;
-      animation: slideUp 0.25s ease;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to   { transform: translateY(0); }
-    }
-    .modal-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
-    .modal-desc  { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 20px; }
-    .modal-btns  { display: flex; gap: 10px; }
+    .modal-overlay[open] { display: flex; align-items: flex-end; justify-content: center; }
+    .modal-overlay::backdrop { background: rgba(6,15,30,.5); }
+    body:has(.modal-overlay[open]) { overflow: hidden; }
+    .modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 28px; padding: 24px; width: 100%; max-width: 520px; max-height: 100%; overflow-y: auto; animation: slideUp .22s ease-out; }
+    .modal-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+    .modal-desc { font-size: .9375rem; color: var(--text-sub); margin-bottom: 24px; }
+    .modal-btns { display: flex; gap: 10px; }
     .modal-btns .btn { flex: 1; }
     .btn-confirm { background: var(--danger); color: #fff; }
-    .btn-cancel  { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
-
-    .spinner {
-      display: inline-block;
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.4);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      vertical-align: middle;
-      margin-right: 6px;
-    }
+    .btn-cancel { background: var(--input-bg); color: var(--text); border-color: var(--border); }
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-color-scheme: dark) {
+      :root { --primary: #91baff; --primary-fill: #215bca; --bg: #10141d; --card: #1c2432; --text: #f1f4fb; --text-sub: #b0bdd1; --border: #3c4b62; --input-bg: #151d2b; --selected: #233858; --glass: rgba(28,36,50,.9); --danger: #ffadb5; --error-bg: #3d202c; --shadow: 0 8px 28px rgba(0,0,0,.12); }
+      .btn-confirm { background: #ad283a; }
+    }
+    @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+      .bottom-bar-inner { background: var(--card); -webkit-backdrop-filter: none; backdrop-filter: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+    @media (max-height: 500px) and (orientation: landscape) {
+      header { padding-block: 16px; }
+      .bottom-bar-outer { position: static; }
+    }
+    @container (max-width: 15rem) {
+      .btn-group, .note-card .field { grid-template-columns: 1fr; }
+    }
+    @media (max-height: 740px) and (orientation: portrait) {
+      header { padding-block: 8px; }
+      .trip-label { display: none; }
+      .card { padding: 8px; margin-bottom: 6px; }
+    }
+    @media (max-width: 360px) {
+      .amount-input-row { gap: 8px; }
+      .amount-type-select { padding-left: 10px; }
+      .amount-number-input { font-size: 2rem; }
+      header h1 { font-size: 1.5rem; }
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>💰 東京消費記錄</h1>
+    <div>
+      <p class="trip-label">TOKYO · 2026.09</p>
+      <h1>東京消費記錄</h1>
+    </div>
+    <img class="trip-icon" src="./202609_TOKYO-icon.png" width="48" height="48" alt="" />
   </header>
 
-  <div class="form-wrap">
+  <main class="form-wrap">
 
-    <div class="card">
+    <div class="card details-card">
       <div class="field">
         <label for="item">消費項目 <span class="req">*</span></label>
-        <input type="text" id="item" placeholder="請輸入消費項目" maxlength="100" autocomplete="off" />
-        <div class="err-msg" id="item-err">請輸入消費項目</div>
+        <input type="text" id="item" aria-required="true" aria-describedby="item-err" placeholder="請輸入消費項目" maxlength="100" autocomplete="off" />
+        <div role="alert" class="err-msg" id="item-err">請輸入消費項目</div>
       </div>
       <div class="field">
         <label for="date">消費日期 <span class="req">*</span></label>
-        <input type="date" id="date" />
-        <div class="err-msg" id="date-err">請選擇消費日期</div>
+        <input type="date" id="date" aria-required="true" aria-describedby="date-err" />
+        <div role="alert" class="err-msg" id="date-err">請選擇消費日期</div>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card amount-card">
       <div class="field">
-        <label>金額 <span class="req">*</span></label>
+        <label for="amount">金額 <span class="req">*</span></label>
         <div class="amount-input-row" id="amount-group">
-          <select class="amount-type-select" id="amountType">
-            <option value="JPY">金額 (JPY)</option>
-            <option value="TWD">金額 (TWD)</option>
+          <select class="amount-type-select" id="amountType" aria-label="幣別">
+            <option value="JPY">JPY 日幣</option>
+            <option value="TWD">TWD 台幣</option>
           </select>
           <!--
             inputmode="numeric" → iOS/Android 優先呼叫純數字鍵盤
@@ -341,7 +225,7 @@
           <input
             class="amount-number-input"
             type="text"
-            id="amount"
+            id="amount" aria-required="true" aria-describedby="amount-err"
             placeholder="0"
             inputmode="numeric"
             pattern="[0-9]*"
@@ -351,50 +235,50 @@
             spellcheck="false"
           />
         </div>
-        <div class="err-msg" id="amount-err">請輸入有效金額</div>
+        <div role="alert" class="err-msg" id="amount-err">請輸入有效金額</div>
       </div>
     </div>
 
     <div class="card">
       <div class="field">
-        <label>付款人 <span class="req">*</span></label>
-        <div class="btn-group col-2" id="payer-group">
-          <button type="button" class="opt-btn selected" data-value="Roberto">Roberto</button>
-          <button type="button" class="opt-btn" data-value="Aqua">Aqua</button>
+        <p class="field-label" id="payer-label">付款人 <span class="req">*</span></p>
+        <div class="btn-group col-2" id="payer-group" role="group" aria-labelledby="payer-label" aria-describedby="payer-err">
+          <button type="button" class="opt-btn selected" aria-pressed="true" data-value="Roberto">Roberto</button>
+          <button type="button" class="opt-btn" aria-pressed="false" data-value="Aqua">Aqua</button>
         </div>
-        <div class="err-msg" id="payer-err">請選擇付款人</div>
+        <div role="alert" class="err-msg" id="payer-err">請選擇付款人</div>
       </div>
     </div>
 
     <div class="card">
       <div class="field">
-        <label>付款方式 <span class="req">*</span></label>
-        <div class="btn-group col-2x2" id="method-group">
-          <button type="button" class="opt-btn selected" data-value="Paypay">
-            <span class="btn-icon">📱</span>Paypay
+        <p class="field-label" id="method-label">付款方式 <span class="req">*</span></p>
+        <div class="btn-group col-2x2" id="method-group" role="group" aria-labelledby="method-label" aria-describedby="method-err">
+          <button type="button" class="opt-btn selected" aria-pressed="true" data-value="Paypay">
+            <span class="btn-icon" aria-hidden="true">📱</span>Paypay
           </button>
-          <button type="button" class="opt-btn" data-value="Suica">
-            <span class="btn-icon">🐧</span>Suica
+          <button type="button" class="opt-btn" aria-pressed="false" data-value="Suica">
+            <span class="btn-icon" aria-hidden="true">🐧</span>Suica
           </button>
-          <button type="button" class="opt-btn" data-value="信用卡">
-            <span class="btn-icon">💳</span>信用卡
+          <button type="button" class="opt-btn" aria-pressed="false" data-value="信用卡">
+            <span class="btn-icon" aria-hidden="true">💳</span>信用卡
           </button>
-          <button type="button" class="opt-btn" data-value="現金">
-            <span class="btn-icon">💵</span>現金
+          <button type="button" class="opt-btn" aria-pressed="false" data-value="現金">
+            <span class="btn-icon" aria-hidden="true">💵</span>現金
           </button>
         </div>
-        <div class="err-msg" id="method-err">請選擇付款方式</div>
+        <div role="alert" class="err-msg" id="method-err">請選擇付款方式</div>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card note-card">
       <div class="field">
         <label for="note">備註 <span class="opt">（選填）</span></label>
-        <textarea id="note" placeholder="輸入備註（選填）" maxlength="500"></textarea>
+        <textarea rows="2" id="note" placeholder="輸入備註（選填）" maxlength="500"></textarea>
       </div>
     </div>
 
-  </div>
+  </main>
 
   <div class="bottom-bar-outer">
     <div class="bottom-bar-inner">
@@ -403,18 +287,18 @@
     </div>
   </div>
 
-  <div id="toast"></div>
+  <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <div class="modal-overlay" id="resetModal">
+  <dialog class="modal-overlay" id="resetModal" aria-labelledby="reset-title" aria-describedby="reset-description">
     <div class="modal-box">
-      <div class="modal-title">⚠️ 確認重設</div>
-      <div class="modal-desc">所有輸入內容將被清除，並還原為預設值，確定要繼續嗎？</div>
+      <h2 class="modal-title" id="reset-title">確認重設？</h2>
+      <div class="modal-desc" id="reset-description">所有輸入內容將被清除，並還原為預設值，確定要繼續嗎？</div>
       <div class="modal-btns">
-        <button class="btn btn-cancel" id="modalCancel">取消</button>
+        <button class="btn btn-cancel" id="modalCancel" autofocus>取消</button>
         <button class="btn btn-confirm" id="modalConfirm">確認重設</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <script>
     const WORKER_URL  = 'https://notion-proxy-202603.roberto-954.workers.dev';
@@ -450,8 +334,12 @@
       const group = document.getElementById(groupId);
       group.querySelectorAll('.opt-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected', 'error-btn'));
+          group.querySelectorAll('.opt-btn').forEach(b => {
+            b.classList.remove('selected', 'error-btn');
+            b.setAttribute('aria-pressed', 'false');
+          });
           btn.classList.add('selected');
+          btn.setAttribute('aria-pressed', 'true');
           const errEl = document.getElementById(groupId.replace('-group', '-err'));
           if (errEl) errEl.classList.remove('show');
         });
@@ -466,6 +354,7 @@
     function setBtnGroupValue(groupId, value) {
       document.getElementById(groupId).querySelectorAll('.opt-btn').forEach(btn => {
         btn.classList.toggle('selected', btn.dataset.value === value);
+        btn.setAttribute('aria-pressed', String(btn.dataset.value === value));
         btn.classList.remove('error-btn');
       });
     }
@@ -615,18 +504,18 @@
 
     document.getElementById('btnSubmit').addEventListener('click', submitForm);
     document.getElementById('btnReset').addEventListener('click', () => {
-      document.getElementById('resetModal').classList.add('show');
+      document.getElementById('resetModal').showModal();
     });
     document.getElementById('modalCancel').addEventListener('click', () => {
-      document.getElementById('resetModal').classList.remove('show');
+      document.getElementById('resetModal').close();
     });
     document.getElementById('modalConfirm').addEventListener('click', () => {
-      document.getElementById('resetModal').classList.remove('show');
+      document.getElementById('resetModal').close();
       resetForm();
       showToast('🔄 已重設為預設內容', '');
     });
     document.getElementById('resetModal').addEventListener('click', function(e) {
-      if (e.target === this) this.classList.remove('show');
+      if (e.target === this) this.close();
     });
 
     initBtnGroup('payer-group');

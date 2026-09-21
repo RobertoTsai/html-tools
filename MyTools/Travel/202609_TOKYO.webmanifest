@@ -1,0 +1,12 @@
+{
+  "id": "./202609_TOKYO.html",
+  "name": "東京消費記錄",
+  "short_name": "東京記帳",
+  "lang": "zh-TW",
+  "start_url": "./202609_TOKYO.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f5fa",
+  "theme_color": "#f2f5fa",
+  "icons": [{ "src": "./202609_TOKYO-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }]
+}
