@@ -218,7 +218,7 @@
           </select>
           <!--
             inputmode="numeric" → iOS/Android 優先呼叫純數字鍵盤
-            pattern="[0-9]*"    → iOS Safari 的額外提示，確保數字鍵盤觸發
+            pattern="[0-9,]*"    → 允許整數與顯示用千分位逗號
             type="text"         → 避免 type="number" 在部分 iOS 版本出現上下箭頭或格式問題
           -->
           <input
@@ -227,7 +227,7 @@
             id="amount" aria-required="true" aria-describedby="amount-err"
             placeholder="0"
             inputmode="numeric"
-            pattern="[0-9]*"
+            pattern="[0-9,]*"
             autocomplete="off"
             autocorrect="off"
             autocapitalize="off"
@@ -316,16 +316,38 @@
       clearAmountError();
     });
 
-    // 阻擋小數點等非數字輸入；貼上或其他輸入方式仍由 input 檢查。
+    // 逗號僅供顯示；阻擋小數點與其他非數字字元。
     document.getElementById('amount').addEventListener('beforeinput', function(e) {
-      if (e.data && /[^0-9]/.test(e.data)) e.preventDefault();
+      if (e.data && /[^0-9,]/.test(e.data)) {
+        e.preventDefault();
+        return;
+      }
+      const start = this.selectionStart;
+      if (start !== this.selectionEnd) return;
+      // 刪除分隔符號時連同相鄰數字一起處理，避免逗號反覆補回而無法刪除。
+      if (e.inputType === 'deleteContentBackward' && this.value[start - 1] === ',') {
+        this.setSelectionRange(Math.max(0, start - 2), start);
+      } else if (e.inputType === 'deleteContentForward' && this.value[start] === ',') {
+        this.setSelectionRange(start, start + 2);
+      }
     });
     document.getElementById('amount').addEventListener('input', function() {
-      if (/[^0-9]/.test(this.value)) {
+      if (/[^0-9,]/.test(this.value)) {
         this.value = '';
         setAmountError('金額請輸入非負整數');
         return;
       }
+      const digitsBeforeCaret = this.value.slice(0, this.selectionStart).replace(/,/g, '').length;
+      const digits = this.value.replace(/,/g, '');
+      this.value = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      // 以游標前的數字數量定位，讓中間插入／刪除時游標不會跳到末端。
+      let caret = 0;
+      let count = 0;
+      while (caret < this.value.length && count < digitsBeforeCaret) {
+        if (this.value[caret] !== ',') count++;
+        caret++;
+      }
+      this.setSelectionRange(caret, caret);
       clearAmountError();
     });
 
@@ -404,7 +426,7 @@
       }
 
       const amtType = document.getElementById('amountType').value;
-      const amtRaw  = document.getElementById('amount').value.trim();
+      const amtRaw  = document.getElementById('amount').value.replace(/,/g, '').trim();
 
       if (amtRaw === '') {
         setAmountError('請輸入金額'); valid = false;
@@ -435,7 +457,7 @@
       const item    = document.getElementById('item').value.trim();
       const date    = document.getElementById('date').value;
       const amtType = document.getElementById('amountType').value;
-      const amtRaw  = document.getElementById('amount').value.trim();
+      const amtRaw  = document.getElementById('amount').value.replace(/,/g, '').trim();
       const payer   = getBtnGroupValue('payer-group');
       const method  = getBtnGroupValue('method-group');
       const note    = document.getElementById('note').value.trim();
@@ -495,7 +517,7 @@
       const amtInput = document.getElementById('amount');
       amtInput.placeholder = '0';
       amtInput.inputMode   = 'numeric';
-      amtInput.pattern     = '[0-9]*';
+      amtInput.pattern     = '[0-9,]*';
       setBtnGroupValue('payer-group',  DEFAULTS.payer);
       setBtnGroupValue('method-group', DEFAULTS.method);
       clearErrors();
