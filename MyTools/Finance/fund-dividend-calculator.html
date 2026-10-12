@@ -38,30 +38,71 @@
     .header h1 {
       font-size: 28px;
       margin-bottom: 10px;
+      letter-spacing: 0.5px;
     }
     
     .header p {
       font-size: 14px;
-      opacity: 0.9;
+      opacity: 0.92;
     }
     
     .content {
       padding: 30px;
     }
+
+    /* 模式切換頁籤 (Tab) */
+    .mode-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      background: #f0f2ff;
+      padding: 6px;
+      border-radius: 12px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn:hover {
+      color: #667eea;
+      background: rgba(255,255,255,0.6);
+    }
+
+    .tab-btn.active {
+      background: white;
+      color: #667eea;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+    }
     
+    /* 上傳區塊 */
     .upload-section {
       border: 2px dashed #667eea;
-      border-radius: 10px;
-      padding: 30px;
+      border-radius: 12px;
+      padding: 35px 25px;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       background: #f8f9ff;
       transition: all 0.3s;
     }
     
-    .upload-section:hover {
+    .upload-section:hover, .upload-section.dragover {
       border-color: #764ba2;
       background: #f0f2ff;
+      transform: translateY(-1px);
     }
     
     .upload-section input[type="file"] {
@@ -70,13 +111,14 @@
     
     .upload-label {
       display: inline-block;
-      padding: 12px 30px;
+      padding: 12px 32px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border-radius: 25px;
       cursor: pointer;
       font-size: 16px;
-      transition: transform 0.2s;
+      font-weight: bold;
+      transition: all 0.2s;
     }
     
     .upload-label:hover {
@@ -94,16 +136,93 @@
       color: #667eea;
       font-weight: bold;
     }
+
+    /* 直接貼上區塊 */
+    .paste-section {
+      border: 1px solid #dbe1f8;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      background: #f8f9ff;
+    }
+
+    .paste-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .paste-hint {
+      font-size: 13px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .paste-toolbar-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .toolbar-btn {
+      padding: 6px 14px;
+      border: 1px solid #c7d2fe;
+      background: white;
+      color: #4f46e5;
+      border-radius: 18px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .toolbar-btn:hover {
+      background: #eef2ff;
+      border-color: #667eea;
+      transform: translateY(-1px);
+    }
+
+    .paste-textarea {
+      width: 100%;
+      height: 190px;
+      padding: 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      font-family: Consolas, "Courier New", "Microsoft JhengHei", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      resize: vertical;
+      background: white;
+      color: #333;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .paste-textarea:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .paste-status {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #6b7280;
+      text-align: right;
+    }
     
     .button-group {
       display: flex;
       gap: 15px;
       justify-content: center;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
     
     .btn {
-      padding: 12px 40px;
+      padding: 12px 42px;
       border: none;
       border-radius: 25px;
       font-size: 16px;
@@ -139,13 +258,13 @@
     
     .result-section {
       display: none;
-      animation: fadeIn 0.5s;
+      animation: fadeIn 0.4s ease-out;
     }
     
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
       }
       to {
         opacity: 1;
@@ -153,24 +272,81 @@
       }
     }
     
+    .result-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     .result-title {
       font-size: 20px;
       color: #333;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #667eea;
+      margin: 0;
     }
     
     .result-title .date-range {
-      font-size: 16px;
+      font-size: 15px;
       color: #667eea;
       font-weight: normal;
+      margin-left: 6px;
+    }
+
+    .btn-copy-all {
+      padding: 7px 18px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #4f46e5;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy-all:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+      transform: translateY(-1px);
+    }
+
+    /* 統計小卡片 */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .summary-card {
+      background: #f8f9ff;
+      border: 1px solid #e0e7ff;
+      border-radius: 10px;
+      padding: 15px 18px;
+      text-align: center;
+    }
+
+    .summary-card .label {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 5px;
+    }
+
+    .summary-card .value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #4f46e5;
     }
     
     .result-table {
       width: 100%;
       border-collapse: collapse;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       border-radius: 10px;
       overflow: hidden;
     }
@@ -182,19 +358,24 @@
     
     .result-table th,
     .result-table td {
-      padding: 15px;
+      padding: 14px 18px;
       text-align: left;
     }
     
     .result-table th {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 15px;
       color: white !important;
+    }
+
+    .result-table th.center,
+    .result-table td.center {
+      text-align: center;
     }
     
     .result-table tbody tr {
-      border-bottom: 1px solid #e0e0e0;
-      transition: background 0.2s;
+      border-bottom: 1px solid #e5e7eb;
+      transition: background 0.15s;
     }
     
     .result-table tbody tr:hover {
@@ -208,7 +389,18 @@
     .result-table .amount {
       text-align: right;
       font-weight: bold;
-      color: #667eea;
+      color: #4f46e5;
+      font-size: 15px;
+    }
+
+    .badge-count {
+      display: inline-block;
+      padding: 3px 10px;
+      background: #eef2ff;
+      color: #4f46e5;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
     }
     
     .result-table tfoot {
@@ -235,17 +427,17 @@
       background: transparent;
       border: none;
       cursor: pointer;
-      font-size: 18px;
-      padding: 5px;
+      font-size: 16px;
+      padding: 4px 6px;
       border-radius: 5px;
       transition: all 0.2s;
-      opacity: 0.6;
+      opacity: 0.55;
       flex-shrink: 0;
     }
     
     .copy-btn:hover {
       opacity: 1;
-      background: rgba(102, 126, 234, 0.1);
+      background: rgba(102, 126, 234, 0.15);
       transform: scale(1.1);
     }
     
@@ -258,44 +450,49 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       color: white;
-      padding: 15px 30px;
+      padding: 14px 28px;
       border-radius: 10px;
-      font-size: 16px;
+      font-size: 15px;
+      font-weight: 500;
       z-index: 1000;
-      animation: fadeInOut 1.5s;
+      animation: fadeInOut 1.4s ease forwards;
       pointer-events: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     }
     
     @keyframes fadeInOut {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-      20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+      18% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      82% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
     }
     
     .error-message {
-      background: #ffebee;
-      color: #c62828;
-      padding: 15px;
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+      padding: 14px 18px;
       border-radius: 10px;
       margin-bottom: 20px;
       display: none;
+      font-size: 14px;
+      line-height: 1.5;
     }
     
     .loading {
       text-align: center;
-      padding: 20px;
+      padding: 24px;
       display: none;
     }
     
     .loading-spinner {
-      border: 4px solid #f3f3f3;
+      border: 4px solid #e0e7ff;
       border-top: 4px solid #667eea;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       animation: spin 1s linear infinite;
       margin: 0 auto;
     }
@@ -304,41 +501,110 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    @media (max-width: 640px) {
+      .content {
+        padding: 20px 15px;
+      }
+      .header h1 {
+        font-size: 22px;
+      }
+      .btn {
+        padding: 10px 24px;
+      }
+      .summary-cards {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
       <h1>💰 基金配息計算工具</h1>
-      <p>上傳 HTML 檔案，自動統計各產品入帳金額總和</p>
+      <p>支援上傳 HTML 交易明細或直接貼上表格資料，自動合併各產品入帳金額</p>
     </div>
     
     <div class="content">
-      <div class="upload-section">
+      <!-- 模式切換頁籤 -->
+      <div class="mode-tabs">
+        <button type="button" class="tab-btn active" id="tabUpload">
+          <span>📁 上傳 HTML 檔案</span>
+        </button>
+        <button type="button" class="tab-btn" id="tabPaste">
+          <span>📋 貼上表格資料</span>
+        </button>
+      </div>
+
+      <!-- 模式一：上傳檔案區塊 -->
+      <div class="upload-section" id="uploadSection">
         <input type="file" id="fileInput" accept=".html,.htm">
         <label for="fileInput" class="upload-label">📁 選擇 HTML 檔案</label>
-        <div class="file-info" id="fileInfo">尚未選擇檔案</div>
+        <div class="file-info" id="fileInfo">可點擊按鈕或將「交易明細下載」HTML 檔案拖曳至此處</div>
+      </div>
+
+      <!-- 模式二：直接貼上區塊 -->
+      <div class="paste-section" id="pasteSection" style="display: none;">
+        <div class="paste-toolbar">
+          <span class="paste-hint">💡 支援從網頁、Excel、CSV 複製貼上之交易明細表格</span>
+          <div class="paste-toolbar-btns">
+            <button type="button" class="toolbar-btn" id="loadSampleBtn" title="帶入預設範例資料測試">📝 填入範例資料</button>
+            <button type="button" class="toolbar-btn" id="clearTextBtn" title="清空文字框">🗑️ 清空內容</button>
+          </div>
+        </div>
+        <textarea class="paste-textarea" id="pasteInput" placeholder="請在此貼上表格資料...
+例如：在網路銀行或 Excel 選取複製明細表格後直接在此貼上 (Ctrl+V)"></textarea>
+        <div class="paste-status" id="pasteStatus">尚未輸入資料</div>
       </div>
       
+      <!-- 動作按鈕 -->
       <div class="button-group">
         <button class="btn btn-calculate" id="calculateBtn" disabled>🔢 計算</button>
         <button class="btn btn-clear" id="clearBtn">🗑️ 清除</button>
       </div>
       
+      <!-- 訊息提示 -->
       <div class="error-message" id="errorMessage"></div>
       
+      <!-- 載入中動畫 -->
       <div class="loading" id="loading">
         <div class="loading-spinner"></div>
-        <p style="margin-top: 10px; color: #666;">處理中...</p>
+        <p style="margin-top: 10px; color: #666; font-size: 14px;">正在分析計算中...</p>
       </div>
       
+      <!-- 結果區域 -->
       <div class="result-section" id="resultSection">
-        <h2 class="result-title" id="resultTitle">📈 統計結果</h2>
+        <div class="result-header-row">
+          <h2 class="result-title" id="resultTitle">📈 統計結果</h2>
+          <button class="btn-copy-all" id="copyAllBtn">📋 複製完整統計表格</button>
+        </div>
+
+        <!-- 統計卡片 -->
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="label">查詢日期區間</div>
+            <div class="value" id="cardDateRange" style="font-size: 16px;">-</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">產品種類數量</div>
+            <div class="value" id="cardProductCount">0</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">總明細筆數</div>
+            <div class="value" id="cardRecordCount">0 筆</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">入帳總金額 (USD)</div>
+            <div class="value" id="cardTotalAmount">0.00</div>
+          </div>
+        </div>
+
         <table class="result-table" id="resultTable">
           <thead>
             <tr>
               <th>產品名稱</th>
-              <th class="amount">入帳金額總和 (USD)</th>
+              <th class="center" style="width: 110px;">筆數</th>
+              <th class="amount" style="width: 220px;">入帳金額總和 (USD)</th>
             </tr>
           </thead>
           <tbody id="resultBody">
@@ -346,6 +612,7 @@
           <tfoot>
             <tr>
               <td>總計</td>
+              <td class="center" id="totalRecords">0 筆</td>
               <td class="amount" id="totalAmount">0.00</td>
             </tr>
           </tfoot>
@@ -355,10 +622,1676 @@
   </div>
   
   <script>
+    // 預設範例資料 (提供快速測試)
+    const SAMPLE_DATA = `"交易日期
+交易類別
+投資方式"	"產品名稱
+信託編號
+簽單方式"	"投資幣別
+交易金額
+"	"匯率
+交易價格
+單位數"	"手續費折抵方式
+手續費折抵金額
+"	"應收手續費
+實收手續費
+"	"短線費用
+信管費
+"	"後收型遞延手續費
+大樂扣手續費
+"	"入帳金額
+入帳日期
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933376878
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"13.15
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933377019
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"19.73
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933377081
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"13.15
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933377643
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.56
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933378210
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.59
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933378547
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.57
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933378948
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"13.10
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933379468
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.53
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933380599
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.64
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933383212
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"4.18
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933384244
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.95
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933390858
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.74
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933393456
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.60
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933397750
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.58
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933406442
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.56
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933410829
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.50
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933468630
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"4.50
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933472883
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"4.81
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933487059
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.96
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933488850
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.92
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933493191
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.54
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933494641
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.40
+2026/10/08
+"
+"2026/10/07
+除息
+單筆投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00933495864
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.24
+2026/10/08
+"
+"2026/10/07
+除息
+定期投資"	"AP16_高盛Ⅲ新興市場債Ｘ美月
+00934380106
+-"	"USD
+-
+"	"31.810000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"86.16
+2026/10/08
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933376581
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.53
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933376872
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"7.07
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933377020
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"7.08
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933377639
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.61
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933378162
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"7.25
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933378212
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.63
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933378546
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.62
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933379467
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.66
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933381639
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.86
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933390859
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"2.04
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933418039
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"1.96
+2026/10/06
+"
+"2026/10/05
+除息
+單筆投資"	"AR22_ＮＢ新興市場本地貨幣Ｔ配美
+00933490708
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"2.99
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN16_聯博美國收益ＡＴ美元
+00933377021
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"7.85
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN16_聯博美國收益ＡＴ美元
+00933377645
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.91
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN16_聯博美國收益ＡＴ美元
+00933378166
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.90
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN16_聯博美國收益ＡＴ美元
+00933379470
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.89
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN16_聯博美國收益ＡＴ美元
+00933383602
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"2.26
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN16_聯博美國收益ＡＴ美元
+00933384246
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"2.21
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN16_聯博美國收益ＡＴ美元
+00933387649
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"2.17
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933365953
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"16.15
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933366319
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"16.18
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933366570
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"16.20
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933367144
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"1.61
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933367692
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.42
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933368308
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.44
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933370117
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.46
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933371030
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.40
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933371572
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.47
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933372880
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.46
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933373604
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.46
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933374281
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.47
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933375102
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"10.95
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933376024
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.41
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933377638
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"10.86
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933378550
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.39
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933378946
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"10.78
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933379469
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.42
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933380302
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"5.57
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933381628
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"11.81
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933384245
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.43
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933387648
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.37
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933406443
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.04
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933423583
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"2.91
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933458070
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.05
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933472885
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.42
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933473740
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.56
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933475573
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.72
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933477691
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.67
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933489425
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.92
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933495365
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.91
+2026/10/06
+"
+"2026/10/02
+除息
+單筆投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00933497603
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.83
+2026/10/06
+"
+"2026/10/02
+除息
+定期投資"	"NN64_聯博全球非投等債ＡＡ美穩
+00934380107
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"49.46
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937528111
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"6.62
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937529775
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.31
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937530437
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.26
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937531991
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.22
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937532715
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.21
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937534604
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.16
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937537731
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"3.57
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937538711
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"4.02
+2026/10/06
+"
+"2026/10/01
+除息
+單筆投資"	"6022_安聯收益成長多重資產美配
+00937539832
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"4.35
+2026/10/06
+"
+"2026/10/01
+除息
+定期投資"	"6022_安聯收益成長多重資產美配
+00938513223
+-"	"USD
+-
+"	"31.670000
+-
+-"	"-
+-
+"	"USD 0.00
+-
+"	"0.00
+-
+"	"0.00
+0.00
+"	"51.98
+2026/10/06
+"`;
+
+    let currentMode = 'upload'; // 'upload' | 'paste'
     let uploadedFile = null;
+    let lastCalculatedData = null;
     
+    // DOM 元素
+    const tabUpload = document.getElementById('tabUpload');
+    const tabPaste = document.getElementById('tabPaste');
+    const uploadSection = document.getElementById('uploadSection');
+    const pasteSection = document.getElementById('pasteSection');
     const fileInput = document.getElementById('fileInput');
     const fileInfo = document.getElementById('fileInfo');
+    const pasteInput = document.getElementById('pasteInput');
+    const pasteStatus = document.getElementById('pasteStatus');
+    const loadSampleBtn = document.getElementById('loadSampleBtn');
+    const clearTextBtn = document.getElementById('clearTextBtn');
     const calculateBtn = document.getElementById('calculateBtn');
     const clearBtn = document.getElementById('clearBtn');
     const errorMessage = document.getElementById('errorMessage');
@@ -366,135 +2299,465 @@
     const resultSection = document.getElementById('resultSection');
     const resultTitle = document.getElementById('resultTitle');
     const resultBody = document.getElementById('resultBody');
+    const totalRecords = document.getElementById('totalRecords');
     const totalAmount = document.getElementById('totalAmount');
-    
-    fileInput.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        uploadedFile = file;
-        fileInfo.innerHTML = `已選擇: <span class="file-name">${file.name}</span> (${(file.size / 1024).toFixed(2)} KB)`;
-        calculateBtn.disabled = false;
-        hideError();
-        hideResult();
+    const copyAllBtn = document.getElementById('copyAllBtn');
+    const cardDateRange = document.getElementById('cardDateRange');
+    const cardProductCount = document.getElementById('cardProductCount');
+    const cardRecordCount = document.getElementById('cardRecordCount');
+    const cardTotalAmount = document.getElementById('cardTotalAmount');
+
+    // 頁籤切換事件
+    tabUpload.addEventListener('click', () => switchMode('upload'));
+    tabPaste.addEventListener('click', () => switchMode('paste'));
+
+    function switchMode(mode) {
+      currentMode = mode;
+      hideError();
+      if (mode === 'upload') {
+        tabUpload.classList.add('active');
+        tabPaste.classList.remove('active');
+        uploadSection.style.display = 'block';
+        pasteSection.style.display = 'none';
+        calculateBtn.disabled = !uploadedFile;
+      } else {
+        tabPaste.classList.add('active');
+        tabUpload.classList.remove('active');
+        pasteSection.style.display = 'block';
+        uploadSection.style.display = 'none';
+        calculateBtn.disabled = !pasteInput.value.trim();
+      }
+    }
+
+    // 檔案拖曳支援
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('dragover');
+    });
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.classList.remove('dragover');
+    });
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFileSelect(e.dataTransfer.files[0]);
       }
     });
-    
+
+    // 檔案選擇
+    fileInput.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+      }
+    });
+
+    function handleFileSelect(file) {
+      uploadedFile = file;
+      fileInfo.innerHTML = `已選擇: <span class="file-name">${file.name}</span> (${(file.size / 1024).toFixed(2)} KB)`;
+      calculateBtn.disabled = false;
+      hideError();
+      hideResult();
+    }
+
+    // 貼上文字框輸入事件
+    pasteInput.addEventListener('input', function() {
+      const text = pasteInput.value.trim();
+      if (text) {
+        const lineCount = text.split(/\r\n|\r|\n/).length;
+        pasteStatus.textContent = `已輸入內容 (約 ${lineCount} 行 / ${text.length} 字元)`;
+        calculateBtn.disabled = false;
+      } else {
+        pasteStatus.textContent = '尚未輸入資料';
+        calculateBtn.disabled = true;
+      }
+      hideError();
+    });
+
+    // 填入範例資料按鈕
+    loadSampleBtn.addEventListener('click', function() {
+      pasteInput.value = SAMPLE_DATA;
+      pasteInput.dispatchEvent(new Event('input'));
+      showCopyFeedback('✓ 已填入範例資料');
+    });
+
+    // 清空文字框按鈕
+    clearTextBtn.addEventListener('click', function() {
+      pasteInput.value = '';
+      pasteInput.dispatchEvent(new Event('input'));
+      hideResult();
+      hideError();
+    });
+
+    // 計算按鈕
     calculateBtn.addEventListener('click', function() {
-      if (!uploadedFile) return;
-      
       hideError();
       hideResult();
       showLoading();
       
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const htmlContent = e.target.result;
-          const { productData, dateRange } = parseHTMLAndCalculate(htmlContent);
-          displayResults(productData, dateRange);
+      if (currentMode === 'upload') {
+        if (!uploadedFile) {
           hideLoading();
-        } catch (error) {
-          hideLoading();
-          showError('解析檔案時發生錯誤: ' + error.message);
+          showError('請先選擇 HTML 檔案');
+          return;
         }
-      };
-      reader.readAsText(uploadedFile, 'UTF-8');
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const htmlContent = e.target.result;
+            const parseResult = parseHTMLAndCalculate(htmlContent);
+            displayResults(parseResult);
+            hideLoading();
+          } catch (error) {
+            hideLoading();
+            showError('解析檔案時發生錯誤: ' + error.message);
+          }
+        };
+        reader.onerror = function() {
+          hideLoading();
+          showError('讀取檔案失敗，請重新嘗試');
+        };
+        reader.readAsText(uploadedFile, 'UTF-8');
+      } else {
+        const rawText = pasteInput.value.trim();
+        if (!rawText) {
+          hideLoading();
+          showError('請貼上表格資料後再進行計算');
+          return;
+        }
+
+        setTimeout(() => {
+          try {
+            const parseResult = parsePastedData(rawText);
+            displayResults(parseResult);
+            hideLoading();
+          } catch (error) {
+            hideLoading();
+            showError('解析貼上資料時發生錯誤: ' + error.message);
+          }
+        }, 50);
+      }
     });
-    
+
+    // 清除按鈕
     clearBtn.addEventListener('click', function() {
       uploadedFile = null;
       fileInput.value = '';
-      fileInfo.textContent = '尚未選擇檔案';
+      fileInfo.textContent = '可點擊按鈕或將「交易明細下載」HTML 檔案拖曳至此處';
+      pasteInput.value = '';
+      pasteStatus.textContent = '尚未輸入資料';
       calculateBtn.disabled = true;
+      lastCalculatedData = null;
       hideError();
       hideResult();
     });
-    
-    function parseHTMLAndCalculate(htmlContent) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    // 複製全部結果表格
+    copyAllBtn.addEventListener('click', function() {
+      if (!lastCalculatedData) return;
+      const { productData, productCounts, total, totalCount } = lastCalculatedData;
+      const sortedProducts = Object.keys(productData).sort((a, b) => productData[b] - productData[a]);
       
-      const table = doc.querySelector('table.table_ver_f');
-      if (!table) {
-        throw new Error('找不到表格資料');
+      let text = "產品名稱\t筆數\t入帳金額總和 (USD)\n";
+      sortedProducts.forEach(product => {
+        text += `${product}\t${productCounts[product] || 1}\t${productData[product].toFixed(2)}\n`;
+      });
+      text += `總計\t${totalCount}\t${total.toFixed(2)}`;
+      copyToClipboard(text);
+    });
+
+    // 解析貼上的文字或 HTML
+    function parsePastedData(text) {
+      text = text.trim();
+      if (!text) {
+        throw new Error('未輸入任何內容');
       }
       
-      const rows = table.querySelectorAll('tbody tr');
-      const productData = {};
-      const dates = [];
+      // 如果貼上的是包含 table 標籤的 HTML
+      if (text.includes('<table') || text.includes('<tr')) {
+        return parseHTMLAndCalculate(text);
+      }
       
-      rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        if (cells.length < 10) return;
+      // 解析分欄文字 (TSV 或 CSV)
+      const rows = parseDelimitedText(text);
+      if (!rows || rows.length === 0) {
+        throw new Error('無法辨識表格結構，請確認有複製包含欄位之明細');
+      }
+      
+      return processTableRows(rows);
+    }
+
+    // 解析 TSV / CSV 格式文字 (完整支援引號跨行)
+    function parseDelimitedText(text) {
+      const delimiter = text.includes('\t') ? '\t' : (text.includes(',') ? ',' : '\t');
+      const rows = [];
+      let currentRow = [];
+      let currentCell = '';
+      let inQuotes = false;
+      
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
         
-        // 交易日期在第一個 td 中的第一行
-        const dateCell = cells[0];
-        const dateText = dateCell.textContent.trim().split(/\s+/)[0];
-        if (dateText && dateText.match(/\d{4}\/\d{2}\/\d{2}/)) {
-          dates.push(dateText);
-        }
-        
-        // 產品名稱在第二個 td 中
-        const productCell = cells[1];
-        const productSpan = productCell.querySelector('span[name="fundCodeLink"]');
-        if (!productSpan) return;
-        
-        const productName = productSpan.textContent.trim();
-        
-        // 入帳金額在最後一個 td 中的第一行
-        const amountCell = cells[9];
-        const amountText = amountCell.textContent.trim().split(/\s+/)[0];
-        const amount = parseFloat(amountText) || 0;
-        
-        if (productName) {
-          if (!productData[productName]) {
-            productData[productName] = 0;
+        if (char === '"') {
+          if (inQuotes && nextChar === '"') {
+            currentCell += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
           }
-          productData[productName] += amount;
+        } else if (char === delimiter && !inQuotes) {
+          currentRow.push(currentCell.trim());
+          currentCell = '';
+        } else if ((char === '\r' || char === '\n') && !inQuotes) {
+          if (char === '\r' && nextChar === '\n') {
+            i++;
+          }
+          currentRow.push(currentCell.trim());
+          currentCell = '';
+          if (currentRow.some(c => c !== '')) {
+            rows.push(currentRow);
+          }
+          currentRow = [];
+        } else {
+          currentCell += char;
         }
-      });
+      }
       
-      // 計算日期範圍
+      if (currentCell !== '' || currentRow.length > 0) {
+        currentRow.push(currentCell.trim());
+        if (currentRow.some(c => c !== '')) {
+          rows.push(currentRow);
+        }
+      }
+      
+      return rows;
+    }
+
+    // 處理二維表格陣列並依產品名稱合併金額
+    function processTableRows(rows) {
+      if (rows.length === 0) {
+        throw new Error('未取得任何資料列');
+      }
+      
+      let headerRowIndex = -1;
+      let productCol = -1;
+      let amountCol = -1;
+      let dateCol = -1;
+      
+      // 搜尋標題列
+      for (let r = 0; r < Math.min(5, rows.length); r++) {
+        const row = rows[r];
+        const pIdx = row.findIndex(c => c.includes('產品名稱'));
+        const aIdx = row.findIndex(c => c.includes('入帳金額'));
+        if (pIdx !== -1 || aIdx !== -1) {
+          headerRowIndex = r;
+          if (pIdx !== -1) productCol = pIdx;
+          if (aIdx !== -1) amountCol = aIdx;
+          const dIdx = row.findIndex(c => c.includes('交易日期') || c.includes('日期'));
+          if (dIdx !== -1) dateCol = dIdx;
+          break;
+        }
+      }
+      
+      // 預設欄位位置回退
+      if (productCol === -1) productCol = rows[0].length > 1 ? 1 : 0;
+      if (dateCol === -1) dateCol = 0;
+      
+      const productData = {};
+      const productCounts = {};
+      const dates = [];
+      let recordCount = 0;
+      
+      const startRow = headerRowIndex !== -1 ? headerRowIndex + 1 : 0;
+      
+      for (let r = startRow; r < rows.length; r++) {
+        const row = rows[r];
+        if (row.length < 2) continue;
+        
+        const currAmountCol = (amountCol !== -1 && amountCol < row.length) ? amountCol : row.length - 1;
+        
+        // 排除重複的表頭列
+        if (row[productCol] && (row[productCol].includes('產品名稱') || (row[currAmountCol] && row[currAmountCol].includes('入帳金額')))) {
+          continue;
+        }
+        
+        // 交易日期
+        const dateCell = row[dateCol] || '';
+        const dateMatch = dateCell.match(/\d{4}[\/\-]\d{2}[\/\-]\d{2}/);
+        if (dateMatch) {
+          dates.push(dateMatch[0]);
+        }
+        
+        // 產品名稱 (若儲存格內有多行，取第一行)
+        const prodCell = row[productCol] || '';
+        const prodLines = prodCell.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const productName = prodLines[0] || '';
+        if (!productName || productName === '-' || productName === '小計' || productName === '合計' || productName === '總計') {
+          continue;
+        }
+        
+        // 入帳金額 (若儲存格內有多行，如入帳金額與入帳日期，取第一行金額)
+        const amtCell = row[currAmountCol] || '';
+        const amtLines = amtCell.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const amtText = amtLines[0] || '0';
+        const cleanAmt = amtText.replace(/,/g, '');
+        const amtMatch = cleanAmt.match(/[-+]?\d*\.?\d+/);
+        const amount = amtMatch ? parseFloat(amtMatch[0]) : 0;
+        
+        if (!productData[productName]) {
+          productData[productName] = 0;
+          productCounts[productName] = 0;
+        }
+        productData[productName] += amount;
+        productCounts[productName] += 1;
+        recordCount++;
+      }
+      
+      if (Object.keys(productData).length === 0) {
+        throw new Error('未解析到任何有效的產品資料，請檢查貼上內容是否包含產品名稱與入帳金額');
+      }
+      
       let dateRange = '';
       if (dates.length > 0) {
         dates.sort();
         const minDate = dates[0];
         const maxDate = dates[dates.length - 1];
-        if (minDate === maxDate) {
-          dateRange = minDate;
-        } else {
-          dateRange = `${minDate}~${maxDate}`;
-        }
+        dateRange = (minDate === maxDate) ? minDate : `${minDate}~${maxDate}`;
       }
       
-      return { productData, dateRange };
+      return { productData, productCounts, recordCount, dateRange };
     }
-    
-    function displayResults(results, dateRange) {
+
+    // 解析 HTML 格式檔案並計算
+    function parseHTMLAndCalculate(htmlContent) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      
+      let table = doc.querySelector('table.table_ver_f');
+      if (!table) {
+        table = doc.querySelector('table');
+      }
+      if (!table) {
+        throw new Error('找不到任何表格資料 (table 標籤)');
+      }
+      
+      const rows = table.querySelectorAll('tr');
+      const productData = {};
+      const productCounts = {};
+      const dates = [];
+      let recordCount = 0;
+      
+      let productCol = 1;
+      let amountCol = -1;
+      let dateCol = 0;
+      
+      // 搜尋標題欄位
+      rows.forEach(row => {
+        const headerCells = row.querySelectorAll('th, td.hd');
+        if (headerCells.length > 0) {
+          headerCells.forEach((c, idx) => {
+            const text = c.textContent;
+            if (text.includes('產品名稱')) productCol = idx;
+            if (text.includes('入帳金額')) amountCol = idx;
+            if (text.includes('交易日期')) dateCol = idx;
+          });
+        }
+      });
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td:not(.hd)');
+        if (cells.length < 2) return;
+        
+        const currAmountCol = (amountCol !== -1 && amountCol < cells.length) ? amountCol : cells.length - 1;
+        
+        // 交易日期
+        const dateCell = cells[dateCol] || cells[0];
+        const dateMatch = dateCell.textContent.match(/\d{4}[\/\-]\d{2}[\/\-]\d{2}/);
+        if (dateMatch) {
+          dates.push(dateMatch[0]);
+        }
+        
+        // 產品名稱
+        const productCell = cells[productCol] || cells[1];
+        const productSpan = productCell.querySelector('span[name="fundCodeLink"]') || productCell.querySelector('span');
+        let productName = '';
+        if (productSpan) {
+          productName = productSpan.textContent.trim();
+        } else {
+          const lines = productCell.textContent.trim().split(/\s*[\r\n]+\s*/);
+          productName = lines[0] || '';
+        }
+        
+        if (!productName || productName === '-' || productName === '小計' || productName === '合計' || productName === '總計') return;
+        
+        // 入帳金額
+        const amountCell = cells[currAmountCol] || cells[cells.length - 1];
+        const amountLines = amountCell.textContent.trim().split(/\s*[\r\n]+\s*/);
+        const amountText = amountLines[0] || '0';
+        const cleanAmt = amountText.replace(/,/g, '');
+        const amtMatch = cleanAmt.match(/[-+]?\d*\.?\d+/);
+        const amount = amtMatch ? parseFloat(amtMatch[0]) : 0;
+        
+        if (!productData[productName]) {
+          productData[productName] = 0;
+          productCounts[productName] = 0;
+        }
+        productData[productName] += amount;
+        productCounts[productName] += 1;
+        recordCount++;
+      });
+      
+      if (Object.keys(productData).length === 0) {
+        throw new Error('未解析到任何有效產品資料，請確認 HTML 格式正確');
+      }
+      
+      let dateRange = '';
+      if (dates.length > 0) {
+        dates.sort();
+        const minDate = dates[0];
+        const maxDate = dates[dates.length - 1];
+        dateRange = (minDate === maxDate) ? minDate : `${minDate}~${maxDate}`;
+      }
+      
+      return { productData, productCounts, recordCount, dateRange };
+    }
+
+    // 顯示結果
+    function displayResults({ productData, productCounts = {}, recordCount = 0, dateRange = '' }) {
       resultBody.innerHTML = '';
       let total = 0;
+      let totalCount = 0;
       
-      // 更新標題，加入日期範圍
+      // 更新標題與日期卡片
       if (dateRange) {
         resultTitle.innerHTML = `📈 統計結果 <span class="date-range">(${dateRange})</span>`;
+        cardDateRange.textContent = dateRange;
       } else {
         resultTitle.innerHTML = `📈 統計結果`;
+        cardDateRange.textContent = '未指定區間';
       }
       
       // 按金額由大到小排序
-      const sortedProducts = Object.keys(results).sort((a, b) => results[b] - results[a]);
+      const sortedProducts = Object.keys(productData).sort((a, b) => productData[b] - productData[a]);
       
       sortedProducts.forEach(product => {
-        const amount = results[product];
+        const amount = productData[product];
+        const count = productCounts[product] || 1;
         total += amount;
+        totalCount += count;
         
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>
             <div class="cell-with-copy">
-              <span>${product}</span>
-              <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(product)}')" title="複製產品名稱">📋</button>
+              <span>${escapeHtml(product)}</span>
+              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(product)}')" title="複製產品名稱">📋</button>
             </div>
+          </td>
+          <td class="center">
+            <span class="badge-count">${count} 筆</span>
           </td>
           <td class="amount">
             <div class="cell-with-copy right">
@@ -506,6 +2769,12 @@
         resultBody.appendChild(row);
       });
       
+      // 更新統計卡片與頁尾
+      cardProductCount.textContent = sortedProducts.length;
+      cardRecordCount.textContent = `${totalCount} 筆`;
+      cardTotalAmount.textContent = total.toFixed(2);
+      
+      totalRecords.textContent = `${totalCount} 筆`;
       totalAmount.innerHTML = `
         <div class="cell-with-copy right">
           <span>${total.toFixed(2)}</span>
@@ -513,62 +2782,82 @@
         </div>
       `;
       
+      lastCalculatedData = { productData, productCounts, total, totalCount, dateRange };
       resultSection.style.display = 'block';
+      resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-    
+
     function escapeHtml(text) {
-      return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
-    
+
+    function escapeJs(text) {
+      return text.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
+    // 複製至剪貼簿
     function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        showCopyFeedback('✓ 已複製');
-      }).catch(err => {
-        // 備用方案：使用舊方法
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-          document.execCommand('copy');
-          showCopyFeedback('✓ 已複製');
-        } catch (err) {
-          showCopyFeedback('✗ 複製失敗');
-        }
-        document.body.removeChild(textarea);
-      });
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopyFeedback('✓ 已複製到剪貼簿');
+        }).catch(() => {
+          fallbackCopyText(text);
+        });
+      } else {
+        fallbackCopyText(text);
+      }
     }
-    
+
+    function fallbackCopyText(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showCopyFeedback('✓ 已複製到剪貼簿');
+      } catch (err) {
+        showCopyFeedback('✗ 複製失敗，請手動複製');
+      }
+      document.body.removeChild(textarea);
+    }
+
     function showCopyFeedback(message) {
+      const existing = document.querySelector('.copy-feedback');
+      if (existing) existing.remove();
+      
       const feedback = document.createElement('div');
       feedback.className = 'copy-feedback';
       feedback.textContent = message;
       document.body.appendChild(feedback);
       
       setTimeout(() => {
-        document.body.removeChild(feedback);
-      }, 1500);
+        if (feedback.parentNode) feedback.remove();
+      }, 1400);
     }
-    
+
     function showError(message) {
       errorMessage.textContent = message;
       errorMessage.style.display = 'block';
+      errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-    
+
     function hideError() {
       errorMessage.style.display = 'none';
     }
-    
+
     function showLoading() {
       loading.style.display = 'block';
     }
-    
+
     function hideLoading() {
       loading.style.display = 'none';
     }
-    
+
     function hideResult() {
       resultSection.style.display = 'none';
     }
